@@ -1,0 +1,251 @@
+{
+    "folders": [
+        {
+            "path": "."
+        }
+    ],
+    "settings": {
+        "[javascript]": {
+            "editor.defaultFormatter": "esbenp.prettier-vscode",
+            "editor.insertSpaces": true,
+            "editor.tabSize": 4
+        },
+        "[javascriptreact]": {
+            "editor.defaultFormatter": "esbenp.prettier-vscode",
+            "editor.insertSpaces": true,
+            "editor.tabSize": 4
+        },
+        "[json]": {
+            "editor.defaultFormatter": "esbenp.prettier-vscode"
+        },
+        "[jsonc]": {
+            "editor.defaultFormatter": "vscode.json-language-features",
+            "editor.insertSpaces": true,
+            "editor.tabSize": 4
+        },
+        "[makefile]": {
+            "editor.insertSpaces": false,
+            "editor.renderWhitespace": "all",
+            "editor.tabSize": 8,
+            "files.trimTrailingWhitespace": false
+        },
+        "[markdown]": {
+            "cSpell.advanced.feature.useReferenceProviderRemove": "/^#+\\s/",
+            "cSpell.advanced.feature.useReferenceProviderWithRename": true,
+            "cSpell.fixSpellingWithRenameProvider": true,
+            "editor.quickSuggestions": {
+                "comments": "on",
+                "other": "on",
+                "strings": "on"
+            },
+            "editor.unicodeHighlight.ambiguousCharacters": true,
+            "editor.unicodeHighlight.invisibleCharacters": true
+        },
+        "[python]": {
+            "editor.codeActionsOnSave": {
+                "source.fixAll.ruff": "explicit",
+                "source.organizeImports.ruff": "always"
+            },
+            "editor.defaultFormatter": "charliermarsh.ruff",
+            "editor.insertSpaces": true,
+            "editor.tabSize": 4,
+            "rewrap.autoWrap.enabled": false
+        },
+        "[toml]": {
+            "editor.defaultFormatter": "tamasfe.even-better-toml"
+        },
+        "[typescript]": {
+            "editor.defaultFormatter": "vscode.typescript-language-features",
+            "editor.insertSpaces": true,
+            "editor.tabSize": 4
+        },
+        "[typescriptreact]": {
+            "editor.insertSpaces": true,
+            "editor.tabSize": 4
+        },
+        "aws.resources.enabledResources": [
+            "AWS::ApiGateway::DomainName",
+            "AWS::CloudFront::Distribution",
+            "AWS::CloudFront::Function",
+            "AWS::DynamoDB::Table"
+        ],
+        "aws.suppressPrompts": {
+            "fileViewerEdit": true
+        },
+        "editor.formatOnSave": true,
+        "editor.insertSpaces": true,
+        "editor.tabSize": 4,
+        "evenBetterToml.formatter.alignComments": true,
+        "evenBetterToml.formatter.allowedBlankLines": 2,
+        "evenBetterToml.formatter.arrayAutoCollapse": true,
+        "evenBetterToml.formatter.arrayTrailingComma": true,
+        "evenBetterToml.formatter.crlf": true,
+        "evenBetterToml.formatter.indentEntries": true,
+        "evenBetterToml.formatter.indentString": "    ",
+        "evenBetterToml.formatter.reorderArrays": true,
+        "evenBetterToml.formatter.reorderInlineTables": true,
+        "evenBetterToml.schema.enabled": true,
+        "files.associations": {
+            "*.pl": "perl",
+            "*.pm": "perl"
+        },
+        "files.autoGuessEncoding": false,
+        "files.eol": "auto",
+        "files.exclude": {
+            "**/.DS_Store": true,
+            "**/Thumbs.db": true,
+            "**/__pycache__": true,
+            "**/.venv/**": true,
+        },
+        "files.insertFinalNewline": true,
+        "files.trimTrailingWhitespace": true,
+        "files.watcherExclude": {
+            "**/.assets": true,
+            "**/.cache": true,
+            "**/.DS_Store": true,
+            "**/.flask_session": true,
+            "**/.hg": true,
+            "**/.mypy_cache": true,
+            "**/.pixi": true,
+            "**/.ropeproject": true,
+            "**/.ruff_cache": true,
+            "**/.svn": true,
+            "**/.venv*": true,
+            "**/*.out": true,
+            "**/*.tsbuildinfo": true,
+            "**/CVS": true,
+            "**/node_modules": true,
+            "**/Thumbs.db": true
+        },
+        "git.autoRepositoryDetection": false,
+        "git.repositoryScanIgnoredFolders": [
+            ".."
+        ],
+        "javascript.validate.enable": true,
+        "markdown.occurrencesHighlight.enabled": true,
+        "markdown.preview.breaks": true,
+        "mbake.autoInit": true,
+        "mbake.executablePath": "${workspaceFolder}/.venv/Scripts/mbake.exe",
+        "prettier.singleQuote": true,
+        "prettier.tabWidth": 4,
+        "python.analysis.aiCodeActions": {
+            "generateDocstring": false,
+            "generateMethod": false,
+            "optimizeImports": false,
+            "sortImports": false
+        },
+        "python.analysis.autoFormatStrings": true,
+        "python.analysis.autoImportCompletions": true,
+        "python.analysis.completeFunctionParens": true,
+        "python.analysis.diagnosticMode": "workspace", // faster than "openFilesOnly" after warmup
+        "python.analysis.disableTaggedHints": false,
+        "python.analysis.enablePytestSupport": false,
+        "python.analysis.exclude": [
+            "**/.*/**",
+            "**/.assets/**",
+            "**/.hg/**",
+            "**/.pixi/**",
+            "**/.svn/**",
+            "**/.venv/**",
+            "**/build/**",
+            "**/*.out/**",
+            "**/data/**",
+            "**/dist/**",
+            "**/docs/**",
+            "**/examples/**",
+            "**/samples/**",
+            "**/site-packages/**",
+            "**/vite-env.d.ts"
+        ],
+        "python.analysis.extraPaths": [
+            "${workspaceFolder}/src"
+        ],
+        "python.analysis.importFormat": "absolute",
+        "python.analysis.indexing": true,
+        "python.analysis.logLevel": "Information",
+        "python.analysis.persistAllIndices": true,
+        "python.analysis.regenerateStdLibIndices": false,
+        "python.analysis.stubPath": "${workspaceFolder}/.cache/typings",
+        "python.analysis.supportDocstringTemplate": false,
+        "python.analysis.supportRestructuredText": true,
+        "python.analysis.typeCheckingMode": "strict",
+        "python.analysis.typeEvaluation.deprecateTypingAliases": true,
+        "python.analysis.userFileIndexingLimit": 25000,
+        "python.autoComplete.extraPaths": [
+            "${workspaceFolder}/.cache/typings",
+            "${workspaceFolder}"
+        ],
+        "python.createEnvironment.contentButton": "hide",
+        "python.defaultInterpreterPath": "${workspaceFolder}/.venv/Scripts/python.exe",
+        "python.envFile": "${workspaceFolder}/.env",
+        "python.experiments.enabled": false,
+        "python.experiments.optInto": [],
+        "python.experiments.optOutFrom": [
+            "All"
+        ],
+        "python.languageServer": "Pylance",
+        "python.REPL.enableREPLSmartSend": false,
+        "python.terminal.activateEnvInCurrentTerminal": true,
+        "python.terminal.activateEnvironment": true,
+        "python.testing.autoTestDiscoverOnSaveEnabled": false,
+        "python.testing.cwd": "${workspaceFolder}/.cache",
+        "python.testing.pytestEnabled": true,
+        "python.testing.unittestEnabled": false,
+        "rewrap.autoWrap.enabled": false,
+        "rewrap.doubleSentenceSpacing": false,
+        "rewrap.reformat": true,
+        "ruff.codeAction.fixViolation": {
+            "enable": true
+        },
+        "ruff.enable": true,
+        "ruff.fixAll": true,
+        "ruff.format.preview": true,
+        "ruff.lint.enable": true,
+        "ruff.lint.preview": true,
+        "ruff.path": [
+            "${workspaceFolder}/.venv/Scripts/ruff.exe"
+        ],
+        "search.exclude": {
+            "**/__pycache__": true,
+            "**/.*": true,
+            "**/.cache": true,
+            "**/.mypy_cache": true,
+            "**/.pytest_cache": true,
+            "**/.venv*/**": true,
+            "**/*.out": true,
+            "**/*source*.txt": true,
+            "**/bower_components": true,
+            "**/build": true,
+            "**/Dockerfile": true,
+            "**/download*": true,
+            "**/node_modules": true,
+            "**/package-lock.json": true,
+            "**/typings": true
+        },
+        "terminal.integrated.cwd": "${workspaceFolder}",
+        "terminal.integrated.env.windows": {
+            "CACHE_DIR": "${workspaceFolder}/.cache",
+            "HF_HUB_DISABLE_SYMLINKS_WARNING": "1",
+            "JSII_SILENCE_WARNING_UNTESTED_NODE_VERSION": "1",
+            "MYPY_CACHE_DIR": "${workspaceFolder}/.cache/.mypy_cache",
+            "MYPYPATH": "${workspaceFolder}/.cache/typings;${workspaceFolder}",
+            "NODE_ENV": "development",
+            "PATH": "${workspaceFolder}/tools;c:/dev/tools/bin;${env:PATH}",
+            "PROMPT": "\u001b[1;35m$P$G\u001b[0m ",
+            "PYDEVD_WARN_SLOW_RESOLVE_TIMEOUT": "5000",
+            "PYLINT_HOME": "${workspaceFolder}/.cache/pylint",
+            "PYLINTRC": "${workspaceFolder}/.pylintrc",
+            "PYTHONPATH": "${workspaceFolder};${workspaceFolder}/.venv/Lib/site-packages;${workspaceFolder}/.cache/typings;${env:PYTHONPATH}",
+            "PYTHONPYCACHEPREFIX": "${workspaceFolder}/.cache/__pycache__",
+            "RUFF_CACHE_DIR": "${workspaceFolder}/.cache/ruff",
+            "WITH_4BIT_QUANTIZATION": "1"
+        },
+        "workbench.colorCustomizations": {
+            "titleBar.inactiveBackground": "#203070",
+            "titleBar.inactiveForeground": "#777777",
+            "titleBar.activeBackground": "#4050a0",
+            "titleBar.activeForeground": "#ffffff"
+        },
+        "workbench.colorTheme": "Abyss"
+    }
+}

@@ -1,0 +1,146 @@
+[build-system]
+    requires = ["setuptools>=65", "wheel"]
+    build-backend = "setuptools.build_meta"
+
+
+[project]
+    name = "mstair-common"
+    version = "0.1.0"
+    description = "Common libraries for mstair projects"
+    readme = "README.md"
+    requires-python = ">=3.10"
+    license = { file = "LICENSE" }
+    authors = [{ name = "Morgan Stair" }]
+
+    # Runtime dependencies
+    dependencies = [
+        "boto3-stubs[essential,sts]>=1.35.0",
+        "boto3>=1.35.0",
+        "botocore-stubs>=1.35.0",
+        "botocore>=1.35.0",
+        "charset_normalizer>=3.3.2",
+        "diskcache>=5.6.1",
+        "gitpython>=3.1.43",
+        "nltk>=3.8.1",
+        "python-dotenv>=1.1.1",
+        "types-awscrt>=0.21.0",
+    ]
+
+
+[project.optional-dependencies]
+    dev = [
+        "boto3-stubs[apigateway,apigatewayv2,cloudformation,cloudfront,cognito-identity,cognito-idp,dynamodb,iam,iot,lambda,logs,s3,sts,ssm,stepfunctions,sts,wafv2]>=1.35.0",
+        "boto3>=1.35.0",
+        "botocore-stubs>=1.35.0",
+        "botocore>=1.35.0",
+        "mypy>=1.10.0",
+        "pytest>=8.3.0",
+        "ruff>=0.6.0",
+        "types-awscrt>=0.21.0",
+    ]
+    test = ["pytest>=8.3.0"]
+
+[tool.build.python]
+    local_src_dir = "src"
+    local_packages = ["mstair"]
+
+[tool.setuptools.packages.find]
+    where = ["src"]
+    include = ["mstair.common*"]
+
+
+[tool.ruff]
+    exclude = [
+        ".cache",
+        ".git",
+        ".mypy_cache",
+        ".ruff_cache",
+        ".venv",
+        ".venv*",
+        "__pycache__",
+        "build",
+        "dist",
+        "node_modules",
+    ]
+    fix = true
+    line-length = 101
+    respect-gitignore = true
+    target-version = "py313"
+    unsafe-fixes = false
+    src = ["src"] # If source is not at top, so Ruff can identify local imports
+
+
+[tool.ruff.lint]
+    fixable = ["ALL"]
+    unfixable = ["F401", "F403", "TID252"]
+
+
+    select = ["B", "C4", "E", "F", "I", "PL", "RUF", "SIM", "TID", "UP"]
+    extend-select = ["I001", "I002"]
+    ignore = [
+        "B007",
+        "B009",
+        "B010",
+        "B017",
+        "B028",
+        "B904",
+        "C408",
+        "D100",
+        "D101",
+        "D104",
+        "D105",
+        "D107",
+        "E501",
+        "E731",
+        "F403",
+        "FA102",
+        "PLR0913",
+        "PLR2004",
+        "PLW0603",
+        "PLW2901",
+        "RUF002",
+        "RUF009",
+        "RUF010",
+        "RUF022",
+        "RUF023",
+        "RUF052",
+        "SIM102",
+        "SIM103",
+        "SIM108",
+        "SIM114",
+        "SIM118",
+        "TID252",
+        "UP006",
+        "UP014",
+        "UP017",
+        "UP028",
+        "UP032",
+        "UP037",
+        "UP040",
+    ]
+
+[tool.ruff.lint.pylint] #
+    max-args = 8      # Default is 5
+    max-returns = 9   # Default is 6
+    max-branches = 15 # Default is 12
+
+
+[tool.ruff.lint.isort]
+    detect-same-package = true
+    force-single-line = false
+    force-to-top = ["__future__"]
+    known-first-party = ["autocomment", "pdf2rtf", "plib_", "tests"]
+    known-local-folder = ["src"]
+    lines-after-imports = 2
+    order-by-type = true
+
+
+[tool.ruff.lint.mccabe]
+    max-complexity = 8
+
+
+[tool.ruff.format]
+    indent-style = "space"
+    line-ending = "cr-lf"
+    quote-style = "double"
+    skip-magic-trailing-comma = false

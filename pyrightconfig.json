@@ -1,0 +1,77 @@
+{
+    // Pyright configuration file. See https://microsoft.github.io/pyright/#/configuration
+    // include [array of paths, optional]: Paths of directories or files that should be
+    // considered part of the project. If no paths are specified, pyright defaults to
+    // the directory that contains the config file. Paths may contain wildcard
+    // characters ** (a directory or multiple levels of directories), * (a sequence of
+    // zero or more characters), or ? (a single character). If no include paths are
+    // specified, the root path for the workspace is assumed.
+    "include": [],
+    // exclude [array of paths, optional]: Paths of directories or files that should not
+    // be considered part of the project. These override the directories and files that
+    // include matched, allowing specific subdirectories to be excluded. Note that files
+    // in the exclude paths may still be included in the analysis if they are referenced
+    // (imported) by source files that are not excluded. Paths may contain wildcard
+    // characters ** (a directory or multiple levels of directories), * (a sequence of
+    // zero or more characters), or ? (a single character). If no exclude paths are
+    // specified, Pyright automatically excludes the following: **/node_modules,
+    // **/__pycache__, **/.*. Pylance also excludes any virtual environment directories
+    // regardless of the exclude paths specified. For more detail on Python environment
+    // specification and discovery, refer to the import resolution documentation.
+    "exclude": [
+        "**/.cache/**",
+        "**/.git/**",
+        "**/.pio/**",
+        "**/.venv*/**",
+        "**/__pycache__/**",
+        "**/build/**",
+        "**/cdk.out/**",
+        "**/data/**",
+        "**/dist/**",
+        "**/node_modules/**",
+        "**/react/**"
+    ],
+    // "executionEnvironments" are about *import resolution*, not what gets analyzed.
+    // They tell Pylance: "when analyzing code under root=., assume imports may come
+    // from these extraPaths". This is useful for resolving imports like
+    // `import lib_cdk_deploy.x` or `import mstair.common.y` without having to modify sys.path.
+    // It's different from "include", which controls what files are type-checked.
+    "executionEnvironments": [
+        {
+            "root": ".",
+            "extraPaths": []
+        }
+    ],
+    // ignore [array of '**' style glob paths, optional]: Suppresses color, hover info,
+    // and problems for the specified paths.
+    "ignore": [],
+    "deprecateTypingAliases": true,
+    "reportArgumentType": "warning",
+    "reportCallIssue": "warning",
+    "reportGeneralTypeIssues": "warning",
+    "reportIncompatibleMethodOverride": "none",
+    "reportMissingParameterType": "none",
+    "reportMissingTypeArgument": "none",
+    "reportMissingTypeStubs": "warning",
+    "reportOptionalCall": "warning",
+    "reportPrivateUsage": "warning",
+    "reportTypedDictNotRequiredAccess": "warning",
+    "reportUnknownArgumentType": "none",
+    "reportUnknownLambdaType": "none",
+    "reportUnknownMemberType": "none",
+    "reportUnknownParameterType": "none",
+    "reportUnknownVariableType": "none",
+    "reportUnnecessaryIsInstance": "none",
+    "reportUntypedFunctionDecorator": "none",
+    "reportUnusedFunction": "none",
+    "reportUnusedImport": "warning",
+    "reportUnusedVariable": "warning",
+    // stubPath [path, optional]: Path to a directory that contains custom type stubs.
+    // Each package's type stub file(s) are expected to be in its own subdirectory. The
+    // default value of this setting is "./typings". (typingsPath is now deprecated)
+    "stubPath": ".cache/typings",
+    "typeCheckingMode": "strict",
+    "useLibraryCodeForTypes": true,
+    "venv": ".venv",
+    "venvPath": "."
+}
