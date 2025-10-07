@@ -22,6 +22,11 @@ export CACHE_DIR := $(PROJECT_DIR)/.cache
 $(warning CACHE_DIR not set, assuming '$(CACHE_DIR)')
 endif
 
+ifndef MYPY_CACHE_DIR
+export MYPY_CACHE_DIR := $(CACHE_DIR)/.mypy-cache
+$(warning MYPY_CACHE_DIR not set, assuming '$(MYPY_CACHE_DIR)')
+endif
+
 ifndef npm_config_cache
 export npm_config_cache := $(CACHE_DIR)/.npm-cache
 endif

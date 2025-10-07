@@ -98,4 +98,5 @@ clean:: ## Remove generated stubs and cache directory
 	@printf "\n$@:\n"
 	set -x
 	rm -rf "$(TYPINGS_DIR)"
+	rm -rf "$(MYPY_CACHE_DIR)"
 	rm -rf "$(CACHE_DIR)"

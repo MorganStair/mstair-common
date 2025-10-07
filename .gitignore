@@ -12,7 +12,11 @@ requirements.txt
 
 # Cached build and stub artifacts (not versioned)
 .cache/
+.mypy_cache/
+**/__pycache__/**
 **/*.egg-info/**
+dist/
+build/
 
 # Pyright / stubgen working directory:
 # Stubs are generated into .cache/typings for IDE use only.

@@ -92,10 +92,9 @@
         "files.autoGuessEncoding": false,
         "files.eol": "auto",
         "files.exclude": {
-            "**/.DS_Store": true,
-            "**/Thumbs.db": true,
             "**/__pycache__": true,
-            "**/.venv/**": true,
+            "**/.DS_Store": true,
+            "**/Thumbs.db": true
         },
         "files.insertFinalNewline": true,
         "files.trimTrailingWhitespace": true,
@@ -113,8 +112,15 @@
             "**/.venv*": true,
             "**/*.out": true,
             "**/*.tsbuildinfo": true,
+            "**/bower_components": true,
+            "**/build": true,
             "**/CVS": true,
+            "**/dist": true,
+            "**/docs": true,
+            "**/examples": true,
             "**/node_modules": true,
+            "**/samples": true,
+            "**/site-packages": true,
             "**/Thumbs.db": true
         },
         "git.autoRepositoryDetection": false,
@@ -147,6 +153,7 @@
             "**/.pixi/**",
             "**/.svn/**",
             "**/.venv/**",
+            "**/bower_components/**",
             "**/build/**",
             "**/*.out/**",
             "**/data/**",
@@ -241,10 +248,10 @@
             "WITH_4BIT_QUANTIZATION": "1"
         },
         "workbench.colorCustomizations": {
-            "titleBar.inactiveBackground": "#203070",
-            "titleBar.inactiveForeground": "#777777",
             "titleBar.activeBackground": "#4050a0",
-            "titleBar.activeForeground": "#ffffff"
+            "titleBar.activeForeground": "#ffffff",
+            "titleBar.inactiveBackground": "#203070",
+            "titleBar.inactiveForeground": "#777777"
         },
         "workbench.colorTheme": "Abyss"
     }
