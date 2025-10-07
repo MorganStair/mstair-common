@@ -8,37 +8,32 @@
     version = "0.1.0"
     description = "Common libraries for mstair projects"
     readme = "README.md"
-    requires-python = ">=3.10"
+    requires-python = ">=3.13"
     license = { file = "LICENSE" }
     authors = [{ name = "Morgan Stair" }]
-
-    # Runtime dependencies
     dependencies = [
-        "boto3-stubs[essential,sts]>=1.35.0",
+        "boto3-stubs[apigateway,apigatewayv2,cloudformation,cloudfront,cognito-identity,cognito-idp,dynamodb,iam,iot,lambda,logs,s3,sts,ssm,stepfunctions,sts,wafv2]>=1.35.0",
         "boto3>=1.35.0",
         "botocore-stubs>=1.35.0",
         "botocore>=1.35.0",
         "charset_normalizer>=3.3.2",
+        "click>=8.1.7",
+        "colorama>=0.4.6",
         "diskcache>=5.6.1",
         "gitpython>=3.1.43",
+        "mypy>=1.10.0",
         "nltk>=3.8.1",
+        "pytest",
         "python-dotenv>=1.1.1",
+        "pytz",
+        "ruff",
         "types-awscrt>=0.21.0",
     ]
 
 
 [project.optional-dependencies]
-    dev = [
-        "boto3-stubs[apigateway,apigatewayv2,cloudformation,cloudfront,cognito-identity,cognito-idp,dynamodb,iam,iot,lambda,logs,s3,sts,ssm,stepfunctions,sts,wafv2]>=1.35.0",
-        "boto3>=1.35.0",
-        "botocore-stubs>=1.35.0",
-        "botocore>=1.35.0",
-        "mypy>=1.10.0",
-        "pytest>=8.3.0",
-        "ruff>=0.6.0",
-        "types-awscrt>=0.21.0",
-    ]
-    test = ["pytest>=8.3.0"]
+    dev = []
+    test = []
 
 [tool.build.python]
     local_src_dir = "src"
