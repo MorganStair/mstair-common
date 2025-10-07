@@ -3,15 +3,14 @@
 # ----------------------------------------------------------
 # Source distribution inclusion rules
 # ----------------------------------------------------------
-# This package (mstair-common) is part of a shared PEP 420 namespace ("mstair").
-# It contributes only mstair.common and not the top-level namespace.
+# This package (mstair-common) owns the mstair package and ships inline types.
 #
-# Only include:
-# - py.typed (PEP 561 marker)
+# Include:
+# - py.typed (PEP 561 marker) for both mstair and mstair.common
 # - source files under src/mstair/common/
-# - no generated stubs (.pyi) from .cache/typings
+# - generated stubs (.pyi) that live alongside sources
 # ----------------------------------------------------------
 
-recursive-include src/mstair/common *.py
-recursive-include src/mstair/common *.pyi
-recursive-include src/mstair/common py.typed
+recursive-include src/mstair *.py
+recursive-include src/mstair *.pyi
+recursive-include src/mstair py.typed

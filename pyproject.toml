@@ -3,27 +3,28 @@
 # ----------------------------------------------------------
 # Project layout overview (for LLMs and maintainers)
 #
-# NAMESPACE PACKAGE CONTEXT
+# PACKAGE LAYOUT CONTEXT
 # ----------------------------------------------------------
-# The "mstair" directory is a **PEP 420 namespace package** shared across multiple distributions.
-# This project, `mstair-common`, contributes the subpackage `mstair.common`.
-# Other sibling projects such as `mstair-tools`, `mstair-aws`, etc. may also contribute
-# their own subpackages under the same namespace (`mstair.tools`, `mstair.aws`, ...).
+# The "mstair" directory is now a regular package owned by this project.
+# It exposes the `mstair.common` utilities while leaving room for future
+# subpackages that can be added to the same repository.
 #
 # Key implications:
-# - There is intentionally **no `__init__.py` file** under `src/mstair/`.
-# - Python automatically merges multiple installed `mstair` directories from different
-#   distributions into one logical package namespace.
-# - Each contributing distribution should include its own `py.typed` under its subpackage,
-#   not at the namespace root.
+# - The top-level package (`src/mstair/__init__.py`) re-exports `mstair.common`.
+# - Type information is shipped inline alongside sources; `py.typed` markers live
+#   under both `src/mstair/` and `src/mstair/common/`.
+# - Generated stubs should be written directly into `src/mstair/common/` (or types
+#   added inline) so that wheels and editable installs expose the same symbols.
 #
 # ----------------------------------------------------------
 # Physical directory structure for this distribution (mstair-common)
 # ----------------------------------------------------------
 # Root directory structure:
-# ├── src/                     # Source root for all namespace participants
-# │   └── mstair/              # Shared top-level namespace package (no __init__.py)
-# │       └── common/          # Subpackage containing shared logic
+# ├── src/
+# │   └── mstair/
+# │       ├── __init__.py
+# │       ├── py.typed
+# │       └── common/
 # │           ├── __init__.py
 # │           └── py.typed     # Marker for inline typing for mstair.common
 # ├── .cache/typings/          # Generated stub directory (not in sdist by default)
@@ -58,7 +59,7 @@ description = "Common libraries for mstair projects"
 authors = [{ name = "Morgan Stair" }]
 readme = "README.md"
 requires-python = ">=3.13"
-license = { file = "LICENSE" }
+license = "MIT"
 
 # Runtime dependencies used by mstair-common and its submodules
 dependencies = [
@@ -97,11 +98,10 @@ local_packages = ["mstair"]
 # ----------------------------------------------------------
 # Package discovery configuration
 # Physical source root: src/
-# Because this is a namespace package, only subpackages are included.
-# This ensures that `mstair` itself has no __init__.py and remains shared across distributions.
+# Include the root package and any subpackages exposed by this distribution.
 # ----------------------------------------------------------
 where = ["src"]
-include = ["mstair.common*"]
+include = ["mstair", "mstair.*"]
 
 
 [tool.setuptools.package-data]
@@ -112,6 +112,7 @@ include = ["mstair.common*"]
 # - The top-level namespace mstair has no files of its own.
 # - Stubs in .cache/typings are excluded by default unless explicitly copied into src/mstair/.
 # ----------------------------------------------------------
+"mstair" = ["py.typed"]
 "mstair.common" = ["py.typed", "*.pyi", "**/*.pyi"]
 
 

@@ -65,7 +65,7 @@ sync-stubs: # (unused) # Copy generated stubs into src/mstair/common for packagi
 	    { printf "No stubs found in .cache/typings/mstair/common (nothing to sync)."; } 2>/dev/null; \
 	fi
 
-package: venv-ensure stubs sync-stubs ## Build distribution artifacts (wheel and sdist)
+package: venv-ensure ## Build distribution artifacts (wheel and sdist)
 	@printf "\n%s:\n" "$@"
 	set -x
 	. .venv/Scripts/activate 2>/dev/null || . .venv/bin/activate
