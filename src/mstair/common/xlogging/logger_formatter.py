@@ -173,7 +173,8 @@ class CoreFormatter(logging.Formatter):
             message_str += f"\n(LOGGING FILTER ERROR: {exc!r})\n"
         return message_str
 
-    def format_file(self, file: str) -> str:
+    @staticmethod
+    def format_file(file: str) -> str:
         """
         Formats the file path relative to the project root if possible,
         otherwise falls back to the original scriptdir-relative logic.
@@ -186,7 +187,7 @@ class CoreFormatter(logging.Formatter):
             file = Path(file).relative_to(project_root).as_posix()
         except Exception:
             # Fall back to scriptdir-relative logic
-            if not sys.path or sys.path[0] == "":
+            if not sys.path or not sys.path[0]:
                 return Path(file).as_posix()
             if " " in file and os.name == "nt":
                 abspath = os.path.abspath(file)
@@ -215,7 +216,8 @@ class CoreFormatter(logging.Formatter):
             fileAndLine = get_color_code("fileAndLine") + fileAndLine + get_color_code()
         return fileAndLine
 
-    def format_klassAndMethod(self, record: logging.LogRecord) -> str:
+    @staticmethod
+    def format_klassAndMethod(record: logging.LogRecord) -> str:
         # SRD: Format class and method names with colors
         # Called from: format()
         # Calls: get_color_code()
@@ -232,21 +234,24 @@ class CoreFormatter(logging.Formatter):
 
         return get_color_code("klassAndMethod") + klassAndMethod + get_color_code()
 
-    def format_levelName(self, levelname: str) -> str:
+    @staticmethod
+    def format_levelName(levelname: str) -> str:
         # SRD: Format log level name with colors
         # Called from: format()
         # Calls: get_color_code()
         levelName = get_color_code(levelname) + levelname + get_color_code()
         return levelName
 
-    def format_method(self, funcName: str) -> str:
+    @staticmethod
+    def format_method(funcName: str) -> str:
         # SRD: Format method name with colors
         # Called from: format()
         # Calls: get_color_code()
         method = get_color_code("method") + funcName + "()" + get_color_code()
         return method
 
-    def format_moduleAndMethod(self, module: str, funcName: str) -> str:
+    @staticmethod
+    def format_moduleAndMethod(module: str, funcName: str) -> str:
         # SRD: Format module and method name with colors
         # Called from: format()
         # Calls: get_color_code()
@@ -255,7 +260,8 @@ class CoreFormatter(logging.Formatter):
         )
         return moduleAndMethod
 
-    def apply_message_colors(self, record: logging.LogRecord, formatted_message: str) -> str:
+    @staticmethod
+    def apply_message_colors(record: logging.LogRecord, formatted_message: str) -> str:
         # SRD: Apply colors and processing to an already-formatted message
         # Called from: format() after super().format()
         # Calls: get_color_code()
@@ -269,7 +275,8 @@ class CoreFormatter(logging.Formatter):
         reset_code = get_color_code()
         return color_code + formatted_message + reset_code
 
-    def format_name(self, record: logging.LogRecord) -> str:
+    @staticmethod
+    def format_name(record: logging.LogRecord) -> str:
         # SRD: Format logger name with colors
         # Called from: format()
         # Calls: get_color_code()
@@ -297,7 +304,7 @@ class CoreFormatter(logging.Formatter):
         if ei is True:
             cur = sys.exc_info()
             ei = (cur[0], cur[1], cur[2]) if cur[0] is not None else (None, None, None)
-        elif ei in (False, None):
+        elif ei in {False, None}:
             ei = (None, None, None)
         elif isinstance(ei, BaseException):
             ei = (type(ei), ei, ei.__traceback__)  # type: ignore[assignment]
@@ -313,7 +320,7 @@ class CoreFormatter(logging.Formatter):
         _result = ""
         if datefmt:
             try:
-                datefmt = re.sub(r"%-", "%", datefmt)
+                datefmt = datefmt.replace(r"%-", "%")
                 _result = _datetime.strftime(datefmt)
                 _result = _result.replace("AM", "am").replace("PM", "pm").lstrip("0")
             except ValueError as e:
@@ -388,21 +395,17 @@ def format_logging_error(record: logging.LogRecord, exc: Exception, debug_config
     ]
 
     if getattr(debug_config, "verbose", False):
-        message_lines.extend(
-            [
-                "",
-                "xdumps(record):",
-                f"  {xdumps(vars(record), **getattr(record, 'extra', {}))}",
-            ]
-        )
+        message_lines.extend([
+            "",
+            "xdumps(record):",
+            f"  {xdumps(vars(record), **getattr(record, 'extra', {}))}",
+        ])
     else:
-        message_lines.extend(
-            [
-                f"record.msg: {getattr(record, 'msg', None)!r}",
-                f"record.args: {getattr(record, 'args', None)!r}",
-                "",
-            ]
-        )
+        message_lines.extend([
+            f"record.msg: {getattr(record, 'msg', None)!r}",
+            f"record.args: {getattr(record, 'args', None)!r}",
+            "",
+        ])
 
     message_lines.extend(full_traceback.splitlines())
     message_lines.extend(["."])
