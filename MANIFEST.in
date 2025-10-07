@@ -13,4 +13,5 @@
 # ----------------------------------------------------------
 
 recursive-include src/mstair/common *.py
-include src/mstair/common/py.typed
+recursive-include src/mstair/common *.pyi
+recursive-include src/mstair/common py.typed

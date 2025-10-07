@@ -112,7 +112,7 @@ include = ["mstair.common*"]
 # - The top-level namespace mstair has no files of its own.
 # - Stubs in .cache/typings are excluded by default unless explicitly copied into src/mstair/.
 # ----------------------------------------------------------
-"mstair.common" = ["py.typed"]
+"mstair.common" = ["py.typed", "*.pyi", "**/*.pyi"]
 
 
 [tool.pytest.ini_options]

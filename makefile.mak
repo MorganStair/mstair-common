@@ -56,7 +56,18 @@ build: venv-ensure ## Install current package in editable mode into .venv
 	pip install -e .[dev,test]
 	@printf "\n[done] project installed in editable mode.\n"
 
-package: venv-ensure stubs ## Build distribution artifacts (wheel and sdist)
+.PHONY: sync-stubs
+sync-stubs: # (unused) # Copy generated stubs into src/mstair/common for packaging
+	@printf "\n%s:\n" "$@"
+	set -ex
+	if [ -d ".cache/typings/mstair/common" ]; then \
+	    rsync -av --include="*.pyi" --exclude="*" .cache/typings/mstair/common/ src/mstair/common/; \
+	    echo "[done] stubs copied into src/mstair/common/"; \
+	else \
+	    echo "No stubs found in .cache/typings/mstair/common (nothing to sync)."; \
+	fi
+
+package: venv-ensure stubs sync-stubs ## Build distribution artifacts (wheel and sdist)
 	@printf "\n%s:\n" "$@"
 	set -ex
 	. .venv/Scripts/activate 2>/dev/null || . .venv/bin/activate
