@@ -1,50 +1,38 @@
-# mstair-common – AI Implementation Guide
+# mstair-common – concise guide for AI agents
 
-Primary mission: provide shared utilities that downstream projects pull in via a VCS dependency (`mstair-common @ git+https://github.com/MorganStair/mstair-common.git@main`) rather than as a standalone app.
+Purpose: shared utilities consumed via VCS dependency, not a standalone app. Root package `mstair` re-exports `mstair.common` (see `src/mstair/__init__.py`).
 
-## Architecture quick tour
+## Big picture
 
-- This repo owns the regular package `mstair` and re-exports `mstair.common`; the root package now has an `__init__.py` so downstream tooling treats the distribution like a standard library.
-- Downstream apps consume it via VCS dependencies, e.g. `mstair-common @ git+https://github.com/MorganStair/mstair-common.git@main` under `[project].dependencies` in their `pyproject.toml`.
-- `mstair.common.base` groups import-safe utilities (filesystem, env detection, string helpers). When adding helpers keep them side-effect free because high level code imports `base.*` at module import time.
-- `mstair.common.xlogging` delivers the logging stack: `CoreLogger`, environment-driven level config (`logger_util`), and formatters. Prefer `create_logger(__name__)` from `logger_factory`.
-- `mstair.common.xdumps` renders structured diagnostics; `xdumps()` plus `CUSTOMIZER` helpers keep logs readable and protect against recursion.
-- `format_helpers.format_source_code` wraps Ruff for formatting via stdin to respect repo-level config; tests mock `subprocess.run` (`test_format_helpers.py`).
-- Tests live alongside packages under `src/.../test_*.py`; pytest config in `pyproject.toml` limits discovery to these folders.
+-   Packages: `base/` (side-effect-free helpers), `xlogging/` (CoreLogger + env config), `xdumps/` (safe object rendering), plus formatting/tokenization helpers under `src/mstair/common/`.
+-   Keep `base.*` import-safe; high-level code imports these at module import time. Use thread-local flags/context managers from `base.config`.
+-   Modules end with a `# End of file:` sentinel; `tokenize_helpers.CodeRegions` relies on it when splitting sources.
 
-## Logging + diagnostics patterns
+## Developer loop (Python 3.13)
 
-- Always initialize module loggers via `create_logger(__name__)`; core logger automatically respects env overrides (see `LOG_LEVEL*` parsing in `xlogging/logger_util.py`).
-- Use `CoreLogger.prefix_with()` for scoped prefixes instead of string concatenation.
-- For structured messages pass complex objects directly; `CoreLogger.log()` will route through `xdumps` so you get safe reprs without manual `json.dumps`.
-- When adding new log levels or formatting tweaks, update both `logger_constants.py` and the pytests in `xlogging/test_logger_util.py`.
+-   Install editable: pip install -e .[dev,test] (or `make build`).
+-   Lint/format: python -m ruff check --fix; python -m ruff format (CRLF enforced in `ruff.toml`).
+-   Type check: mypy src (strict per `mypy.ini`, stubPath `.cache/typings` in `pyrightconfig.json`).
+-   Tests: pytest (quiet, maxfail=5 from `pyproject.toml`; tests live under `src/**/test_*.py`).
+-   Stubs (optional): `make stubs` writes to `.cache/typings`; ship inline types + `py.typed` in `src/mstair/` and `src/mstair/common/`.
 
-## Formatting, typing, and style
+## Logging and diagnostics (xlogging + xdumps)
 
-- Ruff is the single source of truth: run `python -m ruff check --fix` and `python -m ruff format`. Respect CRLF endings enforced in `ruff.toml`.
-- Keep the `# End of file:` sentinel comment that closes every module; `tokenize_helpers.CodeRegions` relies on it when splitting sources.
-- Type checking is strict (`mypy.ini`, `pyrightconfig.json`); prefer precise typing and reuse aliases from `base/types.py`.
-- Keep source modules under `src/mstair/common/`; both `src/mstair/py.typed` and `src/mstair/common/py.typed` ship with the wheel so Pyright/Pylance pick up inline types without separate stub wheels.
+-   Create loggers via `from mstair.common.xlogging.logger_factory import create_logger`; `logger = create_logger(__name__)`.
+-   Levels via env: `LOG_LEVELS="pkg.*:DEBUG; root=INFO"`, `LOG_LEVEL_ROOT=WARNING`, `LOG_LEVEL_MYAPP_CORE=ERROR` (see `xlogging/logger_util.py` for precedence: exact > ancestor > glob > default > fallback). Tests: `xlogging/test_logger_util.py`.
+-   CoreLogger features: `logger.prefix_with("init")`, `logger.construct(Type, "id", {"k": 1})`, `logger.exception(...)` adds stack info. Don’t attach handlers to per-module loggers; root is initialized idempotently and uses `CoreFormatter`.
+-   Pass complex objects directly; CoreLogger serializes non-primitives via `xdumps()` with cycle-safe, width/depth-limited formatting. Customizers in `xdumps/customizer_registry.py` (e.g., `CUSTOMIZER.max_container_width/depth`, `wrap_derived_class_instances`, `libpath_path_as_posix`).
 
-## Developer workflows
+## Formatting and tokenization
 
-- Python 3.13 is required (`[project] requires-python`); create the venv with `make venv-reset` or activate `.venv` before running tools.
-- Typical edit loop:
-  1. Install: `pip install -e .[dev,test]` (Make target `build` handles activation).
-  2. Lint/format: `python -m ruff check --fix` then `python -m ruff format`.
-  3. Type check: `python -m mypy src`.
-  4. Tests: `pytest` (uses `-q --maxfail=5` defaults).
-- If you regenerate stubs, write them directly into `src/mstair/common/*.pyi` (or prefer inline annotations) so they ship with the package.
-- `makefile-rules.mak` forces `bash` from Git for Windows; run `make` commands from an environment where that shell is available.
+-   Use `mstair.common.format_helpers.format_source_code(text=str, target=Path)` to ruff-sort imports and format via stdin with `--stdin-filename` (preserves original line endings). Tests: `test_format_helpers.py` monkeypatch `subprocess.run`.
+-   Normalize textual snippets with `base.normalize_helpers.normalize_lines(...)` to trim and keep CRLF awareness.
+-   `tokenize_helpers.CodeRegions.regions_from_code()` splits header/docstring/body/footer; footer is the first trailing comment block starting at `# End of file:` line.
 
-## Current status
+## Conventions and helpers
 
-- Editable installs and built wheels now ship the same layout (`mstair/__init__.py`, `py.typed`, inline annotations). Pyright/Pylance consume inline types directly; only generate `.pyi` stubs if you have a concrete reason to keep them, and commit them under `src/mstair/common/` if you do.
+-   Filesystem: prefer `base.fs_helpers` (`fs_find_project_root`, `fs_safe_relpath`, `fs_load_dotenv`, redirection/context helpers) for Windows compatibility.
+-   Environment/context: use `base.config.analysis_mode_context()` to suppress side effects; `in_test_mode()/in_desktop_mode()/in_lambda()` are thread-local overrideable.
+-   Tests should avoid real subprocess/network I/O; follow patterns in `xlogging/test_logger_util.py` and `test_format_helpers.py` (monkeypatch, caplog).
 
-## Coding cues & gotchas
-
-- Reuse `normalize_helpers.normalize_lines` when manipulating source snippets; downstream tooling expects trimmed CRLF-aware output.
-- `base.config` uses thread-local flags; prefer context managers like `analysis_mode_context()` over manually toggling globals.
-- When dealing with filesystem paths, favor helpers in `base.fs_helpers` (`fs_safe_relpath`, `fs_find_project_root`) to keep Windows compatibility.
-- Git metadata helpers (`base.git_helpers.RepoMetadata`) cache expensive calls—clean up context-sensitive values via the provided context manager instead of re-querying Git directly.
-- Tests expect logging and xdumps to avoid real subprocess/network calls; follow the mocking patterns in existing tests when adding new behaviors.
+If anything above is unclear or missing for your task, tell me what you’re implementing and I’ll extend these rules with concrete pointers to the relevant modules.
