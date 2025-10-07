@@ -1,3 +1,16 @@
-# MANIFEST.in
-recursive-include src/mstair *.pyi
-include src/mstair/py.typed
+# File: MANIFEST.in
+#
+# ----------------------------------------------------------
+# Source distribution inclusion rules
+# ----------------------------------------------------------
+# This package (mstair-common) is part of a shared PEP 420 namespace ("mstair").
+# It contributes only mstair.common and not the top-level namespace.
+#
+# Only include:
+# - py.typed (PEP 561 marker)
+# - source files under src/mstair/common/
+# - no generated stubs (.pyi) from .cache/typings
+# ----------------------------------------------------------
+
+recursive-include src/mstair/common *.py
+include src/mstair/common/py.typed

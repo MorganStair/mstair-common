@@ -1,3 +1,20 @@
+# File: .gitignore
+#
+# ----------------------------------------------------------
+# Project-wide ignore rules
+# ----------------------------------------------------------
+# Generated requirements
 requirements.in
+requirements.txt
+
+# Python virtual environment
+.venv/
+
+# Cached build and stub artifacts (not versioned)
 .cache/
 **/*.egg-info/**
+
+# Pyright / stubgen working directory:
+# Stubs are generated into .cache/typings for IDE use only.
+# These are NOT committed and NOT packaged.
+.cache/typings/

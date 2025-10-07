@@ -1,54 +1,44 @@
 # File: makefile
 
+
+####################################################################################################
+# SECTION: Variable definitions and includes
+# Purpose: Bring in reusable rules and determine global paths.
+####################################################################################################
+
 include makefile-rules.mak
+
+
+####################################################################################################
+# SECTION: Default target
+# Purpose: Print an informational message when no target is provided.
+####################################################################################################
 
 .PHONY: default clean
 default:
 	@printf "\n%s:\n" "$@"
 	echo "No targets specified."
 
-####################################################################################################
-# Sanity checks
-####################################################################################################
-.PHONY: sanity
-
-sanity:
-	@printf "\n%s:\n" "$@"
-	set -e
-	which python > /dev/null
-	which pip > /dev/null
-	which node > /dev/null
-	which npm > /dev/null
-	which npx > /dev/null
-	which aws > /dev/null
-	which cdk > /dev/null
-	which git > /dev/null
-	which make > /dev/null
-	if [ ! -f .env ]; then ( \
-		printf "# .env\n"; \
-		printf "# LOG_LEVEL=\"debug, *.xlogging.*=warning, tools.lib.click*=warning\"\n" \
-		) > .env; \
-	fi
-	echo "Sanity checks passed."
 
 ####################################################################################################
-# package __init__.py files
+# SECTION: Package initialization
+# Purpose: Auto-generate __init__.py files across src/mstair for clean packaging.
+# Depends on: update_package_inits.sh
 ####################################################################################################
 
 .PHONY: package-inits
-
 package-inits:
 	@printf "\n%s:\n" "$@"
 	set -x
 	update_package_inits.sh
 
-####################################################################################################
-# Virtual Environment Creation
-####################################################################################################
 
+####################################################################################################
+# SECTION: Virtual environment management
+# Purpose: Recreate local .venv and install dev/test dependencies.
+# Outputs: .venv, requirements.txt
+####################################################################################################
 .PHONY: .venv requirements.txt
-
-# Recreate and upgrade all packages in the virtual environment
 .venv:
 	@printf "\n%s:\n" "$@"
 	set -ex
@@ -71,14 +61,16 @@ package-inits:
 	| $(SED) -E 's/#.*//' \
 	| $(GREP) -v '^[[:space:]]*$$' \
 	| $(SORT) -u > requirements.in
-
 	pip-compile --upgrade -o requirements.txt requirements.in
 	pip install -r requirements.txt
 	@printf "\n[done] virtual environment rebuilt successfully\n"
 
 
 ####################################################################################################
-# Stub Generation
+# SECTION: Stub generation
+# Purpose: Generate .pyi stubs into .cache/typings using stubgen.
+# Input: package names in .typings.txt
+# Output: mirrored stub directory under .cache/typings
 ####################################################################################################
 
 .PHONY: stubs
@@ -110,22 +102,19 @@ $(TYPINGS_TXT): | $(TYPINGS_DIR)
 	set -x
 	touch "$@"
 
+####################################################################################################
+# SECTION: Cleanup
+# Purpose: Remove cached artifacts and stub directories.
+####################################################################################################
+
 clean::
 	@printf "\n$@:\n"
 	set -x
 	rm -rf "$(TYPINGS_DIR)"
+	rm -rf "$(CACHE_DIR)"
 
 ####################################################################################################
-# Build and deployment targets
-####################################################################################################
-
-clean::
-	@printf "\n$@:\n"
-	set -x
-	rm -rf $(CACHE_DIR)
-
-####################################################################################################
-# Development tools
+# Development helper targets
 ####################################################################################################
 
 # Generate dependency graph for Python modules
