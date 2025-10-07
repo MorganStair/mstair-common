@@ -21,12 +21,12 @@ default:
 	echo "No targets specified. Try 'make .venv' or 'make stubs'."
 
 ############################################################
-# ".venv" target recreates local .venv and installs dev/test dependencies.
+# ".venv" cleans up everything and recreates the development environment
 ############################################################
-.PHONY: .venv requirements.txt
-.venv:
+.PHONY: .venv
+.venv:	clean
 	@printf "\n%s:\n" "$@"
-	set -ex
+	set -x
 	rm -rf .venv
 	python -m ensurepip --upgrade
 	python -m venv .venv
