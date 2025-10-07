@@ -17,12 +17,10 @@ include makefile-rules.mak
 
 .PHONY: default
 default:  ## List available Makefile targets
-	@set -eu -o pipefail; { \
-		printf "\n%s:\n" "$@"; \
-		printf "Valid targets:\n"; \
-		grep -hE '^[a-zA-Z0-9_.-]+:.*?## .*$$' $(MAKEFILE_LIST) | \
-		awk 'BEGIN {FS = ":.*?## "}; {printf "    \033[36m%-20s\033[0m %s\n", $$1, $$2}'; \
-	}
+	@printf "\n%s:\n" "$@"; \
+	printf "Valid targets:\n"; \
+	grep -hE '^[a-zA-Z0-9_.-]+:.*?## .*$$' $(MAKEFILE_LIST) | \
+		awk 'BEGIN {FS = ":.*?## "}; {printf "    \033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
 # ----------------------------------------------------------
 # Virtual environment and package management
@@ -31,48 +29,48 @@ default:  ## List available Makefile targets
 .PHONY: venv-reset
 venv-reset: ## Recreate .venv from scratch, reinstall dependencies
 	@printf "\n%s:\n" "$@"
-	set -ex
+	set -x
 	rm -rf .venv
 	python -m ensurepip --upgrade
 	python -m venv .venv
 	. .venv/Scripts/activate 2>/dev/null || . .venv/bin/activate
 	python -m pip install --upgrade pip setuptools wheel pip-tools
 	pip install -e .[dev,test]
-	@printf "\n[done] virgin virtual environment built successfully\n"
+	{ printf "\n[done] virgin virtual environment built successfully\n"; } 2>/dev/null
 
 venv-ensure: ## Ensure .venv exists (create if missing)
 	@printf "\n%s:\n" "$@"
-	set -ex
+	set -x
 	if [ ! -d ".venv" ]; then \
 		echo "Creating missing virtual environment (.venv)..."; \
 		python -m venv .venv; \
 	fi
-	@printf "[ok] .venv is present and usable.\n"
+	{ printf "[ok] .venv is present and usable.\n"; } 2>/dev/null
 
 build: venv-ensure ## Install current package in editable mode into .venv
 	@printf "\n%s:\n" "$@"
-	set -ex
+	set -x
 	. .venv/Scripts/activate 2>/dev/null || . .venv/bin/activate
 	pip install -e .[dev,test]
-	@printf "\n[done] project installed in editable mode.\n"
+	{ printf "\n[done] project installed in editable mode.\n"; } 2>/dev/null
 
 .PHONY: sync-stubs
 sync-stubs: # (unused) # Copy generated stubs into src/mstair/common for packaging
 	@printf "\n%s:\n" "$@"
-	set -ex
+	set -x
 	if [ -d ".cache/typings/mstair/common" ]; then \
 	    rsync -av --include="*.pyi" --exclude="*" .cache/typings/mstair/common/ src/mstair/common/; \
-	    echo "[done] stubs copied into src/mstair/common/"; \
+	    { printf "\n[done] stubs copied into src/mstair/common/\n"; } 2>/dev/null; \
 	else \
-	    echo "No stubs found in .cache/typings/mstair/common (nothing to sync)."; \
+	    { printf "No stubs found in .cache/typings/mstair/common (nothing to sync)."; } 2>/dev/null; \
 	fi
 
 package: venv-ensure stubs sync-stubs ## Build distribution artifacts (wheel and sdist)
 	@printf "\n%s:\n" "$@"
-	set -ex
+	set -x
 	. .venv/Scripts/activate 2>/dev/null || . .venv/bin/activate
 	python -m build
-	@printf "\n[done] distribution artifacts written to ./dist\n"
+	{ printf "\n[done] distribution artifacts written to ./dist\n"; } 2>/dev/null
 
 setup: venv-ensure build stubs ## Full developer environment setup
 	@printf "\n[done] development environment initialized.\n"
@@ -111,3 +109,13 @@ clean:: ## Remove generated stubs and cache directory
 	rm -rf "$(TYPINGS_DIR)"
 	rm -rf "$(MYPY_CACHE_DIR)"
 	rm -rf "$(CACHE_DIR)"
+
+.PHONY: virgin
+virgin:: clean
+	@printf "\n$@:\n"
+	set -x
+	rm -rf .venv
+	rm -rf build
+	rm -rf dist
+	find . -name "*.egg-info" -exec rm -rvf {} +
+	{ printf "\n[done] project cleaned to virgin state.\n"; } 2>/dev/null

@@ -92,9 +92,9 @@
         "files.autoGuessEncoding": false,
         "files.eol": "auto",
         "files.exclude": {
-            "**/__pycache__": true,
-            "**/.DS_Store": true,
-            "**/Thumbs.db": true
+            // "**/__pycache__": true,
+            // "**/.DS_Store": true,
+            // "**/Thumbs.db": true
         },
         "files.insertFinalNewline": true,
         "files.trimTrailingWhitespace": true,
