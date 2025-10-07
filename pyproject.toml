@@ -1,4 +1,4 @@
-# File: pyproject.toml
+# File: D:/mstair-common/pyproject.toml
 #
 # ----------------------------------------------------------
 # Project layout overview (for LLMs and maintainers)
@@ -55,10 +55,10 @@ build-backend = "setuptools.build_meta"
 name = "mstair-common"
 version = "0.1.0"
 description = "Common libraries for mstair projects"
+authors = [{ name = "Morgan Stair" }]
 readme = "README.md"
 requires-python = ">=3.13"
 license = { file = "LICENSE" }
-authors = [{ name = "Morgan Stair" }]
 
 # Runtime dependencies used by mstair-common and its submodules
 dependencies = [
@@ -113,3 +113,24 @@ include = ["mstair.common*"]
 # - Stubs in .cache/typings are excluded by default unless explicitly copied into src/mstair/.
 # ----------------------------------------------------------
 "mstair.common" = ["py.typed"]
+
+
+[tool.pytest.ini_options]
+# N:reset f:failed E:error s:skipped x:failed X:passed p:passed
+addopts = "-rNfExXp -q --maxfail=5"
+cache_dir = ".pytest_cache"
+# Use classic output style for better readability
+console_output_style = "classic"
+markers = [
+    "e2e: end-to-end tests simulating real user workflows",
+    "functional: verifies individual features or behaviors",
+    "integration: tests that verify interactions between components",
+    "manual: requires human intervention or cannot be automated",
+    "regression: ensures previously fixed bugs don't reappear",
+    "slow: long-running or resource-intensive tests",
+    "unit: fast, isolated tests with no external dependencies",
+]
+minversion = "8.3"
+norecursedirs = []
+pythonpath = []
+testpaths = ["src/*/", "src/*/*/"]

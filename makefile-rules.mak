@@ -1,47 +1,53 @@
 # File: makefile-rules.mak
 #
-$(info MAKE=$(MAKE))
 $(info CURDIR=$(CURDIR))
+$(info MAKE=$(MAKE))
 $(info MAKEFILE_LIST=$(MAKEFILE_LIST))
 
 .ONESHELL:
 SHELL		:= $(abspath C:/Program Files/Git/usr/bin/bash.exe)
 .SHELLFLAGS	:= -eu -o pipefail -c
 
-##############################################################
+# ----------------------------------------------------------
 # Project directories and environment
-##############################################################
+# ----------------------------------------------------------
 
-PROJECT_DIR := $(abspath $(dir $(lastword $(MAKEFILE_LIST))))
-$(info PROJECT_DIR=$(PROJECT_DIR))
+ifndef PROJECT_DIR
+export PROJECT_DIR := $(abspath $(dir $(firstword $(MAKEFILE_LIST))))
+$(warning PROJECT_DIR not set, assuming '$(PROJECT_DIR)')
+endif
+
 ifndef CACHE_DIR
-	CACHE_DIR	:= $(PROJECT_DIR)/.cache
+export CACHE_DIR := $(PROJECT_DIR)/.cache
+$(warning CACHE_DIR not set, assuming '$(CACHE_DIR)')
 endif
-CACHE_DIR		:= $(subst \,/,$(CACHE_DIR))
-$(info CACHE_DIR=$(CACHE_DIR))
 
-npm_config_cache	?= $(CACHE_DIR)/.npm-cache
+ifndef npm_config_cache
+export npm_config_cache := $(CACHE_DIR)/.npm-cache
+endif
+
 ifndef VIRTUAL_ENV
-	VIRTUAL_ENV := $(subst \,/,$(PROJECT_DIR)/.venv)
-	$(warning VIRTUAL_ENV not set, assuming '$(VIRTUAL_ENV)')
+export VIRTUAL_ENV := $(subst \,/,$(PROJECT_DIR)/.venv)
+$(warning VIRTUAL_ENV not set, assuming '$(VIRTUAL_ENV)')
 endif
-ACTIVATE	:= $(VIRTUAL_ENV)/Scripts/activate
-DEACTIVATE	:= $(VIRTUAL_ENV)/Scripts/deactivate
-PYTHONPATH	:= $(PROJECT_DIR)
 
-export
+ifndef PYTHONPATH
+export PYTHONPATH := $(PROJECT_DIR)
+$(warning PYTHONPATH not set, assuming '$(PYTHONPATH)')
+endif
 
-###############################################################
+# ----------------------------------------------------------
 # Other tools and settings
-###############################################################
+# ----------------------------------------------------------
 
-COPY		?= cp -ar
+CAT 		?= /usr/bin/cat
+CP			?= /usr/bin/cp
+GREP		?= /usr/bin/grep
+SED			?= /usr/bin/sed
+SORT		?= /usr/bin/sort
+TR			?= /usr/bin/tr
 UNZIP		?= 7z.exe x -y -o
-ZIP		?= 7z.exe a -tzip -mx5 -mm=Deflate -mcu -r
-TR		?= $(shell which tr)
-SED		?= $(shell which sed)
-GREP		?= $(shell which grep)
-SORT		?= $(shell which sort)
+ZIP			?= 7z.exe a -tzip -mx5 -mm=Deflate -mcu -r
 
 define STUBGEN_RUN
 	stubgen --package $(1) --output $(2) --quiet 1>/dev/null 2>&1 || ( \
@@ -49,12 +55,9 @@ define STUBGEN_RUN
 	stubgen --package $(1) --output $(2) --no-import --ignore-errors )
 endef
 
+# ----------------------------------------------------------
+# Other settings
+# ----------------------------------------------------------
+
 empty :=
 tab :=	$(empty)
-
-# .DEFAULT_GOAL	:= printenv
-# printenv:
-# 	@printf "\n$@:\n"
-# 	set -x
-# 	printenv | sort | grep -oP '^(BASH|PYT|VI|VE|CURDIR|SHELL|PROJ|CACHE).*=.*$$' || true
-# 	which tr
