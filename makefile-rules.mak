@@ -7,6 +7,8 @@ $(info MAKEFILE_LIST=$(MAKEFILE_LIST))
 .ONESHELL:
 SHELL		:= $(abspath C:/Program Files/Git/usr/bin/bash.exe)
 .SHELLFLAGS	:= -eu -o pipefail -c
+export PATH	:= /c/Program\ Files/Git/cmd:$(PATH)
+
 
 # ----------------------------------------------------------
 # Project directories and environment
@@ -55,9 +57,9 @@ UNZIP		?= 7z.exe x -y -o
 ZIP			?= 7z.exe a -tzip -mx5 -mm=Deflate -mcu -r
 
 define STUBGEN_RUN
-	stubgen --package $(1) --output $(2) --quiet 1>/dev/null 2>&1 || ( \
+	stubgen --package $(1) --output "$(2)" --quiet 1>/dev/null 2>&1 || ( \
 	printf "\n" ; \
-	stubgen --package $(1) --output $(2) --no-import --ignore-errors )
+	stubgen --package $(1) --output "$(2)" --no-import --ignore-errors )
 endef
 
 # ----------------------------------------------------------

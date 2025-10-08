@@ -1,7 +1,4 @@
 # File: makefile.mak
-#
-# ----------------------------------------------------------
-# Developer automation for mstair-common
 # ----------------------------------------------------------
 # Highlights:
 # - Uses .cache/typings for stubgen output (not packaged)
@@ -54,17 +51,6 @@ build: venv-ensure ## Install current package in editable mode into .venv
 	pip install -e .[dev,test]
 	{ printf "\n[done] project installed in editable mode.\n"; } 2>/dev/null
 
-.PHONY: sync-stubs
-sync-stubs: # (unused) # Copy generated stubs into src/mstair/common for packaging
-	@printf "\n%s:\n" "$@"
-	set -x
-	if [ -d ".cache/typings/mstair/common" ]; then \
-	    rsync -av --include="*.pyi" --exclude="*" .cache/typings/mstair/common/ src/mstair/common/; \
-	    { printf "\n[done] stubs copied into src/mstair/common/\n"; } 2>/dev/null; \
-	else \
-	    { printf "No stubs found in .cache/typings/mstair/common (nothing to sync)."; } 2>/dev/null; \
-	fi
-
 package: venv-ensure ## Build distribution artifacts (wheel and sdist)
 	@printf "\n%s:\n" "$@"
 	set -x
@@ -74,6 +60,17 @@ package: venv-ensure ## Build distribution artifacts (wheel and sdist)
 
 setup: venv-ensure build stubs ## Full developer environment setup
 	@printf "\n[done] development environment initialized.\n"
+
+# ----------------------------------------------------------
+# Diagnostics
+# ----------------------------------------------------------
+
+.PHONY: stubs-missing
+stubs-missing: venv-ensure ## List third-party imports missing type stubs (inline or generated)
+	@printf "\n$@:\n"
+	set -x
+	. .venv/Scripts/activate 2>/dev/null || . .venv/bin/activate
+	python tools/scan_missing_stubs.py
 
 # ----------------------------------------------------------
 # Type stubs generation
@@ -93,6 +90,7 @@ $(TYPINGS_DIR)/%/__init__.pyi:
 	@printf "\n$@:\n"
 	set -x
 	mkdir -p "$(dir $@)"
+	. .venv/Scripts/activate 2>/dev/null || . .venv/bin/activate
 	$(call STUBGEN_RUN,$*,$(TYPINGS_DIR))
 	# Append package name to the list for repeatability
 	[ -s "$(TYPINGS_TXT)" ] || printf "" >| "$(TYPINGS_TXT)"
