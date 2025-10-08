@@ -101,7 +101,6 @@
         ],
         "python.analysis.importFormat": "absolute",
         "python.analysis.indexing": true,
-        "python.analysis.logLevel": "Information",
         "python.analysis.persistAllIndices": true,
         "python.analysis.regenerateStdLibIndices": false,
         "python.analysis.stubPath": "${workspaceFolder}/.cache/typings",
@@ -115,7 +114,6 @@
             "${workspaceFolder}"
         ],
         "python.createEnvironment.contentButton": "hide",
-        "python.defaultInterpreterPath": "${workspaceFolder}/.venv/Scripts/python.exe",
         "python.envFile": "${workspaceFolder}/.env",
         "search.exclude": {
             "**/__pycache__": true,
