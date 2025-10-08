@@ -5,29 +5,10 @@
         }
     ],
     "settings": {
-        "[javascript]": {
-            "editor.defaultFormatter": "esbenp.prettier-vscode",
-            "editor.insertSpaces": true,
-            "editor.tabSize": 4
-        },
-        "[javascriptreact]": {
-            "editor.defaultFormatter": "esbenp.prettier-vscode",
-            "editor.insertSpaces": true,
-            "editor.tabSize": 4
-        },
-        "[json]": {
-            "editor.defaultFormatter": "esbenp.prettier-vscode"
-        },
-        "[jsonc]": {
-            "editor.defaultFormatter": "vscode.json-language-features",
-            "editor.insertSpaces": true,
-            "editor.tabSize": 4
-        },
         "[makefile]": {
             "editor.insertSpaces": false,
             "editor.renderWhitespace": "all",
-            "editor.tabSize": 8,
-            "files.trimTrailingWhitespace": false
+            "editor.tabSize": 8
         },
         "[markdown]": {
             "cSpell.advanced.feature.useReferenceProviderRemove": "/^#+\\s/",
@@ -46,22 +27,13 @@
                 "source.fixAll.ruff": "explicit",
                 "source.organizeImports.ruff": "always"
             },
-            "editor.defaultFormatter": "charliermarsh.ruff",
-            "editor.insertSpaces": true,
-            "editor.tabSize": 4,
-            "rewrap.autoWrap.enabled": false
+            "editor.defaultFormatter": "charliermarsh.ruff"
         },
         "[toml]": {
             "editor.defaultFormatter": "tamasfe.even-better-toml"
         },
         "[typescript]": {
-            "editor.defaultFormatter": "vscode.typescript-language-features",
-            "editor.insertSpaces": true,
-            "editor.tabSize": 4
-        },
-        "[typescriptreact]": {
-            "editor.insertSpaces": true,
-            "editor.tabSize": 4
+            "editor.defaultFormatter": "vscode.typescript-language-features"
         },
         "aws.resources.enabledResources": [
             "AWS::ApiGateway::DomainName",
@@ -72,32 +44,6 @@
         "aws.suppressPrompts": {
             "fileViewerEdit": true
         },
-        "editor.formatOnSave": true,
-        "editor.insertSpaces": true,
-        "editor.tabSize": 4,
-        "evenBetterToml.formatter.alignComments": true,
-        "evenBetterToml.formatter.allowedBlankLines": 2,
-        "evenBetterToml.formatter.arrayAutoCollapse": true,
-        "evenBetterToml.formatter.arrayTrailingComma": true,
-        "evenBetterToml.formatter.crlf": true,
-        "evenBetterToml.formatter.indentEntries": true,
-        "evenBetterToml.formatter.indentString": "    ",
-        "evenBetterToml.formatter.reorderArrays": true,
-        "evenBetterToml.formatter.reorderInlineTables": true,
-        "evenBetterToml.schema.enabled": true,
-        "files.associations": {
-            "*.pl": "perl",
-            "*.pm": "perl"
-        },
-        "files.autoGuessEncoding": false,
-        "files.eol": "auto",
-        "files.exclude": {
-            // "**/__pycache__": true,
-            // "**/.DS_Store": true,
-            // "**/Thumbs.db": true
-        },
-        "files.insertFinalNewline": true,
-        "files.trimTrailingWhitespace": true,
         "files.watcherExclude": {
             "**/.assets": true,
             "**/.cache": true,
@@ -109,7 +55,7 @@
             "**/.ropeproject": true,
             "**/.ruff_cache": true,
             "**/.svn": true,
-            "**/.venv*": true,
+            "**/.venv/lib/site-packages": true,
             "**/*.out": true,
             "**/*.tsbuildinfo": true,
             "**/bower_components": true,
@@ -123,23 +69,9 @@
             "**/site-packages": true,
             "**/Thumbs.db": true
         },
-        "git.autoRepositoryDetection": false,
-        "git.repositoryScanIgnoredFolders": [
-            ".."
-        ],
         "javascript.validate.enable": true,
-        "markdown.occurrencesHighlight.enabled": true,
-        "markdown.preview.breaks": true,
         "mbake.autoInit": true,
         "mbake.executablePath": "${workspaceFolder}/.venv/Scripts/mbake.exe",
-        "prettier.singleQuote": true,
-        "prettier.tabWidth": 4,
-        "python.analysis.aiCodeActions": {
-            "generateDocstring": false,
-            "generateMethod": false,
-            "optimizeImports": false,
-            "sortImports": false
-        },
         "python.analysis.autoFormatStrings": true,
         "python.analysis.autoImportCompletions": true,
         "python.analysis.completeFunctionParens": true,
@@ -185,33 +117,6 @@
         "python.createEnvironment.contentButton": "hide",
         "python.defaultInterpreterPath": "${workspaceFolder}/.venv/Scripts/python.exe",
         "python.envFile": "${workspaceFolder}/.env",
-        "python.experiments.enabled": false,
-        "python.experiments.optInto": [],
-        "python.experiments.optOutFrom": [
-            "All"
-        ],
-        "python.languageServer": "Pylance",
-        "python.REPL.enableREPLSmartSend": false,
-        "python.terminal.activateEnvInCurrentTerminal": true,
-        "python.terminal.activateEnvironment": true,
-        "python.testing.autoTestDiscoverOnSaveEnabled": false,
-        "python.testing.cwd": "${workspaceFolder}/.cache",
-        "python.testing.pytestEnabled": true,
-        "python.testing.unittestEnabled": false,
-        "rewrap.autoWrap.enabled": false,
-        "rewrap.doubleSentenceSpacing": false,
-        "rewrap.reformat": true,
-        "ruff.codeAction.fixViolation": {
-            "enable": true
-        },
-        "ruff.enable": true,
-        "ruff.fixAll": true,
-        "ruff.format.preview": true,
-        "ruff.lint.enable": true,
-        "ruff.lint.preview": true,
-        "ruff.path": [
-            "${workspaceFolder}/.venv/Scripts/ruff.exe"
-        ],
         "search.exclude": {
             "**/__pycache__": true,
             "**/.*": true,
@@ -237,12 +142,12 @@
             "MYPY_CACHE_DIR": "${workspaceFolder}/.cache/.mypy_cache",
             "MYPYPATH": "${workspaceFolder}/.cache/typings;${workspaceFolder}",
             "NODE_ENV": "development",
-            "PATH": "${workspaceFolder}/tools;c:/dev/tools/bin;${env:PATH}",
+            "PATH": "${workspaceFolder}/.venv/Scripts;${workspaceFolder}/tools;c:/dev/tools/bin;${env:PATH}",
             "PROMPT": "\u001b[1;35m$P$G\u001b[0m ",
             "PYDEVD_WARN_SLOW_RESOLVE_TIMEOUT": "5000",
             "PYLINT_HOME": "${workspaceFolder}/.cache/pylint",
             "PYLINTRC": "${workspaceFolder}/.pylintrc",
-            "PYTHONPATH": "${workspaceFolder};${workspaceFolder}/.venv/Lib/site-packages;${workspaceFolder}/.cache/typings;${env:PYTHONPATH}",
+            "PYTHONPATH": "${workspaceFolder};${workspaceFolder}/.cache/typings;${env:PYTHONPATH}",
             "PYTHONPYCACHEPREFIX": "${workspaceFolder}/.cache/__pycache__",
             "RUFF_CACHE_DIR": "${workspaceFolder}/.cache/ruff",
             "WITH_4BIT_QUANTIZATION": "1"
@@ -253,6 +158,6 @@
             "titleBar.inactiveBackground": "#203070",
             "titleBar.inactiveForeground": "#777777"
         },
-        "workbench.colorTheme": "Abyss"
+        "workbench.colorTheme": "Default Dark Modern"
     }
 }
