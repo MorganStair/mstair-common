@@ -39,4 +39,4 @@ def os_environ_truthy(var_name: str, default: bool = False) -> bool:
         return default  # Return default for unrecognized values
 
 
-# End of file: python/plib_/base/os_helpers.py
+# End of file: src/mstair/common/base/os_helpers.py

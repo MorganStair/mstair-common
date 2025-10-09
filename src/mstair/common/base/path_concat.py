@@ -12,4 +12,4 @@ def path_concat(path: Path | str, *strings: str) -> Path:
     return path
 
 
-# End of file: python/plib_/base/path_concat.py
+# End of file: src/mstair/common/base/path_concat.py

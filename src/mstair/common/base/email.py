@@ -83,4 +83,4 @@ def name_addr_from_email(
     )
 
 
-# End of file: python/plib_/base/email.py
+# End of file: src/mstair/common/base/email.py

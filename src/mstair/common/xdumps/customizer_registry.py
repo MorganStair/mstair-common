@@ -468,4 +468,4 @@ class XRawString(str):
         return f"{self.__class__.__name__}({super().__repr__()})"
 
 
-# End of file: python/plib_/xdumps/customizer_registry.py
+# End of file: src/mstair/common/xdumps/customizer_registry.py

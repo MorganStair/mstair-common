@@ -377,4 +377,4 @@ def text_truncate(
     return result
 
 
-# End of file: python/plib_/base/string_helpers.py
+# End of file: src/mstair/common/base/string_helpers.py

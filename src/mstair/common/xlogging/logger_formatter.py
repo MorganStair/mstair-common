@@ -416,4 +416,4 @@ def format_logging_error(record: logging.LogRecord, exc: Exception, debug_config
     return "\n>> " + "\n>> ".join(message_lines) + "\n\n"
 
 
-# End of file: python/plib_/xlogging/logger_formatter.py
+# End of file: src/mstair/common/xlogging/logger_formatter.py

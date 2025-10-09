@@ -392,4 +392,4 @@ def _attr_names_from_class(
     return tuple(_deduped_attr_names)
 
 
-# End of file: python/plib_/base/git_helpers.py
+# End of file: src/mstair/common/base/git_helpers.py

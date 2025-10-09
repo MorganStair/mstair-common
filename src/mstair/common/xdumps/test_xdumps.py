@@ -449,4 +449,4 @@ def test_xdumps_rshift_applies_global_padding(kwargs_for_compact: dict[str, Any]
     assert stripped == unshifted
 
 
-# End of file: python/plib_/xdumps/test_xdumps.py
+# End of file: src/mstair/common/xdumps/test_xdumps.py

@@ -117,4 +117,4 @@ def test_stdin_filename_is_absolute(monkeypatch: pytest.MonkeyPatch, tmp_path: P
         assert Path(filename) == absolute_path
 
 
-# End of file: python/tests/test_formatters.py
+# End of file: src/mstair/common/test_format_helpers.py

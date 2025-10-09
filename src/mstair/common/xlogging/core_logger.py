@@ -684,4 +684,4 @@ def _report_if_bad_stack_info(kwargs: dict[str, Any]) -> None:
         logging.getLogger(__name__).warning(f"Invalid stack_info type: {type(val).__name__}")
 
 
-# End of file: python/plib_/xlogging/core_logger.py
+# End of file: src/mstair/common/xlogging/core_logger.py

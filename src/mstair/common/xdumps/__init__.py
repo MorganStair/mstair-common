@@ -5,4 +5,4 @@ from . import customizer_registry, model, test_xdumps, token_stream, view, xdump
 
 __all__ = ["customizer_registry", "model", "test_xdumps", "token_stream", "view", "xdumps_api"]
 
-# End of file: python/plib_/xdumps/__init__.py
+# End of file: src/mstair/common/xdumps/__init__.py

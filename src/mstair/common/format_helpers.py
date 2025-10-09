@@ -52,7 +52,7 @@ def format_source_code(
         if _ruff_not_available(proc):
             _LOG.warning("Ruff not available\n  target: %s", target)
             return original
-        elif proc.returncode in (0, 1) and proc.stdout:
+        elif proc.returncode in {0, 1} and proc.stdout:
             result = proc.stdout
             _LOG.debug(f"{text_checksum(result)=}")
         else:
@@ -144,4 +144,4 @@ def _ruff_not_available(proc: subprocess.CompletedProcess[str]) -> bool:
     )
 
 
-# End of file: python/plib_/format_helpers.py
+# End of file: src/mstair/common/format_helpers.py

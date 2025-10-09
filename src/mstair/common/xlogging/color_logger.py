@@ -112,4 +112,4 @@ class ColorLogger(CoreLogger):
             return K_HMN
 
 
-# End of file: python/plib_/xlogging/color_logger.py
+# End of file: src/mstair/common/xlogging/color_logger.py

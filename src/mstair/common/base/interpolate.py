@@ -149,4 +149,4 @@ def _validate_braces_are_well_formed(text: str) -> None:
         i += 1
 
 
-# End of file: python/plib_/base/interpolate.py
+# End of file: src/mstair/common/base/interpolate.py

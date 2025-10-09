@@ -22,4 +22,4 @@ def trailing_modules(*, module_name: str = "", limit: int = 0, stacklevel: int =
     return result
 
 
-# End of file: python/plib_/base/trailing_modules.py
+# End of file: src/mstair/common/base/trailing_modules.py
