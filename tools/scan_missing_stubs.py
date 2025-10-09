@@ -19,15 +19,18 @@ import ast
 import importlib.util
 import os
 import sys
-from collections.abc import Iterable, Iterator, Mapping
-from functools import cache, reduce
+from collections.abc import Iterable, Iterator
 from pathlib import Path
 from tomllib import loads
-from typing import Any, TypeVar
+
+from mstair.common.base.fs_helpers import fs_find_pyproject_toml, is_stdlib_module_name
+from mstair.common.base.mapping_helpers import mapping_attr_at_keypath
+from mstair.common.xlogging.logger_factory import create_logger
 
 
-T = TypeVar("T")
-SRC_KEYPATH = "tool.setuptools.packages.find.src"
+_LOG = create_logger(__name__)
+
+WHERE_KEYPATH = "tool.setuptools.packages.find.where"
 INCLUDE_KEYPATH = "tool.setuptools.packages.find.include"
 
 
@@ -41,17 +44,27 @@ def main(_argv: list[str]) -> int:
     :param argv: Command-line arguments (unused).
     :return: Exit code (0 for success).
     """
-    project_dir: Path = _find_pyproject_toml()
-    cache_dir = Path(os.getenv("CACHE_DIR", project_dir / ".cache"))
-    typings_dir: Path = cache_dir.joinpath("typings").resolve()
-    files: Iterator[Path] = _find_pyfiles(pyproject=project_dir / "pyproject.toml")
+    pyproject: Path | None = fs_find_pyproject_toml()
+    if pyproject is None or not pyproject.is_file():
+        print("Error: Could not find pyproject.toml", file=sys.stderr)
+        return 1
+
+    toml = loads(pyproject.read_text(encoding="utf-8"))
+    where: list[str] = mapping_attr_at_keypath(toml, WHERE_KEYPATH, pyproject.as_posix(), list)
+    include: list[str] = mapping_attr_at_keypath(toml, INCLUDE_KEYPATH, pyproject.as_posix(), list)
+
+    files: Iterator[Path] = _find_pyfiles(
+        root=pyproject.parent,
+        where=where,
+        include=include,
+    )
     imports: Iterator[str] = _find_top_level_imports_in_pyfiles(files)
     candidates = {
         n
         for n in imports
-        if n and not _is_stdlib_module(n) and n not in {"mstair", "pytest", "typing", "pathlib"}
+        if n and not is_stdlib_module_name(n) and n not in {"mstair", "pytest", "typing", "pathlib"}
     }
-
+    typings_dir: Path = Path(os.getenv("CACHE_DIR", pyproject.parent / ".cache")) / "typings"
     for module_name in sorted(candidates):
         if _has_typings_stub(package_name=module_name, typings_dir=typings_dir):
             continue
@@ -63,66 +76,22 @@ def main(_argv: list[str]) -> int:
     return 0
 
 
-def _is_stdlib_module(name: str) -> bool:
-    """
-    Check whether a module belongs to the standard library.
-
-    :param name: Module name to check.
-    :return: True if the module is part of the standard library, False otherwise.
-    """
-    std = getattr(sys, "stdlib_module_names", None)
-    return bool(std and name in std)
-
-
-def _find_pyfiles(*, pyproject: Path) -> Iterator[Path]:
+def _find_pyfiles(root: Path, where: list[str], include: list[str]) -> Iterator[Path]:
     """
     Return Python source files based on [tool.setuptools.packages.find] in pyproject.toml.
     """
-    toml: dict[str, Any] = _load_pyproject_toml(pyproject)
-    src: str = _get_map_attr_at_keypath(toml, SRC_KEYPATH, pyproject.as_posix(), str)
-    include: list[str] = _get_map_attr_at_keypath(toml, INCLUDE_KEYPATH, pyproject.as_posix(), list)
-    root: Path = pyproject.parent
 
     # Modern Pythonic traversal (3.12+ Path.walk)
     seen: set[Path] = set()
-    for inc in include:
-        inc_path: Path = root / src / inc
-        if inc_path.is_dir():
-            for dirpath, _dirs, files in inc_path.walk():
-                python_files = {dirpath / f for f in files if f.endswith(".py")} - seen
-                if python_files:
-                    yield from python_files
-                    seen |= python_files
-
-
-@cache
-def _load_pyproject_toml(pyproject: Path | None = None) -> dict[str, Any]:
-    """
-    Load and parse pyproject.toml file.
-
-    :param pyproject: Path to pyproject.toml (if None, will search for it).
-    :return: Parsed pyproject.toml as a dictionary.
-    """
-    pyproject = pyproject or _find_pyproject_toml()
-    return loads(pyproject.read_text(encoding="utf-8"))
-
-
-@cache
-def _find_pyproject_toml(start_dir: Path | None = None, name: str = "pyproject.toml") -> Path:
-    """
-    Return nearest pyproject.toml.
-
-    :param start_dir: Directory to start searching from (defaults to cwd).
-    :param name: Filename to search for (defaults to 'pyproject.toml').
-    :return: Path to the found pyproject.toml file.
-    :raises: FileNotFoundError if no pyproject.toml is found.
-    """
-    start_dir = start_dir or Path.cwd()
-    for dir in (start_dir, *start_dir.parents):
-        candidate = dir / name
-        if candidate.is_file():
-            return candidate.resolve()
-    raise FileNotFoundError(f"Could not find {name} in any parent directory of {start_dir}")
+    for topdir in where:
+        for inc in include:
+            inc_path: Path = root / topdir / inc
+            if inc_path.is_dir():
+                for dirpath, _dirs, files in inc_path.walk():
+                    python_files = {dirpath / f for f in files if f.endswith(".py")} - seen
+                    if python_files:
+                        yield from python_files
+                        seen |= python_files
 
 
 def _find_top_level_imports_in_pyfiles(files: Iterable[Path]) -> Iterator[str]:
@@ -161,46 +130,50 @@ def _has_typings_stub(*, package_name: str, typings_dir: Path) -> bool:
 
 def _has_pytyped_or_pyi(*, module_name: str) -> bool:
     """
-    Return True if package provides inline typing (py.typed or .pyi origin).
+    Return True if the given module has inline or external typing information.
+
+    Recognizes:
+    - Inline typing via a `py.typed` marker (PEP 561)
+    - Stub-only packages named `types-<module>` (from typeshed)
+    - Modules implemented as `.pyi` files
     """
+    # 1. Inline py.typed marker
     try:
         spec = importlib.util.find_spec(module_name)
     except (ImportError, ModuleNotFoundError):
-        return False
-    if spec is None:
-        return False
+        spec = None
+        _LOG.debug(f"Module not found: {module_name}")
+    _LOG.debug(f"Module found: {module_name}")
 
-    # Package with py.typed marker
-    if spec.submodule_search_locations:
-        return any(Path(p, "py.typed").is_file() for p in spec.submodule_search_locations or [])
-    # Module implemented as .pyi
-    return isinstance(spec.origin, str) and spec.origin.endswith(".pyi")
+    if spec and spec.submodule_search_locations:
+        if any(Path(p, "py.typed").is_file() for p in spec.submodule_search_locations or []):
+            _LOG.debug(f"Found py.typed for {module_name} in {spec.submodule_search_locations}")
+            return True
+        _LOG.debug(f"No py.typed found for {module_name} in {spec.submodule_search_locations}")
 
-
-def _get_map_attr_at_keypath[T](
-    map: Mapping[str, Any], keypath: str, origin: str, expected_type: type[T]
-) -> T:
-    """
-    Retrieve a nested value from a mapping using a dot-separated keypath.
-
-    :param map: Root mapping (e.g., a parsed TOML or JSON dictionary).
-    :param keypath: Dot-separated lookup path, e.g. "tool.setuptools.packages.find.include".
-    :param origin: Identifier for the mapping (used in diagnostic messages).
-    :param expected_type: The expected runtime type of the final value.
-    :return: The resolved value of type ``T``.
-    :raises: KeyError if any key in the path is missing.
-    :raises: TypeError if the resolved value is not of ``expected_type``.
-    """
+    # 2. Stub-only package (types-<name>)
     try:
-        result = reduce(lambda acc, key: acc[key], keypath.split("."), map)
-    except KeyError as e:
-        raise KeyError(f"Missing key '{e.args[0]}' in '{origin}' while resolving '{keypath}'") from e
-    if not isinstance(result, expected_type):
-        raise TypeError(
-            f"Expected {expected_type.__name__} at '{keypath}' in '{origin}', "
-            f"got {type(result).__name__}"
-        )
-    return result
+        stub_spec = importlib.util.find_spec(f"types-{module_name}")
+        if stub_spec is not None:
+            _LOG.debug(f"Found stub-only package: types-{module_name}")
+            return True
+    except (ImportError, ModuleNotFoundError):
+        _LOG.debug(f"No stub-only package found: types-{module_name}")
+        pass
+
+    # 3. Direct .pyi origin
+    if (
+        spec is not None
+        and spec.origin is not None
+        and isinstance(spec.origin, str)
+        and spec.origin.endswith(".pyi")
+    ):
+        _LOG.debug(f"Module {module_name} is a .pyi file: {spec.origin}")
+        return True
+
+    # Fallback: no typing info found
+    _LOG.debug(f"No typing info found for module: {module_name}")
+    return False
 
 
 if __name__ == "__main__":

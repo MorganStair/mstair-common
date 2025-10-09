@@ -8,16 +8,16 @@ resolve log level configurations from environment variables, and handle logger n
 It is designed to work with the CoreLogger class defined in mstair.common.xlogging.logger.
 """
 
+import contextlib
 import inspect
 import logging
 import sys
+from collections.abc import Callable
 from pathlib import Path
 
 from mstair.common.base import config as cfg
 from mstair.common.base.caller_module_name_and_level import caller_module_name_and_level
-from mstair.common.xlogging.core_logger import (
-    CoreLogger,
-)
+from mstair.common.xlogging.core_logger import CoreLogger
 from mstair.common.xlogging.logger_util import LogLevelConfig
 
 
@@ -33,9 +33,26 @@ def create_logger(
     stacklevel: int = 1,
 ) -> CoreLogger:
     """
-    Return a CoreLogger with the specified name.
+    Return a CoreLogger with a consistent, context-aware name.
+
+    Handles:
+    - Normal imports (uses given name)
+    - Direct script execution (__main__)
+    - Embedded or frozen interpreters (no argv)
+    - Anonymous loggers (uses caller-derived name)
     """
-    logger_name = name or get_caller_logger_name(stacklevel=stacklevel + 1)
+    logger_name: str = name or ""
+
+    if logger_name == "__main__":
+        arg0 = Path(sys.argv[0]) if sys.argv and sys.argv[0] else None
+        if arg0 and arg0.exists():
+            logger_name = arg0.stem
+        else:  # Invoked via PythonC API or embedded interpreter
+            exe = Path(sys.executable or "")
+            logger_name = exe.stem if exe.exists() else "embedded_main"
+
+    if not logger_name:
+        logger_name = get_caller_logger_name(stacklevel=stacklevel + 1)
 
     existing = logging.Logger.manager.loggerDict.get(logger_name)
 
@@ -51,15 +68,16 @@ def create_logger(
         logger.setLevel(level)
 
     if _LOG:
-        fn_name: str = (
-            this_frame.f_code.co_name if (this_frame := inspect.currentframe()) else "<unknown>"
-        )
-        fn_file = Path(__file__).relative_to(Path.cwd()).as_posix()
-        debug_or_warning = _LOG.debug if not existing else _LOG.warning
+        current_frame = inspect.currentframe()
+        current_frame_co_name: str = current_frame.f_code.co_name if current_frame else "<unknown>"
+        current_file: Path = Path(__file__)
+        with contextlib.suppress(ValueError):
+            current_file = current_file.relative_to(Path.cwd())
+        debug_or_warning: Callable[..., None] = _LOG.debug if not existing else _LOG.warning
         debug_or_warning(
             "\n  %s: %s() = %s%s",
-            fn_file,
-            fn_name,
+            current_file.as_posix(),
+            current_frame_co_name,
             str(logger),
             " (replacement)" if existing else "",
             stacklevel=stacklevel + 1,

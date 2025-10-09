@@ -1,4 +1,4 @@
-from setuptools import setup
+from setuptools import setup  # pyright: ignore[reportMissingModuleSource]
 
 
 if __name__ == "__main__":

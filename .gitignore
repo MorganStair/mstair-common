@@ -1,24 +1,85 @@
+# ------------------------------------------------------------
 # File: .gitignore
-#
-# ----------------------------------------------------------
-# Project-wide ignore rules
-# ----------------------------------------------------------
-# Generated requirements
-requirements.in
-requirements.txt
+# ------------------------------------------------------------
+# Global ignore rules for all project environments.
+# Includes Python, virtualenv, build, cache, and IDE artifacts.
+# ------------------------------------------------------------
 
-# Python virtual environment
-.venv/
 
-# Cached build and stub artifacts (not versioned)
-.cache/
-.mypy_cache/
-**/__pycache__/**
-**/*.egg-info/**
-dist/
+# ------------------------------------------------------------
+# Core Python cache and build outputs
+# ------------------------------------------------------------
+**/__pycache__/
+.eggs/
+*.egg
+*.egg-info/
+*.py[cod]
+*$py.class
 build/
+dist/
 
-# Pyright / stubgen working directory:
-# Stubs are generated into .cache/typings for IDE use only.
-# These are NOT committed and NOT packaged.
-.cache/typings/
+
+# ------------------------------------------------------------
+# Virtual environments and local Python setup
+# ------------------------------------------------------------
+.venv/
+env.bak/
+env/
+ENV/
+venv.bak/
+venv/
+
+
+# ------------------------------------------------------------
+# Dependency management outputs
+# ------------------------------------------------------------
+requirements.txt
+requirements.in
+Pipfile
+Pipfile.lock
+poetry.lock
+poetry.toml
+
+
+# ------------------------------------------------------------
+# Editor and IDE metadata
+# ------------------------------------------------------------
+**/.vscode/
+**/.idea/
+*.swp
+*.swo
+
+
+# ------------------------------------------------------------
+# Python tooling caches
+# ------------------------------------------------------------
+.cache/
+.dmypy.json
+.mypy_cache/
+.nox/
+.pytest_cache/
+.tox/
+.typings/
+cov.xml
+coverage.xml
+htmlcov/
+typings/
+
+
+# ------------------------------------------------------------
+# Environment and secrets
+# ------------------------------------------------------------
+.env
+.env.*
+*.env
+
+
+# ------------------------------------------------------------
+# OS-specific junk
+# ------------------------------------------------------------
+.DS_Store
+Thumbs.db
+desktop.ini
+
+
+# End of file: .gitignore

@@ -15,7 +15,7 @@ import pytz
 from colorama import Fore
 
 import mstair.common.base.config as cfg
-from mstair.common.base.fs_helpers import fs_find_project_root
+from mstair.common.base.fs_helpers import fs_find_pyproject_toml
 from mstair.common.xdumps.xdumps_api import xdumps
 from mstair.common.xlogging.logger_constants import (
     RE_PATH_BACKSLASH,
@@ -183,8 +183,11 @@ class CoreFormatter(logging.Formatter):
             return "<unknown file>"
 
         try:
-            project_root = fs_find_project_root(start_dir=Path(file).parent)
-            file = Path(file).relative_to(project_root).as_posix()
+            project_root = fs_find_pyproject_toml(start_dir=Path(file).parent)
+            if project_root is None:
+                file = Path(file).absolute().as_posix()
+            else:
+                file = Path(file).relative_to(project_root).as_posix()
         except Exception:
             # Fall back to scriptdir-relative logic
             if not sys.path or not sys.path[0]:

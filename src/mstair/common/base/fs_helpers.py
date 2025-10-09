@@ -20,6 +20,8 @@ import dotenv
 
 StrPath: TypeAlias = str | Path
 
+_fs_pyproject_toml_cache: dict[Path, Path | None] = {}
+
 
 def fs_safe_relpath(path: StrPath, root: Path) -> str:
     """Return a path with '..' segments, or fallback on the full path, instead of raising"""
@@ -89,48 +91,41 @@ def fs_find_repo_root(
     return Path(result_str)
 
 
-def fs_find_project_root(
+def fs_find_pyproject_toml(
     *,
-    filename: str = "pyproject.toml",
     start_dir: Path | None = None,
     strict: bool = False,
     warn: bool = False,
-) -> Path:
+) -> Path | None:
     """
-    Return the absolute path of the project root.
+    Return the absolute path of the nearest `pyproject.toml` file.
 
-    This function searches for a file named `pyproject.toml` in the directory tree starting from `start_dir`.
-    Given no parameters, it searches for `pyproject.toml`, starting in the current working directory.
-
-    :param filename: The name of the file to search for, default is "pyproject.toml".
     :param start_dir: The directory to start searching from, default is the current working directory.
     :param strict: If True, raises `FileNotFoundError` if the file is not found, default is False.
     :param warn: If True, emits a log `warning` if the file is not found, default is False.
-    :return: The absolute path of first `start_dir` parent directory containing `filename`.
+    :return: The absolute path of the nearest `pyproject.toml` file.
     :raises FileNotFoundError: If the `filename` is not found and `strict` is True.
     """
+    start_dir = start_dir or Path.cwd()
+    if start_dir not in _fs_pyproject_toml_cache:
+        for dir in [start_dir, *list(start_dir.parents)]:
+            if not dir.is_dir():
+                continue
+            candidate = dir / "pyproject.toml"
+            if candidate.is_file():
+                _fs_pyproject_toml_cache[start_dir] = candidate
+                return candidate
 
-    _start_dir_path: Path = start_dir or Path(filename).parent
-    result_str: str | None = _fs_find_root_cached(
-        filename=filename, start_dir_str=_start_dir_path.as_posix()
-    )
-
-    # Handle not-found case with check/warn logic (not cached)
-    if result_str is None:
-        fallback_path: Path = _start_dir_path.resolve()
         if strict:
-            raise FileNotFoundError(
-                f"File not found with, {filename=} starting from {fallback_path}."
-            )
+            raise FileNotFoundError(f"No pyproject.toml found for {start_dir}")
         if warn:
             warnings.warn(
-                message=f"File not found with, filename={filename} starting from {fallback_path}. Returning {fallback_path}.",
+                message=f"No pyproject.toml found for {start_dir}.",
                 category=UserWarning,
                 stacklevel=2,
             )
-        result_str = fallback_path.as_posix()
-
-    return Path(result_str)
+        _fs_pyproject_toml_cache[start_dir] = None
+    return _fs_pyproject_toml_cache[start_dir]
 
 
 @cache
@@ -185,7 +180,7 @@ def fs_redirect_fd(from_file: int | IOBase, to_file: int | IOBase, *, enabled: b
         elif isinstance(file, str):
             if not can_open:
                 raise ValueError(f"Invalid {file=}")
-            if file in (os.devnull, "NUL", "/dev/null"):
+            if file in {os.devnull, "NUL", "/dev/null"}:
                 if os.name == "nt":
                     return os.open("NUL", os.O_WRONLY)
                 return os.open("/dev/null", os.O_WRONLY)
@@ -213,32 +208,6 @@ def fs_redirect_fd(from_file: int | IOBase, to_file: int | IOBase, *, enabled: b
             os.close(_saved_from_fd)
         if isinstance(to_file, str):
             os.close(_to_fd)
-
-
-def fs_replace_file(file: str, content: str | None):
-    """
-    Replace file content but only if different.
-
-    Args:
-        file (str): The file path.
-        content (str): The new file content, or None to delete the file.
-    """
-    if content is None:
-        if os.path.exists(file):
-            os.remove(file)
-        return
-
-    if os.path.exists(file):
-        with open(file) as f:
-            current_content = f.read()
-            if current_content == content:
-                return
-        os.remove(file)
-
-    os.makedirs(os.path.dirname(file), exist_ok=True)
-    with open(file, "w") as f:
-        f.write(content)
-    return
 
 
 def is_project_local_file(

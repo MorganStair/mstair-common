@@ -45,21 +45,21 @@
 
 
 [build-system]
-    requires = ["setuptools>=65", "wheel"]
     build-backend = "setuptools.build_meta"
+    requires      = ["setuptools>=65", "wheel"]
 
 
 [project]
     # ----------------------------------------------------------
     # Core project metadata
     # ----------------------------------------------------------
-    name = "mstair-common"
-    version = "0.1.0"
-    description = "Common libraries for mstair projects"
-    authors = [{ name = "Morgan Stair" }]
-    readme = "README.md"
+    authors         = [{ name = "Morgan Stair" }]
+    description     = "Common libraries for mstair projects"
+    license         = "MIT"
+    name            = "mstair-common"
+    readme          = "README.md"
     requires-python = ">=3.13"
-    license = "MIT"
+    version         = "0.1.1"
 
     # Runtime dependencies used by mstair-common and its submodules
     dependencies = [
@@ -83,16 +83,16 @@
     ]
 
 
-[project.optional-dependencies]
-    # Optional install groups for local development and testing
-    dev = []
-    test = []
+    [project.optional-dependencies]
+        # Optional install groups for local development and testing
+        dev  = []
+        test = []
 
 
 [tool.build.python]
     # Custom local metadata for development tools
-    local_src_dir = "src"
     local_packages = ["mstair"]
+    local_src_dir  = "src"
 
 
 [tool.setuptools.packages.find]
@@ -101,8 +101,8 @@
     # Physical source root: src/
     # Include the root package and any subpackages exposed by this distribution.
     # ----------------------------------------------------------
-    where = ["src"]
     include = ["mstair", "mstair.*"]
+    where   = ["src"]
 
 
 [tool.setuptools.package-data]
@@ -113,13 +113,13 @@
     # - The top-level namespace mstair has no files of its own.
     # - Stubs in .cache/typings are excluded by default unless explicitly copied into src/mstair/.
     # ----------------------------------------------------------
-    "mstair" = ["py.typed"]
+    "mstair"        = ["py.typed"]
     "mstair.common" = ["**/*.pyi", "*.pyi", "py.typed"]
 
 
 [tool.pytest.ini_options]
     # N:reset f:failed E:error s:skipped x:failed X:passed p:passed
-    addopts = "-rNfExXp -q --maxfail=5"
+    addopts   = "-rNfExXp -q --maxfail=5"
     cache_dir = ".pytest_cache"
     # Use classic output style for better readability
     console_output_style = "classic"
