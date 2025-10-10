@@ -50,18 +50,7 @@
 
 
 [project]
-    # ----------------------------------------------------------
-    # Core project metadata
-    # ----------------------------------------------------------
-    authors         = [{ name = "Morgan Stair" }]
-    description     = "Common libraries for mstair projects"
-    license         = "MIT"
-    name            = "mstair-common"
-    readme          = "README.md"
-    requires-python = ">=3.13"
-    version         = "0.1.1"
-
-    # Runtime dependencies used by mstair-common and its submodules
+    authors = [{ name = "Morgan Stair" }]
     dependencies = [
         "boto3-stubs[apigateway,apigatewayv2,cloudformation,cloudfront,cognito-identity,cognito-idp,dynamodb,iam,iot,lambda,logs,s3,sts,ssm,stepfunctions,sts,wafv2]>=1.35.0",
         "boto3>=1.35.0",
@@ -81,47 +70,37 @@
         "ruff",
         "types-awscrt>=0.21.0",
     ]
+    description = "Common libraries for mstair projects"
+    license = "MIT"
+    name = "mstair-common"
+    readme = "README.md"
+    requires-python = ">=3.13"
+    version = "0.1.1"
 
 
     [project.optional-dependencies]
-        # Optional install groups for local development and testing
         dev  = []
         test = []
 
 
 [tool.build.python]
-    # Custom local metadata for development tools
     local_packages = ["mstair"]
     local_src_dir  = "src"
 
 
 [tool.setuptools.packages.find]
-    # ----------------------------------------------------------
-    # Package discovery configuration
-    # Physical source root: src/
-    # Include the root package and any subpackages exposed by this distribution.
-    # ----------------------------------------------------------
     include = ["mstair", "mstair.*"]
     where   = ["src"]
 
 
 [tool.setuptools.package-data]
-    # ----------------------------------------------------------
-    # Extra files to include in wheel/sdist for this package
-    # Note:
-    # - Includes only py.typed for the subpackage mstair.common.
-    # - The top-level namespace mstair has no files of its own.
-    # - Stubs in .cache/typings are excluded by default unless explicitly copied into src/mstair/.
-    # ----------------------------------------------------------
     "mstair"        = ["py.typed"]
     "mstair.common" = ["**/*.pyi", "*.pyi", "py.typed"]
 
 
 [tool.pytest.ini_options]
-    # N:reset f:failed E:error s:skipped x:failed X:passed p:passed
-    addopts   = "-rNfExXp -q --maxfail=5"
+    addopts = "-rNfExXp -q --maxfail=5"
     cache_dir = ".pytest_cache"
-    # Use classic output style for better readability
     console_output_style = "classic"
     markers = [
         "e2e: end-to-end tests simulating real user workflows",
