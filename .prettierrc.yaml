@@ -1,0 +1,26 @@
+# File: .prettierrc.yaml
+
+# Configuration for formatting non-python files
+
+bracketSameLine: false # Keep closing brackets on a new line
+printWidth: 101 # Maximum line width for readability, was 123
+
+# Formatting rules
+
+semi: true # Use semicolons at the end of statements
+singleQuote: false # Use double quotes
+tabWidth: 4 # Indentation size
+useTabs: false # Use tabs instead of spaces
+trailingComma: all # Use "all", "es5", or "none"
+
+# Advanced rules
+
+arrowParens: always # Always use parentheses in arrow functions
+endOfLine: crlf # Consistent Windows-style line endings
+jsxSingleQuote: true # Use single quotes in JSX
+quoteProps: consistent # Quote properties consistently
+proseWrap: preserve # Avoid reformatting Markdown text
+htmlWhitespaceSensitivity: ignore # Ignore extra HTML whitespace
+embeddedLanguageFormatting: auto # Format embedded languages automatically
+
+
