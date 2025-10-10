@@ -1,12 +1,10 @@
 # File: makefile.mak
-# ----------------------------------------------------------
-# Highlights:
-# - Uses .cache/typings for stubgen output (not packaged)
-# - Keeps imports discoverable for IDEs via pyrightconfig.json
-# - Provides clean, rebuild, and environment setup targets
-# ----------------------------------------------------------
 
 include makefile-rules.mak
+
+# .ONESHELL:
+TYPINGS_TXT	= .typings.txt
+TYPINGS_DIR	= $(call asposix,$(CACHE_DIR)/typings)
 
 # ----------------------------------------------------------
 # Default target: list available targets
@@ -14,10 +12,9 @@ include makefile-rules.mak
 
 .PHONY: default
 default:  ## List available Makefile targets
-	@printf "\n%s:\n" "$@"; \
-	printf "Valid targets:\n"; \
-	grep -hE '^[a-zA-Z0-9_.-]+:.*?## .*$$' $(MAKEFILE_LIST) | \
-		awk 'BEGIN {FS = ":.*?## "}; {printf "    \033[36m%-20s\033[0m %s\n", $$1, $$2}'
+	@printf "Valid targets:\n"
+	@grep -hE '^[a-zA-Z0-9_.-]+:.*?## .*$$' $(MAKEFILE_LIST) | \
+	  awk 'BEGIN {FS = ":.*?## "}; {printf "    \033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
 # ----------------------------------------------------------
 # Virtual environment and package management
@@ -25,76 +22,66 @@ default:  ## List available Makefile targets
 
 .PHONY: venv-reset
 venv-reset: ## Recreate .venv from scratch, reinstall dependencies
-	@printf "\n%s:\n" "$@"
-	set -x
+	$(_begin)
 	rm -rf .venv
 	python -m ensurepip --upgrade
 	python -m venv .venv
 	. .venv/Scripts/activate 2>/dev/null || . .venv/bin/activate
 	python -m pip install --upgrade pip setuptools wheel pip-tools
 	pip install -e .[dev,test]
-	{ printf "\n[done] virgin virtual environment built successfully\n"; } 2>/dev/null
+	$(_end)
 
+.PHONY: venv-ensure
 venv-ensure: ## Ensure .venv exists (create if missing)
-	@printf "\n%s:\n" "$@"
-	set -x
-	if [ ! -d ".venv" ]; then \
-		echo "Creating missing virtual environment (.venv)..."; \
-		python -m venv .venv; \
-	fi
-	{ printf "[ok] .venv is present and usable.\n"; } 2>/dev/null
+	$(_begin)
+	[ -d ".venv" ] || python -m venv .venv
+	$(_end)
 
 build: venv-ensure ## Install current package in editable mode into .venv
-	@printf "\n%s:\n" "$@"
-	set -x
+	$(_begin)
 	. .venv/Scripts/activate 2>/dev/null || . .venv/bin/activate
 	pip install -e .[dev,test]
-	{ printf "\n[done] project installed in editable mode.\n"; } 2>/dev/null
+	$(_end)
 
 package: venv-ensure ## Build distribution artifacts (wheel and sdist)
-	@printf "\n%s:\n" "$@"
-	set -x
+	$(_begin)
 	. .venv/Scripts/activate 2>/dev/null || . .venv/bin/activate
 	python -m build
-	{ printf "\n[done] distribution artifacts written to ./dist\n"; } 2>/dev/null
+	$(_end)
 
 setup: venv-ensure build stubs ## Full developer environment setup
-	@printf "\n[done] development environment initialized.\n"
-
-# ----------------------------------------------------------
-# Diagnostics
-# ----------------------------------------------------------
-
-.PHONY: stubs-missing
-stubs-missing: venv-ensure ## List third-party imports missing type stubs (inline or generated)
-	@printf "\n$@:\n"
-	set -x
-	. .venv/Scripts/activate 2>/dev/null || . .venv/bin/activate
-	python tools/scan_missing_stubs.py
+	$(_end)
 
 # ----------------------------------------------------------
 # Type stubs generation
 # ----------------------------------------------------------
 
 .PHONY: stubs
-TYPINGS_TXT	= .typings.txt
-TYPINGS_DIR	= $(CACHE_DIR)/typings
-STUBS		= $(if $(wildcard $(TYPINGS_TXT)),$(addsuffix .stub,$(strip $(file <$(TYPINGS_TXT)))),)
-stubs:		$(TYPINGS_TXT) $(STUBS) ## Generate type stubs for packages listed in $(TYPINGS_TXT)
-	@printf "\n$@:\n"
-	@printf "\n[done] type stubs generated in %s\n" "$(TYPINGS_DIR)"
-.NOTINTERMEDIATE: $(TYPINGS_DIR)/%/__init__.pyi
-%.stub: 	$(TYPINGS_DIR)/%/__init__.pyi ## Generate type stubs for package $*
-	@:
-$(TYPINGS_DIR)/%/__init__.pyi:
-	@printf "\n$@:\n"
+stubs:	$(TYPINGS_TXT) ## Generate type stubs for packages listed in $(TYPINGS_TXT)
+	$(_begin)
 	set -x
+	{ test -s "$(TYPINGS_TXT)" && cat "$(TYPINGS_TXT)"; } | \
+	  tr -d '\r' | \
+	  grep -v '^[[:space:]]*$$' | \
+	  while IFS= read -r package; do \
+	    $(MAKE) --no-print-directory "$${package}.stub"; \
+	  done
+	$(_end)
+
+%.stub: $(TYPINGS_DIR)/%/__init__.pyi ## Generate type stubs for package $*
+	$(_end)
+
+.NOTINTERMEDIATE: $(TYPINGS_DIR)/%/__init__.pyi
+
+$(TYPINGS_DIR)/%/__init__.pyi:
+	$(_begin)
 	mkdir -p "$(dir $@)"
-	. .venv/Scripts/activate 2>/dev/null || . .venv/bin/activate
+	source .venv/Scripts/activate 2>/dev/null || source .venv/bin/activate
 	$(call STUBGEN_RUN,$*,$(TYPINGS_DIR))
-	# Append package name to the list for repeatability
-	[ -s "$(TYPINGS_TXT)" ] || printf "" >| "$(TYPINGS_TXT)"
-	( printf "$*\n"; cat $(TYPINGS_TXT) ) | tr -d '\r' | grep -v '^$$' | sort | uniq >| $(TYPINGS_TXT)
+	: "$(TYPINGS_TXT)" ; \
+	  { test -f "$$_" && cat "$$_"; printf "%s\n" "$*"; } \
+	  | tr -d '\r' | grep -v '^$$' | sort | uniq >| "$$_"
+	$(_end)
 
 # ----------------------------------------------------------
 # Cleanup
@@ -102,18 +89,17 @@ $(TYPINGS_DIR)/%/__init__.pyi:
 
 .PHONY: clean
 clean:: ## Remove generated stubs and cache directory
-	@printf "\n$@:\n"
-	set -x
+	$(_begin)
 	rm -rf "$(TYPINGS_DIR)"
 	rm -rf "$(MYPY_CACHE_DIR)"
 	rm -rf "$(CACHE_DIR)"
+	$(_end)
 
 .PHONY: virgin
 virgin:: clean
-	@printf "\n$@:\n"
-	set -x
+	$(_begin)
 	rm -rf .venv
 	rm -rf build
 	rm -rf dist
 	find . -name "*.egg-info" -exec rm -rvf {} +
-	{ printf "\n[done] project cleaned to virgin state.\n"; } 2>/dev/null
+	$(_end)
