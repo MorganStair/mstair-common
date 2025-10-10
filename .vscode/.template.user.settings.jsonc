@@ -1,0 +1,420 @@
+{
+    "[javascript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[javascriptreact]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[json]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[jsonc]": {
+        "editor.defaultFormatter": "vscode.json-language-features"
+    },
+    "[makefile]": {
+        "editor.insertSpaces": false,
+        "editor.renderWhitespace": "all",
+        "editor.tabSize": 8
+    },
+    "[markdown]": {
+        "cSpell.advanced.feature.useReferenceProviderRemove": "/^#+\\s/",
+        "cSpell.advanced.feature.useReferenceProviderWithRename": true,
+        "cSpell.fixSpellingWithRenameProvider": true,
+        "editor.quickSuggestions": {
+            "comments": "on",
+            "other": "on",
+            "strings": "on"
+        },
+        "editor.unicodeHighlight.ambiguousCharacters": true,
+        "editor.unicodeHighlight.invisibleCharacters": true
+    },
+    "[python]": {
+        "editor.codeActionsOnSave": {
+            "source.fixAll.ruff": "explicit",
+            "source.organizeImports.ruff": "always"
+        },
+        "editor.defaultFormatter": "charliermarsh.ruff",
+        "editor.insertSpaces": true,
+        "editor.tabSize": 4,
+        "rewrap.autoWrap.enabled": false
+    },
+    "[toml]": {
+        "editor.defaultFormatter": "tamasfe.even-better-toml"
+    },
+    "[typescript]": {
+        "editor.defaultFormatter": "vscode.typescript-language-features",
+        "editor.insertSpaces": true,
+        "editor.tabSize": 4
+    },
+    "[typescriptreact]": {
+        "editor.insertSpaces": true,
+        "editor.tabSize": 4
+    },
+    "accessibility.verbosity.terminal": false,
+    "aws.resources.enabledResources": [
+        "AWS::ApiGateway::DomainName",
+        "AWS::CloudFront::Distribution",
+        "AWS::CloudFront::Function",
+        "AWS::DynamoDB::Table"
+    ],
+    "aws.suppressPrompts": {
+        "fileViewerEdit": true
+    },
+    "chat.tools.terminal.autoApprove": {
+        "make": true,
+        "pytest": true
+    },
+    "chat.tools.terminal.enableAutoApprove": true,
+    "cSpell.allowCompoundWords": true,
+    "cSpell.autoFormatConfigFile": true,
+    "cSpell.blockCheckingWhenTextChunkSizeGreaterThan": 5000,
+    "cSpell.customDictionaries": {},
+    "cSpell.dictionaries": [
+        "en_US",
+        "en-gb"
+    ],
+    "cSpell.enabledNotifications": {
+        "Average Word Length too Long": false,
+        "Lines too Long": false,
+        "Maximum Word Length Exceeded": false
+    },
+    "cSpell.ignoreRegExpList": [
+        // File paths: Unix or Windows
+        "(?:[A-Za-z]:)?[\\\\/](?:[A-Za-z0-9_.-]+[\\\\/])*[A-Za-z0-9_.-]+",
+        // IPv4 addresses
+        "\\b\\d{1,3}(?:\\.\\d{1,3}){3}\\b",
+        // URLs (http / https)
+        "https?://\\S+",
+        // Short words (1–5 chars)
+        "\\b\\w{1,5}\\b",
+        "\\b\\w{1,5}s\\b",
+        "\\b\\w{1,5}ed\\b",
+        // Very long words (12+ chars)
+        "\\b\\w{12,}\\b",
+        // All-caps alphanumeric sequences (IDs, constants)
+        "\\b[A-Z0-9]{4,}\\b"
+    ],
+    "cSpell.ignoreWords": [],
+    "cSpell.import": [],
+    "cSpell.language": "en,en-US",
+    "cSpell.logLevel": "Information",
+    "cSpell.maxDuplicateProblems": 1,
+    "cSpell.minWordLength": 6,
+    "cSpell.numSuggestions": 12,
+    "cSpell.spellCheckOnlyWorkspaceFiles": true,
+    "cSpell.userWords": [
+        "dotenv",
+        "FSTRING",
+        "pycache",
+        "PYLINT",
+        "WRONLY",
+        "xdumps"
+    ],
+    "debug.console.fontSize": 14,
+    "diffEditor.experimental.useTrueInlineView": true,
+    "editor.accessibilitySupport": "off",
+    "editor.autoClosingBrackets": "never",
+    "editor.autoClosingQuotes": "never",
+    "editor.codeActionsOnSave": {
+        "source.fixAll": "never",
+        "source.organizeImports": "always"
+    },
+    "editor.codeLens": true,
+    "editor.cursorSurroundingLines": 2,
+    "editor.detectIndentation": false,
+    "editor.fontSize": 18,
+    "editor.formatOnPaste": true,
+    "editor.formatOnSave": true,
+    "editor.insertSpaces": true,
+    "editor.minimap.maxColumn": 40,
+    "editor.minimap.scale": 3,
+    "editor.tabSize": 4,
+    "evenBetterToml.formatter.alignComments": true,
+    "evenBetterToml.formatter.alignEntries": true,
+    "evenBetterToml.formatter.allowedBlankLines": 2,
+    "evenBetterToml.formatter.arrayAutoCollapse": true,
+    "evenBetterToml.formatter.arrayAutoExpand": true,
+    "evenBetterToml.formatter.arrayTrailingComma": true,
+    "evenBetterToml.formatter.columnWidth": 101,
+    "evenBetterToml.formatter.compactArrays": true,
+    "evenBetterToml.formatter.crlf": true,
+    "evenBetterToml.formatter.indentEntries": true,
+    "evenBetterToml.formatter.indentString": "    ",
+    "evenBetterToml.formatter.indentTables": true,
+    "evenBetterToml.formatter.inlineTableExpand": true,
+    "evenBetterToml.formatter.reorderArrays": true,
+    "evenBetterToml.formatter.reorderInlineTables": true,
+    "evenBetterToml.formatter.reorderKeys": true,
+    "evenBetterToml.formatter.trailingNewline": true,
+    "evenBetterToml.schema.cache.diskExpiration": 120,
+    "evenBetterToml.schema.cache.memoryExpiration": 120,
+    "evenBetterToml.schema.enabled": true,
+    "evenBetterToml.schema.links": true,
+    "evenBetterToml.semanticTokens": true,
+    "explorer.autoReveal": true,
+    "explorer.excludeGitIgnore": false,
+    "explorer.expandSingleFolderWorkspaces": false,
+    "explorer.fileNesting.patterns": {
+        "*.db": "${capture}.${extname}-*",
+        "*.db3": "${capture}.${extname}-*",
+        "*.js": "${capture}.js.map, ${capture}.min.js, ${capture}.d.ts",
+        "*.jsx": "${capture}.js",
+        "*.s3db": "${capture}.${extname}-*",
+        "*.sdb": "${capture}.${extname}-*",
+        "*.sqlite": "${capture}.${extname}-*",
+        "*.sqlite3": "${capture}.${extname}-*",
+        "*.ts": "${capture}.js",
+        "*.tsx": "${capture}.ts",
+        "package.json": "package-lock.json, yarn.lock, pnpm-lock.yaml, bun.lockb",
+        "tsconfig.json": "tsconfig.*.json"
+    },
+    "explorer.incrementalNaming": "disabled",
+    "explorer.openEditors.minVisible": 2,
+    "explorer.sortOrder": "foldersNestsFiles",
+    "files.associations": {
+        "*.pl": "perl",
+        "*.pm": "perl"
+    },
+    "files.autoGuessEncoding": false,
+    "files.autoSave": "afterDelay",
+    "files.autoSaveDelay": 1000,
+    "files.eol": "auto",
+    "files.exclude": {
+        "**/*.egg-info": true
+    },
+    "files.insertFinalNewline": true,
+    "files.trimFinalNewlines": true,
+    "files.trimTrailingWhitespace": true,
+    "files.watcherExclude": {
+        "**/.assets": true,
+        "**/.cache": true,
+        "**/.DS_Store": true,
+        "**/.flask_session": true,
+        "**/.hg": true,
+        "**/.mypy_cache": true,
+        "**/.pixi": true,
+        "**/.ropeproject": true,
+        "**/.ruff_cache": true,
+        "**/.svn": true,
+        "**/.venv*": true,
+        "**/*.out": true,
+        "**/*.tsbuildinfo": true,
+        "**/CVS": true,
+        "**/node_modules": true,
+        "**/Thumbs.db": true
+    },
+    "git.autoRepositoryDetection": false,
+    "git.autoStash": true,
+    "git.blame.editorDecoration.enabled": false,
+    "git.blame.statusBarItem.enabled": true,
+    "git.confirmSync": false,
+    "git.decorations.enabled": true,
+    "git.enabled": true,
+    "git.enableSmartCommit": false,
+    "git.openRepositoryInParentFolders": "always",
+    "git.repositoryScanIgnoredFolders": [
+        ".."
+    ],
+    "git.showActionButton": {
+        "commit": true,
+        "publish": true,
+        "sync": true
+    },
+    "github.copilot.advanced": {},
+    "github.copilot.chat.agent.autoFix": true,
+    "github.copilot.chat.codeGeneration.useInstructionFiles": true,
+    "github.copilot.chat.codesearch.enabled": true,
+    "github.copilot.chat.editor.temporalContext.enabled": true,
+    "github.copilot.chat.edits.temporalContext.enabled": true,
+    "github.copilot.chat.languageContext.typescript.enabled": true,
+    "github.copilot.chat.reviewSelection.enabled": true,
+    "github.copilot.editor.enableCodeActions": true,
+    "github.copilot.enable": {
+        "markdown": true
+    },
+    "github.copilot.nextEditSuggestions.enabled": true,
+    "github.copilot.renameSuggestions.triggerAutomatically": true,
+    "markdown.extension.completion.enabled": true,
+    "markdown.extension.showActionButtons": true,
+    "markdown.extension.theming.decoration.renderHardLineBreak": true,
+    "markdown.extension.theming.decoration.renderLink": true,
+    "markdown.extension.theming.decoration.renderParagraph": true,
+    "markdown.extension.toc.omittedFromToc": {
+        "Table of Contents": true
+    },
+    "markdown.occurrencesHighlight.enabled": true,
+    "markdown.preview.breaks": true,
+    "markdown.preview.doubleClickToSwitchToEditor": true,
+    "mbake.autoInit": true,
+    "mbake.executablePath": "${workspaceFolder}/.venv/Scripts/mbake.exe",
+    "mbake.formatOnSave": false,
+    "notebook.outline.showCodeCells": true,
+    "outline.collapseItems": "alwaysCollapse",
+    "outline.icons": true,
+    "outline.problems.badges": true,
+    "outline.problems.colors": true,
+    "outline.problems.enabled": true,
+    "outline.showArrays": true, // Probably not for python
+    "outline.showBooleans": true, // Probably not for python
+    "outline.showClasses": true,
+    "outline.showConstants": false,
+    "outline.showConstructors": true,
+    "outline.showEvents": true, // Probably not for python
+    "outline.showFields": true, // Probably not for python
+    "outline.showFiles": true, // Probably not for python
+    "outline.showFunctions": true, // Probably not for python
+    "outline.showKeys": true, // Probably not for python
+    "outline.showMethods": true,
+    "outline.showModules": true,
+    "outline.showNamespaces": true, // Probably not for python
+    "outline.showNull": true, // Probably not for python
+    "outline.showNumbers": true, // Probably not for python
+    "outline.showObjects": true, // Probably not for python
+    "outline.showOperators": true, // Probably not for python
+    "outline.showPackages": true, // Probably not for python
+    "outline.showStrings": true, // Probably not for python
+    "outline.showStructs": true, // Probably not for python
+    "outline.showTypeParameters": true, // Probably not for python
+    "pypiAssistant.codeLens": false,
+    "python.analysis.autoFormatStrings": true,
+    "python.analysis.autoImportCompletions": true,
+    "python.analysis.completeFunctionParens": true,
+    "python.analysis.diagnosticMode": "workspace", // faster than "openFilesOnly" after warmup
+    "python.analysis.gotoDefinitionInStringLiteral": false,
+    "python.analysis.importFormat": "absolute",
+    "python.analysis.indexing": true,
+    "python.analysis.inlayHints.functionReturnTypes": true,
+    "python.analysis.inlayHints.variableTypes": true,
+    "python.analysis.logLevel": "Information",
+    "python.analysis.supportDocstringTemplate": false,
+    "python.analysis.supportRestructuredText": true,
+    "python.autoComplete.extraPaths": [
+        "${workspaceFolder}/.cache/typings",
+        "${workspaceFolder}"
+    ],
+    "python.createEnvironment.contentButton": "hide",
+    "python.defaultInterpreterPath": "${workspaceFolder}/.venv/Scripts/python.exe",
+    "python.envFile": "${workspaceFolder}/.env",
+    "python.experiments.enabled": false,
+    "python.experiments.optInto": [],
+    "python.experiments.optOutFrom": [
+        "All"
+    ],
+    "python.languageServer": "Pylance",
+    "python.REPL.enableREPLSmartSend": false,
+    "python.terminal.activateEnvInCurrentTerminal": false, // do not mess with already activated terminals
+    "python.terminal.activateEnvironment": true,
+    "terminal.integrated.cwd": "${workspaceFolder}",
+    "python.testing.autoTestDiscoverOnSaveEnabled": false,
+    "python.testing.cwd": "${workspaceFolder}/.cache",
+    "python.testing.pytestEnabled": true,
+    "python.testing.unittestEnabled": false,
+    "python.useEnvironmentsExtension": true,
+    "rewrap.autoWrap.enabled": false,
+    "rewrap.reformat": true,
+    "rewrap.wrappingColumn": 80,
+    "ruff.codeAction.fixViolation": {
+        "enable": true
+    },
+    "ruff.enable": true,
+    "ruff.fixAll": true,
+    "ruff.format.preview": true,
+    "ruff.lint.enable": true,
+    "ruff.lint.preview": true,
+    "ruff.logLevel": "info",
+    "search.exclude": {
+        "**/__pycache__": true,
+        "**/.cache": true,
+        "**/.gitignore": false,
+        "**/.mypy_cache": true,
+        "**/.pytest_cache": true,
+        "**/.venv*": true,
+        "**/*.egg-info": true,
+        "**/*.out": true,
+        "**/*source*.txt": true,
+        "**/bower_components": true,
+        "**/build": true,
+        "**/Dockerfile": true,
+        "**/download*": true,
+        "**/node_modules": true,
+        "**/out": true,
+        "**/package-lock.json": true,
+        "**/typings": true
+    },
+    "search.searchEditor.defaultNumberOfContextLines": 2,
+    "search.useIgnoreFiles": false,
+    "security.workspace.trust.untrustedFiles": "open",
+    "terminal.integrated.allowChords": true,
+    "terminal.integrated.allowedLinkSchemes": [
+        "file",
+        "http",
+        "https",
+        "mailto",
+        "vscode",
+        "vscode-insiders",
+        "docker-desktop"
+    ],
+    "terminal.integrated.allowMnemonics": true,
+    "terminal.integrated.defaultProfile.windows": "Windows PowerShell",
+    "terminal.integrated.enablePersistentSessions": true,
+    "terminal.integrated.enableVisualBell": true,
+    "terminal.integrated.environmentChangesRelaunch": true,
+    "terminal.integrated.fontSize": 14,
+    "terminal.integrated.hideOnStartup": "always",
+    "terminal.integrated.persistentSessionScrollback": 5000,
+    "terminal.integrated.profiles.windows": {
+        "Command Prompt": {
+            "args": [],
+            "icon": "terminal-cmd",
+            "path": [
+                "${env:windir}\\Sysnative\\cmd.exe",
+                "${env:windir}\\System32\\cmd.exe"
+            ]
+        },
+        "Git Bash": {
+            "source": "Git Bash"
+        },
+        "PowerShell": {
+            "icon": "terminal-powershell",
+            "source": "PowerShell"
+        },
+        "Windows PowerShell": {
+            "path": "C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
+        }
+    },
+    "terminal.integrated.scrollback": 5000,
+    "terminal.integrated.shellIntegration.environmentReporting": true,
+    "terminal.integrated.suggest.enabled": true,
+    "typescript.updateImportsOnFileMove.enabled": "always",
+    "window.density.editorTabHeight": "compact",
+    "window.title": "(${rootNameShort}) ${activeEditorShort}",
+    "window.zoomLevel": -1,
+    "workbench.commandPalette.experimental.suggestCommands": true,
+    "workbench.editor.closeOnFileDelete": true,
+    "workbench.editor.highlightModifiedTabs": true,
+    "workbench.editorAssociations": {
+        "{git,gitlens,conflictResolution,vscode-local-history}:/**/*.{asl.json,asl.yaml,asl.yml}": "default",
+        "{git,gitlens,conflictResolution,vscode-local-history}:/**/*.tc.json": "default",
+        "{git,gitlens,git-graph}:/**/*.{md,csv,svg}": "default"
+    },
+    "workbench.settings.applyToAllProfiles": [
+        "genieai.enableConversationHistory"
+    ],
+    "workbench.startupEditor": "none",
+    "terminal.integrated.env.windows": {
+        "CACHE_DIR": "${workspaceFolder}/.cache",
+        "HF_HUB_DISABLE_SYMLINKS_WARNING": "1",
+        "JSII_SILENCE_WARNING_UNTESTED_NODE_VERSION": "1",
+        "MYPY_CACHE_DIR": "${workspaceFolder}/.cache/.mypy_cache",
+        "NODE_ENV": "development",
+        "PATH": "${workspaceFolder}/.venv/Scripts;${workspaceFolder}/bin;${env:PATH}",
+        "PROJECT_DIR": "${workspaceFolder}",
+        "PROMPT": "\u001b[1;35m$P$G\u001b[0m ",
+        "PYDEVD_WARN_SLOW_RESOLVE_TIMEOUT": "5000",
+        "PYLINT_HOME": "${workspaceFolder}/.cache/pylint",
+        "PYLINTRC": "${workspaceFolder}/.pylintrc",
+        "PYTHONPYCACHEPREFIX": "${workspaceFolder}/.cache/__pycache__",
+        "RUFF_CACHE_DIR": "${workspaceFolder}/.cache/ruff",
+        "WITH_4BIT_QUANTIZATION": "1"
+    }
+}

@@ -9,11 +9,11 @@
 # ------------------------------------------------------------
 # Core Python cache and build outputs
 # ------------------------------------------------------------
-**/__pycache__/
 .eggs/
 *.egg
 *.egg-info/
 *.py[cod]
+**/__pycache__/
 *$py.class
 build/
 dist/
@@ -23,10 +23,8 @@ dist/
 # Virtual environments and local Python setup
 # ------------------------------------------------------------
 .venv/
-env.bak/
 env/
 ENV/
-venv.bak/
 venv/
 
 
@@ -44,7 +42,6 @@ poetry.toml
 # ------------------------------------------------------------
 # Editor and IDE metadata
 # ------------------------------------------------------------
-**/.vscode/
 **/.idea/
 *.swp
 *.swo
@@ -81,5 +78,17 @@ typings/
 Thumbs.db
 desktop.ini
 
+# ------------------------------------------------------------
+# Miscellaneous files to ignore
+# ------------------------------------------------------------
+*.bak
+*.png
+*.svg
+
+# ------------------------------------------------------------
+# Exceptions
+# ------------------------------------------------------------
+!.typings.txt
+!settings.json
 
 # End of file: .gitignore
