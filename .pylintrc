@@ -45,13 +45,13 @@ fail-under=10
 #from-stdin=
 
 # Files or directories to be skipped. They should be base names, not paths.
-ignore=.cache,.venv,.venv-cdk,.venv*,.assets,typings,cdk.out,__pycache__,node_modules,uploads
+ignore=__pycache__, .cache, .venv, cdk.out, data, node_modules, out, typings, uploads
 
 # Add files or directories matching the regular expressions patterns to the
-# ignore-list. The regex matches against paths and can be in Posix or Windows
+# ignore-list. The regex matches against PATHS and can be in Posix or Windows
 # format. Because '\\' represents the directory delimiter on Windows systems,
 # it can't be used as an escape character.
-ignore-paths=.*\.venv\.*,\.*,.*/typings/.*,.*/cdk.out/.*,.*/__pycache__/.*,.*\.assets.*,.*/node_modules/.*
+ignore-paths = .*__pycache__.*, .*node_modules.*
 
 # Files or directories matching the regular expression patterns are skipped.
 # The regex matches against base names, not paths. The default value ignores
@@ -67,7 +67,7 @@ ignored-modules=boto3,pycognito.exceptions,h3._h3shape,flask_smorest.blueprint
 
 # Python code to execute, usually for sys.path manipulation such as
 # pygtk.require().
-#init-hook=
+init-hook='import sys, os; sys.path.append(os.path.join(os.getcwd(), ".cache", "typings"))'
 
 # Use multiple processes to speed up Pylint. Specifying 0 will auto-detect the
 # number of processors available to use, and will cap the count on Windows to
@@ -92,7 +92,7 @@ prefer-stubs=no
 
 # Minimum Python version to use for version dependent checks. Will default to
 # the version used to run pylint.
-py-version=3.12
+py-version=3.13
 
 # Discover python modules and packages in the file system subtree.
 recursive=no
@@ -329,7 +329,7 @@ overgeneral-exceptions=builtins.BaseException,builtins.Exception
 [FORMAT]
 
 # Expected format of line ending, e.g. empty (any line ending), LF or CRLF.
-expected-line-ending-format=CRLF
+# expected-line-ending-format=CRLF
 
 # Regexp for a line that is allowed to be longer than the limit.
 ignore-long-lines=^\s*(# )?<?https?://\S+>?$
@@ -342,7 +342,7 @@ indent-after-paren=4
 indent-string='    '
 
 # Maximum number of characters on a single line.
-max-line-length=101 # was 123
+max-line-length=101
 
 # Maximum number of lines in a module.
 max-module-lines=1000
@@ -462,7 +462,6 @@ disable=arguments-differ,
         redefined-builtin,
         redefined-outer-name,
         simplifiable-if-expression,
-        superfluous-parens,
         suppressed-message,
         too-few-public-methods,
         too-many-boolean-expressions,
@@ -484,7 +483,6 @@ disable=arguments-differ,
         use-implicit-booleaness-not-comparison-to-string,
         use-implicit-booleaness-not-comparison-to-zero,
         use-symbolic-message-instead,
-        useless-parent-delegation,
         useless-suppression,
         wrong-import-order,
         wrong-import-position,

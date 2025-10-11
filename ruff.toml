@@ -1,11 +1,12 @@
 # File: ruff.toml
+# This configuration file is for the Ruff linter (https://ruff.rs/).
 
-fix               = true
-line-length       = 101
+fix = true
+line-length = 101
 respect-gitignore = true
-src               = ["src"]
-target-version    = "py313"
-unsafe-fixes      = false
+src = ["python", "src"]
+target-version = "py313"
+unsafe-fixes = false
 
 
 exclude = [
@@ -23,8 +24,10 @@ exclude = [
 
 
 [lint]
-    extend-select = ["I001", "I002"]
     fixable = ["ALL"]
+    unfixable = ["F401", "F403", "TID252"]
+    select = ["B", "C4", "E", "F", "I", "PL", "RUF", "SIM", "TID", "UP"]
+    extend-select = ["I001", "I002"]
     ignore = [
         "B007",
         "B009",
@@ -66,28 +69,25 @@ exclude = [
         "UP037",
         "UP040",
     ]
-    select = ["B", "C4", "E", "F", "I", "PL", "RUF", "SIM", "TID", "UP"]
-    unfixable = ["F401", "F403", "TID252"]
 
-    [lint.pylint]
-        max-args     = 8
-        max-branches = 15
-        max-returns  = 9
+[lint.pylint]
+    max-args = 8
+    max-returns = 9
+    max-branches = 15
 
-    [lint.isort]
-        detect-same-package = true
-        force-single-line   = false
-        force-to-top        = ["__future__"]
-        known-first-party   = ["mstair"]
-        known-local-folder  = ["src"]
-        lines-after-imports = 2
-        order-by-type       = true
+[lint.isort]
+    detect-same-package = true
+    force-single-line = false
+    force-to-top = ["__future__"]
+    known-first-party = ["autocomment", "pdf2rtf", "plib_", "tests"]
+    known-local-folder = ["python", "src"]
+    lines-after-imports = 2
+    order-by-type = true
 
-    [lint.mccabe]
-        max-complexity = 8
+[lint.mccabe]
+    max-complexity = 8
 
 [format]
-    indent-style              = "space"
-    line-ending               = "cr-lf"
-    quote-style               = "double"
+    indent-style = "space"
+    quote-style = "double"
     skip-magic-trailing-comma = false
