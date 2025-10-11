@@ -1,2 +1,48 @@
-# Auto detect text files and perform LF normalization
-* text=auto
+# File: .gitattributes
+# Normalize line endings across platforms
+# Store LF in repo, use CRLF on checkout in Windows
+
+* text eol=crlf
+
+# Common text file types
+*.bat  text eol=crlf
+*.cmd  text eol=crlf
+*.ps1  text eol=crlf
+*.py   text eol=crlf
+*.toml text eol=crlf
+*.json text eol=crlf
+*.yml  text eol=crlf
+*.yaml text eol=crlf
+*.ini  text eol=crlf
+*.cfg  text eol=crlf
+*.sh   text eol=lf
+*.md   text eol=lf
+*.ts   text eol=crlf
+*.js   text eol=crlf
+*.css  text eol=crlf
+*.html text eol=crlf
+
+# Binary files (no EOL conversion)
+*.bin  binary
+*.dll  binary
+*.exe  binary
+*.gif  binary
+*.gz   binary
+*.ico  binary
+*.jpeg binary
+*.jpg  binary
+*.pdf  binary
+*.png  binary
+*.so   binary
+*.stl  binary
+*.zip  binary
+
+# Build and vendor outputs — skip text normalization entirely
+build/**         -text
+dist/**          -text
+node_modules/**  -text
+out/**           -text
+.cache/**        -text
+.venv/**         -text
+
+# End of file: .gitattributes

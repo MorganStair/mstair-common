@@ -249,30 +249,6 @@ def strip_bounding_blank_lines(text: list[str] | str) -> str:
     return "".join(lines[start:end])
 
 
-class CRLFMode(Enum):
-    AUTO = "auto"
-    CRLF = "crlf"
-    LF = "lf"
-    PLATFORM = "platform"
-
-
-def apply_crlf_mode(content: str, crlf_mode: CRLFMode) -> str:
-    """Apply CRLF line endings to the content based on the specified mode, default is CRLF."""
-    if crlf_mode == CRLFMode.CRLF:
-        content = content.replace("\n", "\r\n")
-    elif crlf_mode == CRLFMode.LF:
-        content = content.replace("\r\n", "\n")
-    elif crlf_mode == CRLFMode.AUTO:
-        if "\r\n" in content:
-            content = content.replace("\n", "\r\n")
-    elif crlf_mode == CRLFMode.PLATFORM:
-        if sys.platform == "win32":
-            content = content.replace("\n", "\r\n")
-        else:
-            content = content.replace("\r\n", "\n")
-    return content
-
-
 def count_printf_specifiers(format_string: str) -> int:
     """
     Count the number of format specifiers in a %-format string.
