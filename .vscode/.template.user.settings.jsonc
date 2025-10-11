@@ -39,7 +39,8 @@
         "rewrap.autoWrap.enabled": false
     },
     "[toml]": {
-        "editor.defaultFormatter": "tamasfe.even-better-toml"
+        "editor.defaultFormatter": "tamasfe.even-better-toml",
+        "editor.formatOnSave": true
     },
     "[typescript]": {
         "editor.defaultFormatter": "vscode.typescript-language-features",
@@ -50,7 +51,6 @@
         "editor.insertSpaces": true,
         "editor.tabSize": 4
     },
-    "accessibility.verbosity.terminal": false,
     "aws.resources.enabledResources": [
         "AWS::ApiGateway::DomainName",
         "AWS::CloudFront::Distribution",
@@ -113,15 +113,12 @@
     "debug.console.fontSize": 14,
     "diffEditor.experimental.useTrueInlineView": true,
     "editor.accessibilitySupport": "off",
-    "editor.autoClosingBrackets": "never",
-    "editor.autoClosingQuotes": "never",
     "editor.codeActionsOnSave": {
         "source.fixAll": "never",
         "source.organizeImports": "always"
     },
     "editor.codeLens": true,
     "editor.cursorSurroundingLines": 2,
-    "editor.detectIndentation": false,
     "editor.fontSize": 18,
     "editor.formatOnPaste": true,
     "editor.formatOnSave": true,
@@ -132,7 +129,7 @@
     "evenBetterToml.formatter.alignComments": true,
     "evenBetterToml.formatter.alignEntries": true,
     "evenBetterToml.formatter.allowedBlankLines": 2,
-    "evenBetterToml.formatter.arrayAutoCollapse": true,
+    "evenBetterToml.formatter.arrayAutoCollapse": false,
     "evenBetterToml.formatter.arrayAutoExpand": true,
     "evenBetterToml.formatter.arrayTrailingComma": true,
     "evenBetterToml.formatter.columnWidth": 101,
@@ -150,7 +147,6 @@
     "evenBetterToml.schema.cache.memoryExpiration": 120,
     "evenBetterToml.schema.enabled": true,
     "evenBetterToml.schema.links": true,
-    "evenBetterToml.semanticTokens": true,
     "explorer.autoReveal": true,
     "explorer.excludeGitIgnore": false,
     "explorer.expandSingleFolderWorkspaces": false,
@@ -175,10 +171,8 @@
         "*.pl": "perl",
         "*.pm": "perl"
     },
-    "files.autoGuessEncoding": false,
     "files.autoSave": "afterDelay",
     "files.autoSaveDelay": 1000,
-    "files.eol": "auto",
     "files.exclude": {
         "**/*.egg-info": true
     },
@@ -208,8 +202,6 @@
     "git.blame.editorDecoration.enabled": false,
     "git.blame.statusBarItem.enabled": true,
     "git.confirmSync": false,
-    "git.decorations.enabled": true,
-    "git.enabled": true,
     "git.enableSmartCommit": false,
     "git.openRepositoryInParentFolders": "always",
     "git.repositoryScanIgnoredFolders": [
@@ -220,7 +212,6 @@
         "publish": true,
         "sync": true
     },
-    "github.copilot.advanced": {},
     "github.copilot.chat.agent.autoFix": true,
     "github.copilot.chat.codeGeneration.useInstructionFiles": true,
     "github.copilot.chat.codesearch.enabled": true,
@@ -245,6 +236,8 @@
     "markdown.occurrencesHighlight.enabled": true,
     "markdown.preview.breaks": true,
     "markdown.preview.doubleClickToSwitchToEditor": true,
+    "markdown.updateLinksOnFileMove.enabled": "prompt",
+    "markdown.validate.enabled": true,
     "mbake.autoInit": true,
     "mbake.executablePath": "${workspaceFolder}/.venv/Scripts/mbake.exe",
     "mbake.formatOnSave": false,
@@ -254,27 +247,14 @@
     "outline.problems.badges": true,
     "outline.problems.colors": true,
     "outline.problems.enabled": true,
-    "outline.showArrays": true, // Probably not for python
-    "outline.showBooleans": true, // Probably not for python
     "outline.showClasses": true,
     "outline.showConstants": false,
     "outline.showConstructors": true,
-    "outline.showEvents": true, // Probably not for python
-    "outline.showFields": true, // Probably not for python
-    "outline.showFiles": true, // Probably not for python
-    "outline.showFunctions": true, // Probably not for python
-    "outline.showKeys": true, // Probably not for python
+    "outline.showFunctions": true,
     "outline.showMethods": true,
     "outline.showModules": true,
-    "outline.showNamespaces": true, // Probably not for python
-    "outline.showNull": true, // Probably not for python
-    "outline.showNumbers": true, // Probably not for python
-    "outline.showObjects": true, // Probably not for python
-    "outline.showOperators": true, // Probably not for python
-    "outline.showPackages": true, // Probably not for python
-    "outline.showStrings": true, // Probably not for python
-    "outline.showStructs": true, // Probably not for python
-    "outline.showTypeParameters": true, // Probably not for python
+    "platformio-ide.autoRebuildAutocompleteIndex": true,
+    "platformio-ide.useBuiltinPython": true,
     "pypiAssistant.codeLens": false,
     "python.analysis.autoFormatStrings": true,
     "python.analysis.autoImportCompletions": true,
@@ -285,9 +265,7 @@
     "python.analysis.indexing": true,
     "python.analysis.inlayHints.functionReturnTypes": true,
     "python.analysis.inlayHints.variableTypes": true,
-    "python.analysis.logLevel": "Information",
     "python.analysis.supportDocstringTemplate": false,
-    "python.analysis.supportRestructuredText": true,
     "python.autoComplete.extraPaths": [
         "${workspaceFolder}/.cache/typings",
         "${workspaceFolder}"
@@ -295,16 +273,8 @@
     "python.createEnvironment.contentButton": "hide",
     "python.defaultInterpreterPath": "${workspaceFolder}/.venv/Scripts/python.exe",
     "python.envFile": "${workspaceFolder}/.env",
-    "python.experiments.enabled": false,
-    "python.experiments.optInto": [],
-    "python.experiments.optOutFrom": [
-        "All"
-    ],
-    "python.languageServer": "Pylance",
-    "python.REPL.enableREPLSmartSend": false,
     "python.terminal.activateEnvInCurrentTerminal": false, // do not mess with already activated terminals
     "python.terminal.activateEnvironment": true,
-    "terminal.integrated.cwd": "${workspaceFolder}",
     "python.testing.autoTestDiscoverOnSaveEnabled": false,
     "python.testing.cwd": "${workspaceFolder}/.cache",
     "python.testing.pytestEnabled": true,
@@ -344,6 +314,10 @@
     "search.searchEditor.defaultNumberOfContextLines": 2,
     "search.useIgnoreFiles": false,
     "security.workspace.trust.untrustedFiles": "open",
+    "serverlessIDE.cfnLint.ignoreRules": [
+        "I3011",
+        "E3002"
+    ],
     "terminal.integrated.allowChords": true,
     "terminal.integrated.allowedLinkSchemes": [
         "file",
@@ -355,9 +329,26 @@
         "docker-desktop"
     ],
     "terminal.integrated.allowMnemonics": true,
+    "terminal.integrated.cwd": "${workspaceFolder}",
     "terminal.integrated.defaultProfile.windows": "Windows PowerShell",
     "terminal.integrated.enablePersistentSessions": true,
     "terminal.integrated.enableVisualBell": true,
+    "terminal.integrated.env.windows": {
+        "CACHE_DIR": "${workspaceFolder}/.cache",
+        "HF_HUB_DISABLE_SYMLINKS_WARNING": "1",
+        "JSII_SILENCE_WARNING_UNTESTED_NODE_VERSION": "1",
+        "MYPY_CACHE_DIR": "${workspaceFolder}/.cache/.mypy_cache",
+        "NODE_ENV": "development",
+        "PATH": "${workspaceFolder}/.venv/Scripts;${workspaceFolder}/bin;${workspaceFolder}/tools;${env:PATH}",
+        "PROJECT_DIR": "${workspaceFolder}",
+        "PROMPT": "\u001b[1;35m$P$G\u001b[0m ",
+        "PYDEVD_WARN_SLOW_RESOLVE_TIMEOUT": "5000",
+        "PYLINT_HOME": "${workspaceFolder}/.cache/pylint",
+        "PYLINTRC": "${workspaceFolder}/.pylintrc",
+        "PYTHONPYCACHEPREFIX": "${workspaceFolder}/.cache/__pycache__",
+        "RUFF_CACHE_DIR": "${workspaceFolder}/.cache/ruff",
+        "WITH_4BIT_QUANTIZATION": "1"
+    },
     "terminal.integrated.environmentChangesRelaunch": true,
     "terminal.integrated.fontSize": 14,
     "terminal.integrated.hideOnStartup": "always",
@@ -383,38 +374,26 @@
         }
     },
     "terminal.integrated.scrollback": 5000,
+    "terminal.integrated.shellIntegration.decorationsEnabled": "both",
     "terminal.integrated.shellIntegration.environmentReporting": true,
     "terminal.integrated.suggest.enabled": true,
     "typescript.updateImportsOnFileMove.enabled": "always",
-    "window.density.editorTabHeight": "compact",
     "window.title": "(${rootNameShort}) ${activeEditorShort}",
     "window.zoomLevel": -1,
+    "workbench.colorCustomizations": {
+        "titleBar.activeForeground": "#FFFFFF"
+    },
     "workbench.commandPalette.experimental.suggestCommands": true,
     "workbench.editor.closeOnFileDelete": true,
     "workbench.editor.highlightModifiedTabs": true,
     "workbench.editorAssociations": {
-        "{git,gitlens,conflictResolution,vscode-local-history}:/**/*.{asl.json,asl.yaml,asl.yml}": "default",
+        "{git,gitlens,conflictResolution,vscode-local-history}:/**/*.asl.{json,yaml,yml}": "default",
         "{git,gitlens,conflictResolution,vscode-local-history}:/**/*.tc.json": "default",
-        "{git,gitlens,git-graph}:/**/*.{md,csv,svg}": "default"
+        "{git,gitlens,git-graph}:/**/*.{csv,svg}": "default",
+        "*.{jpg,png}": "imagePreview.previewEditor",
+        "*.{json,jsonc,yaml,yml}": "default",
+        "*.{md,markdown}": "vscode.markdown.preview.editor",
+        "*.ipynb": "jupyter-notebook"
     },
-    "workbench.settings.applyToAllProfiles": [
-        "genieai.enableConversationHistory"
-    ],
-    "workbench.startupEditor": "none",
-    "terminal.integrated.env.windows": {
-        "CACHE_DIR": "${workspaceFolder}/.cache",
-        "HF_HUB_DISABLE_SYMLINKS_WARNING": "1",
-        "JSII_SILENCE_WARNING_UNTESTED_NODE_VERSION": "1",
-        "MYPY_CACHE_DIR": "${workspaceFolder}/.cache/.mypy_cache",
-        "NODE_ENV": "development",
-        "PATH": "${workspaceFolder}/.venv/Scripts;${workspaceFolder}/bin;${env:PATH}",
-        "PROJECT_DIR": "${workspaceFolder}",
-        "PROMPT": "\u001b[1;35m$P$G\u001b[0m ",
-        "PYDEVD_WARN_SLOW_RESOLVE_TIMEOUT": "5000",
-        "PYLINT_HOME": "${workspaceFolder}/.cache/pylint",
-        "PYLINTRC": "${workspaceFolder}/.pylintrc",
-        "PYTHONPYCACHEPREFIX": "${workspaceFolder}/.cache/__pycache__",
-        "RUFF_CACHE_DIR": "${workspaceFolder}/.cache/ruff",
-        "WITH_4BIT_QUANTIZATION": "1"
-    }
+    "workbench.startupEditor": "none"
 }
