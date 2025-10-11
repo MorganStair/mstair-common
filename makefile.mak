@@ -26,9 +26,10 @@ venv-reset: ## Recreate .venv from scratch, reinstall dependencies
 	rm -rf .venv
 	python -m ensurepip --upgrade
 	python -m venv .venv
-	. .venv/Scripts/activate 2>/dev/null || . .venv/bin/activate
-	python -m pip install --upgrade pip setuptools wheel pip-tools
-	pip install -e .[dev,test]
+	. .venv/Scripts/activate 2>/dev/null || . .venv/bin/activate && {
+	  python -m pip install --upgrade pip setuptools wheel pip-tools; \
+	  pip install -e .[dev,test]; \
+	}
 	$(_end)
 
 .PHONY: venv-ensure
@@ -39,14 +40,16 @@ venv-ensure: ## Ensure .venv exists (create if missing)
 
 build: venv-ensure ## Install current package in editable mode into .venv
 	$(_begin)
-	. .venv/Scripts/activate 2>/dev/null || . .venv/bin/activate
-	pip install -e .[dev,test]
+	. .venv/Scripts/activate 2>/dev/null || . .venv/bin/activate && { \
+	  pip install -e .[dev,test]; \
+	}
 	$(_end)
 
 package: venv-ensure ## Build distribution artifacts (wheel and sdist)
 	$(_begin)
-	. .venv/Scripts/activate 2>/dev/null || . .venv/bin/activate
-	python -m build
+	. .venv/Scripts/activate 2>/dev/null || . .venv/bin/activate && {
+	  python -m build; \
+	}
 	$(_end)
 
 setup: venv-ensure build stubs ## Full developer environment setup
@@ -75,31 +78,50 @@ stubs:	$(TYPINGS_TXT) ## Generate type stubs for packages listed in $(TYPINGS_TX
 
 $(TYPINGS_DIR)/%/__init__.pyi:
 	$(_begin)
-	mkdir -p "$(dir $@)"
-	source .venv/Scripts/activate 2>/dev/null || source .venv/bin/activate
-	$(call STUBGEN_RUN,$*,$(TYPINGS_DIR))
-	: "$(TYPINGS_TXT)" ; \
+	source .venv/Scripts/activate 2>/dev/null || source .venv/bin/activate && { \
+	  pip install --upgrade pip setuptools wheel; \
+	  pip install mypy; \
+	}
+	[ ! -f "$(VIRTUAL_ENV)/Lib/site-packages/$*/__init__.pyi" ] || \
+	  { printf "\n*** '$*' includes stubs ***\n\n" >&2; exit 1; }; \
+	source .venv/Scripts/activate 2>/dev/null || source .venv/bin/activate && \
+	  $(call STUBGEN_RUN,$*,$(TYPINGS_DIR))
+	: "$(TYPINGS_TXT)"; \
 	  { test -f "$$_" && cat "$$_"; printf "%s\n" "$*"; } \
-	  | tr -d '\r' | grep -v '^$$' | sort | uniq >| "$$_"
+	  | tr -d '\r' | grep -v '^$$' | sort | uniq >| "$$_";
 	$(_end)
 
 # ----------------------------------------------------------
 # Cleanup
 # ----------------------------------------------------------
 
+.PHONY: clear
+clear:
+	$(_clear_screen)
+
 .PHONY: clean
-clean:: ## Remove generated stubs and cache directory
+clean:: clear ## Remove generated stubs and cache directory
 	$(_begin)
 	rm -rf "$(TYPINGS_DIR)"
-	rm -rf "$(MYPY_CACHE_DIR)"
-	rm -rf "$(CACHE_DIR)"
 	$(_end)
 
 .PHONY: virgin
 virgin:: clean
 	$(_begin)
 	rm -rf .venv
+	rm -rf "$(CACHE_DIR)"
+	rm -rf "$(MYPY_CACHE_DIR)"
 	rm -rf build
 	rm -rf dist
-	find . -name "*.egg-info" -exec rm -rvf {} +
+	rm -rf uploads
+	find . -type d -name "*.egg-info" -exec rm -rf {} +
 	$(_end)
+
+.PHONY: windows-init
+windows-init: ## Initialize Windows environment (run once)
+	$(_begin)
+	git config --global core.autocrlf false
+	git config --global core.eol crlf
+	$(_end)
+
+# End of file: makefile.mak
