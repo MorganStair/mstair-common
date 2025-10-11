@@ -1,18 +1,40 @@
 {
+    "extensions": {
+        "recommendations": [
+            "amazonwebservices.aws-toolkit-vscode",
+            "boto3typed.boto3-ide",
+            "charliermarsh.ruff",
+            "dnut.rewrap-revived",
+            "esbenp.prettier-vscode",
+            "eshojaei.mbake-makefile-formatter",
+            "github.copilot-chat",
+            "github.copilot",
+            "jannchie.ruff-ignore-explainer",
+            "ms-python.debugpy",
+            "ms-python.python",
+            "ms-python.vscode-pylance",
+            "rodolphebarbanneau.python-docstring-highlighter",
+            "streetsidesoftware.code-spell-checker",
+            "tamasfe.even-better-toml",
+            "twixes.pypi-assistant",
+            "yzhang.markdown-all-in-one"
+        ]
+    },
     "folders": [
         {
             "path": "."
         }
     ],
     "settings": {
-        "terminal.integrated.env.windows": {
-            "MYPYPATH": "${workspaceFolder}/src;${workspaceFolder}/.cache/typings;${env:MYPYPATH}",
-            "PYTHONPATH": "${workspaceFolder}/src;${workspaceFolder}/.cache/typings;${env:PYTHONPATH}",
-        },
         "workbench.colorCustomizations": {
-            "editor.background": "#112",
-            "titleBar.activeBackground": "#448",
-            "titleBar.inactiveBackground": "#224"
+            "editor.background": "#101",
+            "titleBar.activeBackground": "#436",
+            "titleBar.inactiveBackground": "#101",
+            "panel.background": "#212",
+            "sideBar.background": "#212",
+            "statusBar.background": "#212",
+            "activityBar.background": "#212",
+            "barbackground": "#212",
         }
     }
 }

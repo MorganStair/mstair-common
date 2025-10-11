@@ -1,38 +1,35 @@
-# File: D:/mstair-common/pyproject.toml
+# File: pyproject.toml
 
 [build-system]
     build-backend = "setuptools.build_meta"
-    requires      = ["setuptools>=65", "wheel"]
-
+    requires      = ["setuptools>=67", "wheel"]
 
 [project]
     authors = [{ name = "Morgan Stair" }]
     dependencies = [
-        "boto3-stubs[apigateway,apigatewayv2,cloudformation,cloudfront,cognito-identity,cognito-idp,dynamodb,iam,iot,lambda,logs,s3,sts,ssm,stepfunctions,sts,wafv2]>=1.35.0",
-        "boto3>=1.35.0",
-        "botocore-stubs>=1.35.0",
-        "botocore>=1.35.0",
-        "charset_normalizer>=3.3.2",
-        "click>=8.1.7",
-        "colorama>=0.4.6",
-        "diskcache>=5.6.1",
-        "gitpython>=3.1.43",
+        "boto3",
+        "boto3-stubs[apigateway,apigatewayv2,cloudformation,cloudfront,cognito-identity,cognito-idp,dynamodb,iam,iot,lambda,logs,s3,sts,ssm,stepfunctions,sts,wafv2]",
+        "botocore",
+        "botocore-stubs",
+        "charset_normalizer",
+        "click",
+        "colorama",
+        "diskcache",
+        "gitpython",
         "json5",
-        "mypy>=1.10.0",
-        "nltk>=3.8.1",
+        "mypy",
+        "nltk",
         "pytest",
-        "python-dotenv>=1.1.1",
+        "python-dotenv",
         "pytz",
         "ruff",
-        "types-awscrt>=0.21.0",
     ]
     description = "Common libraries for mstair projects"
     license = "MIT"
     name = "mstair-common"
     readme = "README.md"
     requires-python = ">=3.13"
-    version = "0.1.1"
-
+    version = "0.1.2"
 
     [project.optional-dependencies]
         dev  = []
@@ -45,11 +42,28 @@
         local_packages = ["mstair"]
         local_src_dir  = "src"
 
+[tool.hatch.build]
+    directory = ".cache/hatch.build.directory"
+
+[tool.pip-tools]
+    annotate        = true
+    generate-hashes = false
+    header          = true
+    # newline = "CRLF"
+    resolver = "backtracking"
+
+[tool.poetry.dependencies]
+    pyan3  = "1.0.3"
+    python = "^3.13"
 
 [tool.pytest.ini_options]
     addopts = "-rNfExXp -q --maxfail=5"
-    cache_dir = ".pytest_cache"
+    cache_dir = ".cache/pytest"
+    collect_imported_tests = true
+    consider_namespace_packages = true
     console_output_style = "classic"
+    doctest_encoding = "utf-8"
+    doctest_optionflags = "ELLIPSIS FAIL_FAST IGNORE_EXCEPTION_DETAIL NORMALIZE_WHITESPACE REPORT_ONLY_FIRST_FAILURE"
     markers = [
         "e2e: end-to-end tests simulating real user workflows",
         "functional: verifies individual features or behaviors",
@@ -59,16 +73,18 @@
         "slow: long-running or resource-intensive tests",
         "unit: fast, isolated tests with no external dependencies",
     ]
-    minversion = "8.3"
-    norecursedirs = "*.egg-info"
-    testpaths = ["src/*/", "src/*/*/"]
 
+    minversion    = "8.3"
+    norecursedirs = ["*.egg-info"]
+    testpaths     = ["python", "src", "tests"]
 
-[tool.setuptools.packages.find]
-    include = ["mstair", "mstair.*"]
-    where   = ["src"]
+[tool.setuptools]
+    include-package-data = false
 
+    [tool.setuptools.packages.find]
+        include = ["mstair", "mstair.*"]
+        where   = ["src"]
 
-[tool.setuptools.package-data]
-    "mstair"        = ["py.typed"]
-    "mstair.common" = ["**/*.pyi", "*.pyi", "py.typed"]
+    [tool.setuptools.package-data]
+        "mstair"        = ["py.typed"]
+        "mstair.common" = ["**/*.pyi", "*.pyi", "py.typed"]
