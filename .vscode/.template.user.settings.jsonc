@@ -51,15 +51,6 @@
         "editor.insertSpaces": true,
         "editor.tabSize": 4
     },
-    "aws.resources.enabledResources": [
-        "AWS::ApiGateway::DomainName",
-        "AWS::CloudFront::Distribution",
-        "AWS::CloudFront::Function",
-        "AWS::DynamoDB::Table"
-    ],
-    "aws.suppressPrompts": {
-        "fileViewerEdit": true
-    },
     "chat.tools.terminal.autoApprove": {
         "make": true,
         "pytest": true
@@ -199,7 +190,7 @@
     },
     "git.autoRepositoryDetection": false,
     "git.autoStash": true,
-    "git.blame.editorDecoration.enabled": false,
+    "git.blame.editorDecoration.enabled": true,
     "git.blame.statusBarItem.enabled": true,
     "git.confirmSync": false,
     "git.enableSmartCommit": false,
@@ -339,7 +330,7 @@
         "JSII_SILENCE_WARNING_UNTESTED_NODE_VERSION": "1",
         "MYPY_CACHE_DIR": "${workspaceFolder}/.cache/.mypy_cache",
         "NODE_ENV": "development",
-        "PATH": "${workspaceFolder}/.venv/Scripts;${workspaceFolder}/bin;${workspaceFolder}/tools;${env:PATH}",
+        "PATH": "${workspaceFolder}/bin;${workspaceFolder}/tools;${env:PATH}",
         "PROJECT_DIR": "${workspaceFolder}",
         "PROMPT": "\u001b[1;35m$P$G\u001b[0m ",
         "PYDEVD_WARN_SLOW_RESOLVE_TIMEOUT": "5000",
