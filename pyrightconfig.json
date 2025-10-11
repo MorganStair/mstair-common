@@ -1,10 +1,11 @@
+// File: pyrightconfig.json
 {
     "deprecateTypingAliases": true,
     "exclude": [
-        "!.cache/typings",
         "**/.cache/**",
         "**/.git/**",
         "**/.pio/**",
+        "**/.mypy_cache/**",
         "**/.venv*/**",
         "**/__pycache__/**",
         "**/build/**",
@@ -12,16 +13,18 @@
         "**/data/**",
         "**/dist/**",
         "**/node_modules/**",
+        "**/out/**",
         "**/react/**"
     ],
     "executionEnvironments": [
         {
-            "extraPaths": ["src", ".cache/typings"],
+            "extraPaths": [".cache/typings", "python", "src"],
             "root": "."
         }
     ],
     "ignore": [],
-    "include": ["src"],
+    "include": ["src", "python", "tests"],
+    "pythonVersion": "3.13",
     "reportArgumentType": "warning",
     "reportCallIssue": "warning",
     "reportGeneralTypeIssues": "warning",
@@ -44,7 +47,6 @@
     "reportUnusedVariable": "warning",
     "stubPath": ".cache/typings",
     "typeCheckingMode": "strict",
-    "useLibraryCodeForTypes": true,
-    "venv": ".venv",
-    "venvPath": "."
+    "useLibraryCodeForTypes": true
 }
+// End of file: pyrightconfig.json
