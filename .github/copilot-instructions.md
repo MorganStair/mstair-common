@@ -11,7 +11,7 @@ Purpose: shared utilities consumed via VCS dependency, not a standalone app. Roo
 ## Developer loop (Python 3.13)
 
 -   Install editable: pip install -e .[dev,test] (or `make build`).
--   Lint/format: python -m ruff check --fix; python -m ruff format (CRLF enforced in `ruff.toml`).
+-   Lint/format: python -m ruff check --fix; python -m ruff format.
 -   Type check: mypy src (strict per `mypy.ini`, stubPath `.cache/typings` in `pyrightconfig.json`).
 -   Tests: pytest (quiet, maxfail=5 from `pyproject.toml`; tests live under `src/**/test_*.py`).
 -   Stubs (optional): `make stubs` writes to `.cache/typings`; ship inline types + `py.typed` in `src/mstair/` and `src/mstair/common/`.
@@ -26,7 +26,7 @@ Purpose: shared utilities consumed via VCS dependency, not a standalone app. Roo
 ## Formatting and tokenization
 
 -   Use `mstair.common.format_helpers.format_source_code(text=str, target=Path)` to ruff-sort imports and format via stdin with `--stdin-filename` (preserves original line endings). Tests: `test_format_helpers.py` monkeypatch `subprocess.run`.
--   Normalize textual snippets with `base.normalize_helpers.normalize_lines(...)` to trim and keep CRLF awareness.
+-   Normalize textual snippets with `base.normalize_helpers.normalize_lines(...)` to trim and keep line ending awareness.
 -   `tokenize_helpers.CodeRegions.regions_from_code()` splits header/docstring/body/footer; footer is the first trailing comment block starting at `# End of file:` line.
 
 ## Conventions and helpers

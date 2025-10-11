@@ -1,0 +1,22 @@
+// File: .markdownlint.jsonc
+{
+    "MD012": false,
+    "MD013": false,
+    // Allow your list-start layout without forcing a first-line H1
+    "MD041": false,
+    // Headings inside list items often trip surrounding-blank-lines rules
+    "MD022": false,
+    "MD023": false,
+    // Allow 4-space indent for unordered lists
+    "MD007": {
+        "indent": 4
+    },
+    // Use "-" for all unordered lists
+    "MD004": {
+        "style": "dash"
+    },
+    // Require exactly one space after list markers
+    "MD030": false,
+    "MD046": false
+}
+// End of file: .markdownlint.jsonc
