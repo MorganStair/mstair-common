@@ -51,7 +51,7 @@ def git_repo(start_dir: Path | str = ".") -> git.Repo:
 
 
 @cache
-def _git_repo_cache_impl(*, start: str):
+def _git_repo_cache_impl(*, start: str) -> git.Repo:
     return git.Repo(start, search_parent_directories=True)
 
 
@@ -71,7 +71,7 @@ def git_repo_basedir(start: str | Path = ".") -> str:
 
 
 @cache
-def _git_repo_basedir_cache_impl(*, start: str):
+def _git_repo_basedir_cache_impl(*, start: str) -> str:
     start_path = Path(start or ".").resolve()
     if start_path.is_file():
         start_path = start_path.parent
@@ -294,17 +294,19 @@ class RepoMetadata:
     @property
     def remotes(self) -> dict[str, str]:
         """All remote URLs."""
-        return self._remotes.copy()  # Return copy to prevent mutation
+        result: dict[str, str] = self._remotes.copy()
+        return result
 
     @property
     def current_branch(self) -> str | None:
         """Current branch name."""
-        return self._branch_info["current"]
+        result: str | None = self._branch_info["current"]
+        return result
 
     @property
     def is_head_detached(self) -> bool:
         """Whether HEAD is detached."""
-        return self._branch_info["head_detached"]
+        return bool(self._branch_info["head_detached"])
 
     @property
     def user_name(self) -> str | None:
