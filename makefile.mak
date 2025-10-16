@@ -64,6 +64,7 @@ venv: .venv ## Create a virtual environment in .venv
 
 # 	@$(_activate); { set -x; python -m ensurepip --upgrade || exit 1; } | /usr/bin/grep -vE '(Looking in|Requirement already)' || true
 
+.PHONY: check
 check:
 	@$(_clear_screen)
 	@$(_begin)
