@@ -90,9 +90,9 @@ define _end
 endef
 
 define _stubgen
-	( set -x; stubgen -p "$(1)" -o "$(2)" --include-private -q; ); \
+	( set -x; stubgen -p "$(1)" -o "$(2)" --include-private -q 2>/dev/null; ); \
 	if [ ! -s "$(2)/$(1)/__init__.pyi" ]; then \
-		( set -x; stubgen -p "$(1)" -o "$(2)" --include-private -q --no-import --ignore-errors; ); \
+		( set -x; stubgen -p "$(1)" -o "$(2)" --include-private -q --no-import --ignore-errors 2>/dev/null; ); \
 	fi; \
 	if [ ! -s "$(2)/$(1)/__init__.pyi" ]; then \
 		printf "\n*** stubgen '$(1)' failed ***\n\n" >&2; exit 1; \

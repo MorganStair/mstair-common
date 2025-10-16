@@ -98,12 +98,8 @@ $(CACHE_DIR)/.stubs: $(TYPINGS_TXT) # install calls "make stubs", so this can no
 	@$(_end)
 
 .PHONY: docs
-docs: .venv/.install ## Generate documentation in docs/
-	@$(_begin)
-	@$(_activate); set -x; python -m mstair.rentals.rentals_docgen --output docs/ --format markdown
-	@$(_activate); set -x; rentals --config rentals.example.toml
-	@$(_activate); set -x; rentals --help > docs/rentals-help.txt
-	@$(_end)
+docs: .venv/.install # Generate documentation in docs/
+	@: No documentation to generate yet
 
 dist: .venv/.install ## Build the source and wheel packages
 	@$(_begin)
@@ -121,7 +117,6 @@ lint: .venv/.install $(CACHE_DIR)/.stubs ## Run linters
 test: .venv/.install ## Run test suites and validate documentation generation
 	@$(_begin)
 	@$(_activate); set -x; pytest -v
-	@$(_activate); set -x; python -m mstair.rentals.rentals_docgen --output docs/ --format markdown --validate-only
 	@$(_end)
 
 .PHONY: all

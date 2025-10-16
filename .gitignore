@@ -214,7 +214,6 @@ tmp.*
 *token.*
 
 # Ignore personal files
-/rentals.toml
 /*.csv
 /*.eml
 

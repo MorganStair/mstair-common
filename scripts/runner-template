@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
-# File: bin/rentals
+# File: bin/runner-template
 # ------------------------------------------------------
 # Summary:
 #     Runs the mstair.{Python module or package} based on the script name.
 # Usage:
-#     rentals [ARGS...]
+#     runner-template [ARGS...]
 # Exit codes:
 #     0 = Success
 #     4 = Usage error or CLI method not found
@@ -35,7 +35,7 @@ for subdir in "Scripts" "bin"; do
     fi
 done
 if [ -z "$ACTIVATE" ] || [ ! -f "$ACTIVATE" ]; then
-    echo "rentals: Virtual environment activation script not found in $PROJECT_ROOT/.venv" >&2
+    echo "runner-template: Virtual environment activation script not found in $PROJECT_ROOT/.venv" >&2
     exit 5
 fi
 
@@ -44,7 +44,7 @@ source "$ACTIVATE"
 
 # Raise an error if PYTHONPATH was not set by the activate script
 if [ -z "${PYTHONPATH:-}" ]; then
-    echo "rentals: PYTHONPATH not set by the virtual environment activation script" >&2
+    echo "runner-template: PYTHONPATH not set by the virtual environment activation script" >&2
     exit 5
 fi
 

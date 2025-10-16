@@ -101,7 +101,6 @@
         "python": true,
         "Remove-Item": true,
         "Rename-Item": true,
-        "rentals": true,
         "ruff": true,
         "schtasks": true
     },

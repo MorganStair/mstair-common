@@ -1,10 +1,10 @@
 @echo off
-@REM File: bin\rentals.cmd
+@REM File: bin\runner-template.cmd
 @REM ------------------------------------------------------
 @REM Summary:
 @REM     Runs the Python module or package based on the script name.
 @REM Usage:
-@REM     rentals [ARGS...]
+@REM     runner-template [ARGS...]
 @REM Exit codes:
 @REM     0 = Success
 @REM     4 = Usage error or CLI method not found
@@ -30,7 +30,7 @@ set "MODULE=mstair.%~n0"
 
 set "ACTIVATE=%PROJECT_ROOT%\.venv\Scripts\activate.bat"
 if not exist "%ACTIVATE%" (
-    echo rentals: Virtual environment activation script not found in %PROJECT_ROOT%\.venv 1>&2
+    echo runner-template: Virtual environment activation script not found in %PROJECT_ROOT%\.venv 1>&2
     exit /b 5
 )
 
@@ -39,7 +39,7 @@ call "%ACTIVATE%"
 
 @REM Raise an error if PYTHONPATH was not set by the activation script
 if "%PYTHONPATH%"=="" (
-    echo rentals: PYTHONPATH was not set by the virtual environment activation script 1>&2
+    echo runner-template: PYTHONPATH was not set by the virtual environment activation script 1>&2
     exit /b 5
 )
 
