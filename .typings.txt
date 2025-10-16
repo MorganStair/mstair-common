@@ -1,4 +1,2 @@
 diskcache
-google_auth_oauthlib
-googleapiclient
 nltk

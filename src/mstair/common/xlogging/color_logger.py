@@ -5,7 +5,7 @@ A logger that adds color and a prefix to messages.
 
 import re
 from logging import CRITICAL, DEBUG, ERROR, INFO, WARNING
-from typing import Any
+from typing import Any, Literal
 
 from mstair.common.base import config as cfg
 from mstair.common.xlogging.core_logger import CoreLogger
@@ -15,9 +15,14 @@ from mstair.common.xlogging.logger_constants import (
 
 
 color_logger = None
-K_HMN = "Hmn"  # Fallback logger name used during script execution (e.g. cdk scripts)
-K_HMN_CODE_ANALYZER = "HmnCodeAnalyzer"  # Fallback logger name used during code analysis
-K_HMN_LAMBDA = "HmnLambda"  # Fallback logger name used during lambda execution
+
+LoggerNameType = Literal["HmnLambda", "HmnCodeAnalyzer", "HmnUnderTrace", "Hmn"]
+
+K_HMN: LoggerNameType = "Hmn"  # Fallback logger name during script execution (e.g. cdk scripts)
+K_HMN_CODE_ANALYZER: LoggerNameType = "HmnCodeAnalyzer"  # Fallback logger name during code analysis
+K_HMN_LAMBDA: LoggerNameType = "HmnLambda"  # Fallback logger name during lambda execution
+
+"""Type for all fallback logger names."""
 
 
 class ColorLogger(CoreLogger):
@@ -68,19 +73,19 @@ class ColorLogger(CoreLogger):
         not add any offset and let CoreLogger handle it.
         """
 
-    def debug(self, msg: str, *args: Any, **kwargs: Any) -> None:
+    def debug(self, msg: str, *args: Any, **kwargs: Any) -> None:  # type: ignore[override]
         self._custom_logger_log(DEBUG, msg, *args, **kwargs)
 
-    def info(self, msg: str, *args: Any, **kwargs: Any) -> None:
+    def info(self, msg: str, *args: Any, **kwargs: Any) -> None:  # type: ignore[override]
         self._custom_logger_log(INFO, msg, *args, **kwargs)
 
-    def warning(self, msg: str, *args: Any, **kwargs: Any) -> None:
+    def warning(self, msg: str, *args: Any, **kwargs: Any) -> None:  # type: ignore[override]
         self._custom_logger_log(WARNING, msg, *args, **kwargs)
 
-    def error(self, msg: str, *args: Any, **kwargs: Any) -> None:
+    def error(self, msg: str, *args: Any, **kwargs: Any) -> None:  # type: ignore[override]
         self._custom_logger_log(ERROR, msg, *args, **kwargs)
 
-    def critical(self, msg: str, *args: Any, **kwargs: Any) -> None:
+    def critical(self, msg: str, *args: Any, **kwargs: Any) -> None:  # type: ignore[override]
         self._custom_logger_log(CRITICAL, msg, *args, **kwargs)
 
     def _custom_logger_log(self, level: int, msg: str, *args: Any, **kwargs: Any) -> None:
@@ -101,9 +106,7 @@ class ColorLogger(CoreLogger):
         super().log(level, formatted_msg, *formatted_args, **kwargs)
 
     @staticmethod
-    def _get_fallback_logger_name() -> (
-        Literal["HmnLambda"] | Literal["HmnCodeAnalyzer"] | Literal["HmnUnderTrace"] | Literal["Hmn"]
-    ):
+    def _get_fallback_logger_name() -> LoggerNameType:
         if cfg.in_lambda() and not cfg.in_test_mode():
             return K_HMN_LAMBDA
         elif cfg.in_analysis_mode():

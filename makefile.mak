@@ -76,6 +76,7 @@ install: .venv/.install; @: ## Install packages and custom wrappers in .venv
 .venv/.install: .venv
 	@$(_begin)
 	@$(_activate); set -x; pip install -q -e .[dev,test]
+	@set -x; make --no-print-directory stubs
 	@set -x; touch $@
 	@$(_end)
 
@@ -85,7 +86,7 @@ install: .venv/.install; @: ## Install packages and custom wrappers in .venv
 
 .PHONY: stubs
 stubs: $(CACHE_DIR)/.stubs; @:  ## Generate stubs for packages listed in .typings.txt
-$(CACHE_DIR)/.stubs: .venv/.install $(TYPINGS_TXT)
+$(CACHE_DIR)/.stubs: $(TYPINGS_TXT) # install calls "make stubs", so this can not depend on install
 	@$(_begin)
 	@{ cat "$(TYPINGS_TXT)" 2>/dev/null || true; } | \
 		tr -d '\r' | \

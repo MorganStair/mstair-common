@@ -118,7 +118,9 @@ class CoreLogger(logging.Logger):
         """
         initialize_logger_constants()
 
-        if level in (None, logging.NOTSET, "NOTSET", ""):
+        levels: set[int | str] = {logging.NOTSET, "NOTSET", ""}
+        level = level if level in levels or isinstance(level, int) else logging.NOTSET
+        if level in levels:
             level = LogLevelConfig.get_instance().get_effective_level(name)
         super().__init__(name, level)
 
@@ -210,6 +212,7 @@ class CoreLogger(logging.Logger):
 
         # Apply prefix if set
         prefix = _log_prefix.get()
+        msg: str
         if prefix and args:
             msg = args[0] if isinstance(args[0], str) else str(args[0])
             args = (f"{prefix}{msg}", *args[1:])
@@ -218,7 +221,7 @@ class CoreLogger(logging.Logger):
             msg = msg if isinstance(msg, str) else str(msg)
             kwargs["msg"] = f"{prefix}{msg}"
 
-        msg: Any = args[0] if args else kwargs.get("msg", "")
+        msg = args[0] if args else kwargs.get("msg", "")
         log_args: tuple[Any, ...] = args[1:] if len(args) > 1 else ()
 
         token: contextvars.Token[StackFrameInfo | None] = _cached_caller_info.set(found_frame_info)
@@ -230,7 +233,7 @@ class CoreLogger(logging.Logger):
                 exc_info=kwargs.get("exc_info"),
                 # stack_info can be bool or str (pre-formatted stack trace)
                 # pyright doesn't know about the str overload in logging internals
-                stack_info=kwargs.get("stack_info"),  # pyright: ignore[reportArgumentType]
+                stack_info=kwargs.get("stack_info"),  # type: ignore
                 stacklevel=1,
                 extra=extra,
             )
@@ -297,12 +300,13 @@ class CoreLogger(logging.Logger):
         :param args: Optional metadata (e.g., dict).
         :param kwargs: Passed to log().
         """
+        _type: str
         if isinstance(type_, str):
-            _type: str = re.sub(r"^.*\.", "", type_)
+            _type = re.sub(r"^.*\.", "", type_)
         elif hasattr(type_, "__name__"):
-            _type: str = type_.__name__
+            _type = type_.__name__
         else:
-            _type: str = type(type_).__name__
+            _type = type(type_).__name__
         _type = _type.strip()
 
         _msg = f"\n  {_type}:\n    {id}"

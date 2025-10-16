@@ -78,7 +78,7 @@ COLOR_MAP = {
 }
 
 
-def get_color_code(key: Any = None):
+def get_color_code(key: Any = None) -> str | Any:
     # Disable color codes in code analyzer and lambda functions
     if not cfg.in_desktop_mode():
         return ""
@@ -235,7 +235,8 @@ class CoreFormatter(logging.Formatter):
         else:
             klassAndMethod = f"{klass_name}.{record.funcName}()"  # klassAndMethod = "Klass.method()"
 
-        return get_color_code("klassAndMethod") + klassAndMethod + get_color_code()
+        result: str = get_color_code("klassAndMethod") + klassAndMethod + get_color_code()
+        return result
 
     @staticmethod
     def format_levelName(levelname: str) -> str:
@@ -250,7 +251,7 @@ class CoreFormatter(logging.Formatter):
         # SRD: Format method name with colors
         # Called from: format()
         # Calls: get_color_code()
-        method = get_color_code("method") + funcName + "()" + get_color_code()
+        method: str = get_color_code("method") + funcName + "()" + get_color_code()
         return method
 
     @staticmethod
@@ -310,17 +311,17 @@ class CoreFormatter(logging.Formatter):
         elif ei in {False, None}:
             ei = (None, None, None)
         elif isinstance(ei, BaseException):
-            ei = (type(ei), ei, ei.__traceback__)  # type: ignore[assignment]
+            ei = (type(ei), ei, ei.__traceback__)
 
         message = super().formatException(ei)  # type: ignore[arg-type]
         return self.message_filter(message)
 
-    def formatTime(self, record: Any, datefmt: str | None = None):
+    def formatTime(self, record: Any, datefmt: str | None = None) -> str:
         # SRD: Format timestamp with timezone and colors
         # Called from: logging.Formatter.format()
         # Calls: get_color_code()
         _datetime = datetime.fromtimestamp(record.created, self.est_tz)
-        _result = ""
+        _result: str = ""
         if datefmt:
             try:
                 datefmt = datefmt.replace(r"%-", "%")

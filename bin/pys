@@ -21,7 +21,7 @@ fi
 # ------------------------------------------------------
 # CLI Script Existence Check:
 # PROJECT_ROOT = Project root directory.
-# SRC          = Subdirectory for source code.
+# SRC          = Subdirectory for source code ("src").
 # TOOL         = Tool name (without .py extension).
 # ------------------------------------------------------
 

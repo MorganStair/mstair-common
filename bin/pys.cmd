@@ -30,7 +30,7 @@ if "%~1"=="" (
 REM ----------------------------------------------------
 REM Script CLI Existence Check:
 REM PROJECT_ROOT = The root directory of the project (one level up from this script).
-REM SRC          = The project subdirectory for the source code ("python").
+REM SRC          = The project subdirectory for the source code ("src").
 REM TOOL         = The name of the tool to run (first argument).
 REM ----------------------------------------------------
 

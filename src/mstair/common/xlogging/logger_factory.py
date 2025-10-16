@@ -15,15 +15,13 @@ import sys
 from collections.abc import Callable
 from pathlib import Path
 
-from mstair.common.base import config as cfg
 from mstair.common.base.caller_module_name_and_level import caller_module_name_and_level
 from mstair.common.xlogging.core_logger import CoreLogger
-from mstair.common.xlogging.logger_util import LogLevelConfig
 
 
 DEFAULT_LOG_LEVEL = logging.WARNING  # Default log level if not specified in environment variables
 
-_LOG: CoreLogger = None  # pyright: ignore[reportAssignmentType]
+_LOG: CoreLogger = None  # type: ignore
 
 
 def create_logger(
@@ -100,7 +98,7 @@ def _get_core_logger_from_logging(name: str) -> CoreLogger:
     logging_class = logging.getLoggerClass()
     if logging_class is not CoreLogger:
         logging.setLoggerClass(CoreLogger)
-    logger: CoreLogger = logging.getLogger(name)  # pyright: ignore[reportAssignmentType]
+    logger: CoreLogger = logging.getLogger(name)  # type: ignore
     if logging_class is not CoreLogger:
         logging.setLoggerClass(logging_class)
     if not isinstance(logger, CoreLogger):
@@ -117,53 +115,6 @@ def get_caller_logger_name(*, stacklevel: int = 1) -> str:
         executable = sys.argv[0] if sys.argv and sys.argv[0] else sys.executable
         name = Path(executable).stem
     return name
-
-
-def _logger_resolve_level_for_name(
-    name: str,
-    requested_level: int | str | None,
-    default: int,
-) -> int:
-    """
-    Resolve the effective integer log level for a logger using environment config
-    parsed by LogLevelConfig, with support for explicit int/str overrides.
-
-    :param name: Logger name to resolve.
-    :param requested_level: Explicit level (int or name) or None to use env config.
-    :param default: Fallback level when nothing matches.
-    :return: Resolved stdlib logging level integer (custom levels supported).
-    """
-    # Minimize noise under trace/debuggers.
-    if cfg.being_traced():
-        return logging.ERROR
-
-    # Explicit integer wins.
-    if isinstance(requested_level, int):
-        return requested_level
-
-    # Explicit string override (supports custom names).
-    if isinstance(requested_level, str):
-        level = _parse_level_name_to_int(requested_level)
-        return level if level is not None else default
-
-    # No explicit override: use singleton env config
-    config = LogLevelConfig.get_instance()
-    return config.get_effective_level(name, default=default)
-
-
-def _parse_level_name_to_int(level_name: str) -> int | None:
-    """
-    Map level name to integer, supporting custom levels used by CoreLogger.
-    """
-    name = level_name.strip().upper()
-    custom: dict[str, int] = {
-        "TRACE": logging.DEBUG - 1,
-        "CONSTRUCT": logging.INFO - 1,
-        "SUPPRESS": -1,
-    }
-    if name in custom:
-        return custom[name]
-    return logging.getLevelNamesMapping().get(name)
 
 
 # End of file: src/mstair/common/xlogging/logger_factory.py

@@ -8,9 +8,6 @@
     authors = [ { name = "Morgan Stair" } ]
     dependencies = [
         "bs4",
-        # "google",
-        # "google-api-python-client",
-        # "google_auth_oauthlib",
         "charset_normalizer",
         "click",
         "colorama",
