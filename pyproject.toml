@@ -31,11 +31,6 @@
     requires-python = ">=3.13"
     version = "0.1.3"
 
-    # "mstair-common @ git+https://github.com/MorganStair/mstair-common.git@main",
-
-[tool.build] # Installed from makefile.mak via pip-tools
-    build-base = ".cache/tool-build"
-
     [project.optional-dependencies]
         dev = [
             "mypy",
@@ -44,6 +39,10 @@
             "types-python-dateutil",
         ]
         test = [ "pytest" ]
+
+
+[tool.build] # Installed from makefile.mak via pip-tools
+    build-base = ".cache/tool-build"
 
 
 [tool.pip-tools] # For future use with pip-tools
@@ -87,7 +86,6 @@
         "mstair"        = [ "py.typed" ]
         "mstair.common" = [ "**/*.pyi", "*.pyi", "py.typed" ]
 
-# vulture
 [tool.vulture]
     exclude = [
         ".cache",
@@ -122,3 +120,5 @@
     paths = [ "bin", "scripts", "src", "tests", "tools" ]
     sort_by_size = true
     verbose = false
+
+    # End of file: pyproject.toml
