@@ -29,8 +29,7 @@ help: ## List available Makefile targets
 # ----------------------------------------------------------
 
 .PHONY: clean
-clean: ## Remove build artifacts and egg-info directories (not the virtual environment)
-	@$(_clear_screen)
+clean: clear ## Remove build artifacts and egg-info directories (not the virtual environment)
 	@$(_begin)
 	@set -x; rm -rf build dist uploads
 	@find . -name .venv -prune -o -type d -name "*.egg-info" \
@@ -38,7 +37,8 @@ clean: ## Remove build artifacts and egg-info directories (not the virtual envir
 	@$(_end)
 
 .PHONY: virgin
-virgin: clean ## Remove virtual environment, log files, temp files, and .cache directory
+virgin: ## Remove virtual environment, log files, temp files, and .cache directory
+	@$(_clear_screen)
 	@$(_begin)
 	@set -x; rm -rf .venv *.log *.tmp
 	@set -x; rm -rf $(CACHE_DIR)
