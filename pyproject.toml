@@ -36,6 +36,7 @@
             "pyright",
             "pytest",
             "ruff",
+            "types-colorama",
             "types-python-dateutil",
             "types-pytz",
         ]
