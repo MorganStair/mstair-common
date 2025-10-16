@@ -18,12 +18,12 @@
     ],
     "executionEnvironments": [
         {
-            "extraPaths": [".cache/typings", "python", "src"],
+            "extraPaths": [".cache/typings", "python", "scripts", "src", "tests", "tools"],
             "root": "."
         }
     ],
     "ignore": [],
-    "include": ["src", "python", "tests"],
+    "include": ["python", "scripts", "src", "tests", "tools"],
     "pythonVersion": "3.13",
     "reportArgumentType": "warning",
     "reportCallIssue": "warning",
@@ -33,7 +33,9 @@
     "reportMissingTypeArgument": "none",
     "reportMissingTypeStubs": "warning",
     "reportOptionalCall": "warning",
+    "reportPrivateImportUsage": "warning",
     "reportPrivateUsage": "warning",
+    "reportReturnType": "warning",
     "reportTypedDictNotRequiredAccess": "warning",
     "reportUnknownArgumentType": "none",
     "reportUnknownLambdaType": "none",

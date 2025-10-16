@@ -1,14 +1,6 @@
 # File: ruff.toml
 # This configuration file is for the Ruff linter (https://ruff.rs/).
 
-fix = true
-line-length = 101
-respect-gitignore = true
-src = ["python", "src"]
-target-version = "py313"
-unsafe-fixes = false
-
-
 exclude = [
     ".cache",
     ".git",
@@ -21,13 +13,17 @@ exclude = [
     "dist",
     "node_modules",
 ]
+fix = true
+line-length = 101
+respect-gitignore = true
+src = [ "python", "scripts", "src", "tests", "tools" ]
+target-version = "py313"
+unsafe-fixes = false
 
 
 [lint]
-    fixable = ["ALL"]
-    unfixable = ["F401", "F403", "TID252"]
-    select = ["B", "C4", "E", "F", "I", "PL", "RUF", "SIM", "TID", "UP"]
-    extend-select = ["I001", "I002"]
+    extend-select = [ "I001", "I002" ]
+    fixable = [ "ALL" ]
     ignore = [
         "B007",
         "B009",
@@ -45,8 +41,11 @@ exclude = [
         "E731",
         "F403",
         "FA102",
+        "PLC1901",
+        "PLR0904",
         "PLR0913",
         "PLR2004",
+        "PLR6301",
         "PLW0603",
         "PLW2901",
         "RUF002",
@@ -69,25 +68,28 @@ exclude = [
         "UP037",
         "UP040",
     ]
+    select = [ "B", "C4", "E", "F", "I", "PL", "RUF", "SIM", "TID", "UP" ]
+    unfixable = [ "F401", "F403", "TID252" ]
 
-[lint.pylint]
-    max-args = 8
-    max-returns = 9
-    max-branches = 15
+    [lint.pylint]
+        max-args           = 8
+        max-branches       = 15
+        max-public-methods = 30
+        max-returns        = 9
 
-[lint.isort]
-    detect-same-package = true
-    force-single-line = false
-    force-to-top = ["__future__"]
-    known-first-party = ["autocomment", "pdf2rtf", "plib_", "tests"]
-    known-local-folder = ["python", "src"]
-    lines-after-imports = 2
-    order-by-type = true
+    [lint.isort]
+        detect-same-package = true
+        force-single-line   = false
+        force-to-top        = [ "__future__" ]
+        known-first-party   = [ "autocomment", "pdf2rtf", "plib_", "tests" ]
+        known-local-folder  = [ "src" ]
+        lines-after-imports = 2
+        order-by-type       = true
 
-[lint.mccabe]
-    max-complexity = 8
+    [lint.mccabe]
+        max-complexity = 8
 
 [format]
-    indent-style = "space"
-    quote-style = "double"
+    indent-style              = "space"
+    quote-style               = "double"
     skip-magic-trailing-comma = false

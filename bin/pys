@@ -1,0 +1,50 @@
+#!/usr/bin/env bash
+# File: tools/bin/pys
+# ------------------------------------------------------
+# Summary:
+#     Run a Python CLI from the current project.
+# Usage:
+#     pys TOOL [ARGS...]
+# Exit codes:
+#     0 = Success
+#     2 = Usage error or CLI method not found
+#     3 = Internal or virtual environment error
+#     Other = Script-specific error
+# ------------------------------------------------------
+
+set -eu -o pipefail
+if [ $# -lt 1 ]; then
+  echo "Usage: pys TOOL [ARGS...]" >&2
+  exit 2
+fi
+
+# ------------------------------------------------------
+# CLI Script Existence Check:
+# PROJECT_ROOT = Project root directory.
+# SRC          = Subdirectory for source code.
+# TOOL         = Tool name (without .py extension).
+# ------------------------------------------------------
+
+PROJECT_ROOT="$(cd "$(dirname "$0")/.." && pwd -P)"
+SRC="src"
+TOOL="$1"
+
+# --------------------------------------
+# Virtual Environment Activation:
+# ACTIVATE = Script to activate virtual environment.
+# --------------------------------------
+
+for subdir in "Scripts" "bin"; do
+    ACTIVATE="$PROJECT_ROOT/.venv/$subdir/activate"
+    if [ -f "$ACTIVATE" ]; then
+        break
+    fi
+done
+if [ ! -f "$ACTIVATE" ]; then
+    echo "pys: Virtual environment activation script not found in $PROJECT_ROOT/.venv" >&2
+    exit 3
+fi
+
+# Run the Script
+python -P -s -m "$TOOL" "$@"
+exit $?

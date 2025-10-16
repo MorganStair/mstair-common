@@ -1,0 +1,53 @@
+#!/usr/bin/env bash
+# File: bin/rentals
+# ------------------------------------------------------
+# Summary:
+#     Runs the mstair.{Python module or package} based on the script name.
+# Usage:
+#     rentals [ARGS...]
+# Exit codes:
+#     0 = Success
+#     4 = Usage error or CLI method not found
+#     5 = Internal or virtual environment error
+#     Other = Script-specific error
+# ------------------------------------------------------
+
+set -eu
+
+# ------------------------------------------------------
+# PROJECT_ROOT = Project root directory.
+# SRC          = Subdirectory for source code.
+# MODULE       = The Python module to run.
+# ------------------------------------------------------
+
+PROJECT_ROOT="$(cd "$(dirname "$0")/.." && pwd -P)"
+SRC="src"
+MODULE="mstair.$(basename "$0")"
+
+# --------------------------------------
+# ACTIVATE = Virtual environment activation script.
+# --------------------------------------
+
+for subdir in "Scripts" "bin"; do
+    ACTIVATE="$PROJECT_ROOT/.venv/$subdir/activate"
+    if [ -f "$ACTIVATE" ]; then
+        break
+    fi
+done
+if [ -z "$ACTIVATE" ] || [ ! -f "$ACTIVATE" ]; then
+    echo "rentals: Virtual environment activation script not found in $PROJECT_ROOT/.venv" >&2
+    exit 5
+fi
+
+# Activate virtual environment
+source "$ACTIVATE"
+
+# Raise an error if PYTHONPATH was not set by the activate script
+if [ -z "${PYTHONPATH:-}" ]; then
+    echo "rentals: PYTHONPATH not set by the virtual environment activation script" >&2
+    exit 5
+fi
+
+# Run the Script
+python -P -s -m "$MODULE" "$@"
+exit $?

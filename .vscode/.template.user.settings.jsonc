@@ -13,13 +13,13 @@
     },
     "[makefile]": {
         "editor.insertSpaces": false,
-        "editor.renderWhitespace": "all",
-        "editor.tabSize": 8
+        "editor.renderWhitespace": "all"
     },
     "[markdown]": {
         "cSpell.advanced.feature.useReferenceProviderRemove": "/^#+\\s/",
         "cSpell.advanced.feature.useReferenceProviderWithRename": true,
         "cSpell.fixSpellingWithRenameProvider": true,
+        "editor.defaultFormatter": "yzhang.markdown-all-in-one",
         "editor.quickSuggestions": {
             "comments": "on",
             "other": "on",
@@ -34,8 +34,6 @@
             "source.organizeImports.ruff": "always"
         },
         "editor.defaultFormatter": "charliermarsh.ruff",
-        "editor.insertSpaces": true,
-        "editor.tabSize": 4,
         "rewrap.autoWrap.enabled": false
     },
     "[toml]": {
@@ -43,19 +41,77 @@
         "editor.formatOnSave": true
     },
     "[typescript]": {
-        "editor.defaultFormatter": "vscode.typescript-language-features",
-        "editor.insertSpaces": true,
-        "editor.tabSize": 4
+        "editor.defaultFormatter": "vscode.typescript-language-features"
     },
-    "[typescriptreact]": {
-        "editor.insertSpaces": true,
-        "editor.tabSize": 4
+    "accessibility.dimUnfocused.enabled": true,
+    "accessibility.dimUnfocused.opacity": 0.6,
+    "chat.agent.enabled": true,
+    "chat.agent.maxRequests": 25,
+    "chat.checkpoints.enabled": false,
+    // "chat.agent.thinkingStyle": "none",
+    // "chat.agent.todoList": {
+    //     "position": "default"
+    // },
+    // "chat.agentSessionsViewLocation": "view",
+    // "chat.checkpoints.enabled": true,
+    // "chat.checkpoints.showFileChanges": false,
+    "chat.editing.autoAcceptDelay": 1,
+    // "chat.editing.confirmEditRequestRemoval": false,
+    // "chat.editing.confirmEditRequestRetry": false,
+    "chat.editor.wordWrap": "off",
+    "chat.extensionTools.enabled": true,
+    "chat.fontSize": 16,
+    "chat.implicitContext.enabled": {
+        "panel": "always"
     },
+    "chat.instructionsFilesLocations": {
+        ".github/copilot.instructions.md": true
+    },
+    // "chat.mcp.access": "all",
+    // "chat.mcp.assisted.nuget.enabled": true,
+    // "chat.mcp.autostart": "newAndOutdated",
+    // "chat.mcp.discovery.enabled": {
+    //     "claude-desktop": false,
+    //     "cursor-global": false,
+    //     "cursor-workspace": false,
+    //     "windsurf": false
+    // },
+    // "chat.mcp.gallery.enabled": true,
+    // "chat.tools.edits.autoApprove": {
+    //     "**/.git/**": false,
+    //     "**/.vscode/*.json": true,
+    //     "**/{package.json,package-lock.json,server.xml,build.rs,web.config,.gitattributes,.env}": true,
+    //     "**/*": true, // This is correct - approves all workspace files
+    //     "**/*.{csproj,fsproj,vbproj}": true,
+    // },
+    // "chat.tools.global.autoApprove": false,
     "chat.tools.terminal.autoApprove": {
+        ".venv/Scripts/Activate.ps1": true,
+        ".venv\\Scripts\\Activate.ps1": true,
+        "cd": true,
+        "Copy-Item": true,
+        "Get-ScheduledTask": true,
+        "Get-ScheduledTaskInfo": true,
+        "git restore": true,
         "make": true,
-        "pytest": true
+        "mypy": true,
+        "pip": true,
+        "pylint": true,
+        "pytest": true,
+        "python": true,
+        "Remove-Item": true,
+        "Rename-Item": true,
+        "rentals": true,
+        "ruff": true,
+        "schtasks": true
     },
+    "chat.tools.terminal.autoReplyToPrompts": true,
     "chat.tools.terminal.enableAutoApprove": true,
+    "chat.tools.terminal.shellIntegrationTimeout": -1,
+    "chat.tools.terminal.terminalProfile.windows": {
+        "path": "C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
+    },
+    "chatgpt.openOnStartup": true,
     "cSpell.allowCompoundWords": true,
     "cSpell.autoFormatConfigFile": true,
     "cSpell.blockCheckingWhenTextChunkSizeGreaterThan": 5000,
@@ -101,7 +157,7 @@
         "WRONLY",
         "xdumps"
     ],
-    "debug.console.fontSize": 14,
+    "debug.console.fontSize": 18,
     "diffEditor.experimental.useTrueInlineView": true,
     "editor.accessibilitySupport": "off",
     "editor.codeActionsOnSave": {
@@ -113,9 +169,14 @@
     "editor.fontSize": 18,
     "editor.formatOnPaste": true,
     "editor.formatOnSave": true,
+    "editor.inlineSuggest.enabled": true,
     "editor.insertSpaces": true,
     "editor.minimap.maxColumn": 40,
     "editor.minimap.scale": 3,
+    "editor.scrollbar.horizontal": "visible",
+    "editor.scrollbar.horizontalScrollbarSize": 16,
+    "editor.scrollbar.scrollByPage": false,
+    "editor.scrollbar.verticalScrollbarSize": 20,
     "editor.tabSize": 4,
     "evenBetterToml.formatter.alignComments": true,
     "evenBetterToml.formatter.alignEntries": true,
@@ -124,7 +185,7 @@
     "evenBetterToml.formatter.arrayAutoExpand": true,
     "evenBetterToml.formatter.arrayTrailingComma": true,
     "evenBetterToml.formatter.columnWidth": 101,
-    "evenBetterToml.formatter.compactArrays": true,
+    "evenBetterToml.formatter.compactArrays": false,
     "evenBetterToml.formatter.crlf": true,
     "evenBetterToml.formatter.indentEntries": true,
     "evenBetterToml.formatter.indentString": "    ",
@@ -138,6 +199,8 @@
     "evenBetterToml.schema.cache.memoryExpiration": 120,
     "evenBetterToml.schema.enabled": true,
     "evenBetterToml.schema.links": true,
+    "evenBetterToml.semanticTokens": true,
+    "evenBetterToml.taplo.configFile.path": "taplo.toml",
     "explorer.autoReveal": true,
     "explorer.excludeGitIgnore": false,
     "explorer.expandSingleFolderWorkspaces": false,
@@ -203,19 +266,34 @@
         "publish": true,
         "sync": true
     },
+    "github.copilot.advanced": {
+        "authPermissions": "default",
+        "authProvider": "github"
+    },
     "github.copilot.chat.agent.autoFix": true,
     "github.copilot.chat.codeGeneration.useInstructionFiles": true,
     "github.copilot.chat.codesearch.enabled": true,
     "github.copilot.chat.editor.temporalContext.enabled": true,
     "github.copilot.chat.edits.temporalContext.enabled": true,
+    "github.copilot.chat.executePrompt.enabled": true,
     "github.copilot.chat.languageContext.typescript.enabled": true,
+    "github.copilot.chat.newWorkspaceCreation.enabled": false,
+    "github.copilot.chat.reviewAgent.enabled": true,
     "github.copilot.chat.reviewSelection.enabled": true,
+    "github.copilot.chat.summarizeAgentConversationHistory.enabled": true,
+    "github.copilot.chat.terminalChatLocation": "terminal",
+    "github.copilot.chat.virtualTools.threshold": 128,
     "github.copilot.editor.enableCodeActions": true,
     "github.copilot.enable": {
-        "markdown": true
+        "*": true,
+        "markdown": true,
+        "plaintext": true,
+        "scminput": true
     },
     "github.copilot.nextEditSuggestions.enabled": true,
+    "github.copilot.nextEditSuggestions.fixes": true,
     "github.copilot.renameSuggestions.triggerAutomatically": true,
+    "inlineChat.enableV2": true,
     "markdown.extension.completion.enabled": true,
     "markdown.extension.showActionButtons": true,
     "markdown.extension.theming.decoration.renderHardLineBreak": true,
@@ -246,11 +324,12 @@
     "outline.showModules": true,
     "platformio-ide.autoRebuildAutocompleteIndex": true,
     "platformio-ide.useBuiltinPython": true,
+    "powershell.integratedConsole.focusConsoleOnExecute": false,
     "pypiAssistant.codeLens": false,
     "python.analysis.autoFormatStrings": true,
     "python.analysis.autoImportCompletions": true,
     "python.analysis.completeFunctionParens": true,
-    "python.analysis.diagnosticMode": "workspace", // faster than "openFilesOnly" after warmup
+    "python.analysis.diagnosticMode": "workspace",
     "python.analysis.gotoDefinitionInStringLiteral": false,
     "python.analysis.importFormat": "absolute",
     "python.analysis.indexing": true,
@@ -283,6 +362,7 @@
     "ruff.lint.enable": true,
     "ruff.lint.preview": true,
     "ruff.logLevel": "info",
+    "scm.inputFontSize": 16,
     "search.exclude": {
         "**/__pycache__": true,
         "**/.cache": true,
@@ -309,6 +389,7 @@
         "I3011",
         "E3002"
     ],
+    "terminal.integrated.accessibleViewFocusOnCommandExecution": false,
     "terminal.integrated.allowChords": true,
     "terminal.integrated.allowedLinkSchemes": [
         "file",
@@ -329,8 +410,9 @@
         "HF_HUB_DISABLE_SYMLINKS_WARNING": "1",
         "JSII_SILENCE_WARNING_UNTESTED_NODE_VERSION": "1",
         "MYPY_CACHE_DIR": "${workspaceFolder}/.cache/.mypy_cache",
+        "MYPYPATH": "${workspaceFolder}/.cache/typings;${workspaceFolder}/src",
         "NODE_ENV": "development",
-        "PATH": "${workspaceFolder}/bin;${workspaceFolder}/tools;${env:PATH}",
+        "PATH": "${workspaceFolder}\\bin;${env:PATH}",
         "PROJECT_DIR": "${workspaceFolder}",
         "PROMPT": "\u001b[1;35m$P$G\u001b[0m ",
         "PYDEVD_WARN_SLOW_RESOLVE_TIMEOUT": "5000",
@@ -364,7 +446,7 @@
             "path": "C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
         }
     },
-    "terminal.integrated.scrollback": 5000,
+    "terminal.integrated.scrollback": 2000,
     "terminal.integrated.shellIntegration.decorationsEnabled": "both",
     "terminal.integrated.shellIntegration.environmentReporting": true,
     "terminal.integrated.suggest.enabled": true,
@@ -372,7 +454,7 @@
     "window.title": "(${rootNameShort}) ${activeEditorShort}",
     "window.zoomLevel": -1,
     "workbench.colorCustomizations": {
-        "titleBar.activeForeground": "#FFFFFF"
+        "tab.activeBorder": "#ffffff"
     },
     "workbench.commandPalette.experimental.suggestCommands": true,
     "workbench.editor.closeOnFileDelete": true,
@@ -383,7 +465,6 @@
         "{git,gitlens,git-graph}:/**/*.{csv,svg}": "default",
         "*.{jpg,png}": "imagePreview.previewEditor",
         "*.{json,jsonc,yaml,yml}": "default",
-        "*.{md,markdown}": "vscode.markdown.preview.editor",
         "*.ipynb": "jupyter-notebook"
     },
     "workbench.startupEditor": "none"
