@@ -26,9 +26,6 @@
         }
     ],
     "settings": {
-        "chat.instructionsFilesLocations": {
-            ".github/ai-agent-guide.md": true
-        },
         "workbench.colorCustomizations": {
             "editor.background": "#101",
             "titleBar.activeBackground": "#436",
