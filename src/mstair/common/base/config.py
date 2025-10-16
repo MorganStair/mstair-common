@@ -48,11 +48,13 @@ class TLSAttrs:
 
 def _get_tls() -> TLSAttrs:
     """Return the current thread's TLSAttrs instance, initializing if needed."""
+    result: TLSAttrs
     try:
-        return _tls.state
+        result = _tls.state
     except AttributeError:
         _tls.state = TLSAttrs()
-        return _tls.state
+        result = _tls.state
+    return result
 
 
 @contextmanager

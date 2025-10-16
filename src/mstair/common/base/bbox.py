@@ -26,23 +26,23 @@ class BBox:
 
         return BBox(c_lat + d_lat, c_lat - d_lat, c_lng + d_lng, c_lng - d_lng)
 
-    def w(self):
+    def w(self) -> float:
         """Calculates the width of the bbox in miles."""
         return self._hav_dist(self.south, self.west, self.south, self.east)
 
-    def h(self):
+    def h(self) -> float:
         """Calculates the height of the bbox in miles."""
         return self._hav_dist(self.south, self.west, self.north, self.west)
 
-    def area(self):
+    def area(self) -> float:
         """Calculates the approximate area of the bbox in square miles."""
         return self.w() * self.h()
 
-    def ctr(self):
+    def ctr(self) -> tuple[float, float]:
         """Returns the center of the bbox as (lat, lng)."""
         return (self.south + self.north) / 2, (self.west + self.east) / 2
 
-    def google_maps_url(self):
+    def google_maps_url(self) -> str:
         """Returns a Google Maps URL for the bbox with the appropriate zoom level.
 
         Zoom calculation:
@@ -56,18 +56,20 @@ class BBox:
         zoom = min(max(int(15 - log10(width_miles)), 1), 21)
         return f"https://www.google.com/maps/@{c_lat},{c_lng},{zoom}z"
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Returns a formatted string with center coordinates and dimensions."""
+        c_lat: float
+        c_lng: float
+        w: float
+        h: float
         c_lat, c_lng = self.ctr()
         precision = BBox.decimal_places(BBox.MAX_PRECISION)
-
-        w = round(self.w(), precision)  # Dynamically round width based on precision
+        # Dynamically round based on precision
+        w = round(self.w(), precision)
         h = round(self.h(), precision)
-
         # Round center to calculated decimal places (based on 50 feet)
         c_lat = round(c_lat, precision)
         c_lng = round(c_lng, precision)
-
         return f"ctr:{c_lat},{c_lng}, w:{w} mi, h:{h} mi"
 
     @staticmethod
@@ -75,11 +77,11 @@ class BBox:
         """Calculates the great-circle distance between two points on Earth."""
         lat1, lng1, lat2, lng2 = map(radians, [lat1, lng1, lat2, lng2])
 
-        dlat = lat2 - lat1
-        dlng = lng2 - lng1
+        dlat: float = lat2 - lat1
+        dlng: float = lng2 - lng1
 
-        a = sin(dlat / 2) ** 2 + cos(lat1) * cos(lat2) * sin(dlng / 2) ** 2
-        c = 2 * atan2(sqrt(a), sqrt(1 - a))
+        a: float = sin(dlat / 2) ** 2 + cos(lat1) * cos(lat2) * sin(dlng / 2) ** 2
+        c: float = 2 * atan2(sqrt(a), sqrt(1 - a))
         return BBox.EARTH_RADIUS_MI * c
 
     @staticmethod
@@ -94,7 +96,7 @@ class BBox:
         return (mi / radius_at_lat) * (180 / 3.141592653589793)
 
     @staticmethod
-    def decimal_places(precision: float):
+    def decimal_places(precision: float) -> int:
         """Calculates how many decimal places are needed based on the precision in miles."""
         if precision <= 0:
             return 0
@@ -105,15 +107,15 @@ if __name__ == "__main__":
     import unittest
 
     class TestBBox(unittest.TestCase):
-        def test_w(self):
+        def test_w(self) -> None:
             bbox = BBox(28.8333, 28.6667, -97.8333, -98.1667)
             self.assertAlmostEqual(bbox.w(), 20.21, places=2)
 
-        def test_h(self):
+        def test_h(self) -> None:
             bbox = BBox(28.8333, 28.6667, -97.8333, -98.1667)
             self.assertAlmostEqual(bbox.h(), 11.51, places=2)
 
-        def test_precision(self):
+        def test_precision(self) -> None:
             self.assertEqual(BBox.decimal_places(BBox.MAX_PRECISION), 3)  # pyright: ignore[reportPrivateUsage]
 
     unittest.main()
