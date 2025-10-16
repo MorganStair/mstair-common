@@ -8,7 +8,7 @@ import logging
 import os
 import sys
 import warnings
-from collections.abc import Callable
+from collections.abc import Callable, Iterator
 from contextlib import contextmanager, suppress
 from functools import cache
 from io import IOBase
@@ -151,7 +151,12 @@ def fs_remove_files(*, root: str, glob: str = "*") -> None:
 
 
 @contextmanager
-def fs_redirect_fd(from_file: int | IOBase, to_file: int | IOBase, *, enabled: bool = True):
+def fs_redirect_fd(
+    from_file: int | IOBase,
+    to_file: int | IOBase,
+    *,
+    enabled: bool = True,
+) -> Iterator[None]:
     """
     Redirects a file descriptor or stream to another file or stream.
 
@@ -187,7 +192,8 @@ def fs_redirect_fd(from_file: int | IOBase, to_file: int | IOBase, *, enabled: b
             return os.open(file, os.O_RDWR)
         raise ValueError(f"Invalid {file=}")
 
-    def _safe_sync(fd: int):
+    def _safe_sync(fd: int) -> None:
+        """Safely flush and sync a file descriptor, ignoring errors."""
         with suppress(OSError):
             os.fsync(fd)
 
@@ -361,7 +367,7 @@ def fs_load_dotenv(
     .env file with it's default parameters. If you need to change the default parameters
     of `find_dotenv()`, you can explicitly call `find_dotenv()` and pass the result
     to this function as `dotenv_path`."""
-    if bool(logger):
+    if logger is not None and bool(logger):
         dotenv.main.logger = logger
         verbose = True
     return dotenv.load_dotenv(
