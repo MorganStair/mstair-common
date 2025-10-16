@@ -146,16 +146,16 @@ class Delimiters:
                 return s[0], s[1], s[2], s[3]
             raise TypeError("Delimiters string input must be 2 or 4 characters")
 
-        def _from_seq(seq) -> tuple[str, str, str, str]:  # type: ignore
-            if len(seq) == 2:  # type: ignore
+        def _from_seq(seq: Sequence[str]) -> tuple[str, str, str, str]:
+            if len(seq) == 2:
                 return seq[0], seq[1], ",", ":"
-            if len(seq) == 4:  # type: ignore
+            if len(seq) == 4:
                 return seq[0], seq[1], seq[2], seq[3]
             raise TypeError("Delimiters tuple/list must have 2 or 4 elements")
 
-        def _from_dict(d: dict[str, str]) -> tuple[str, str, str, str]:  # type: ignore
+        def _from_dict(d: dict[str, str]) -> tuple[str, str, str, str]:
             allowed = {"open", "close", "itemsep", "kvsep"}
-            extra = set(d) - allowed  # type: ignore
+            extra = set(d) - allowed
             if extra:
                 raise ValueError(f"Invalid keys in Delimiters input: {extra}")
             if "open" not in d or "close" not in d:
@@ -323,34 +323,41 @@ class Token:
 
     def delimiters(self, indent: int | None, separators: tuple[str, str] | None) -> Delimiters:
         """
-        Return the applicable Delimiters for this token.
+        Resolve and return the applicable Delimiters for this token.
 
-        - For VALUE tokens:
-            * Use custom delimiters from customization if present.
-            * Otherwise, use Delimiters.for_object(self.value).
-        - For all other token kinds:
-            * Inherit delimiters from the parent token.
+        Resolution order:
+            1. VALUE tokens:
+               - Use customization.delimiters if provided.
+               - Else derive from Delimiters.for_object(value, indent, separators).
+            2. Non-VALUE tokens:
+               - Inherit delimiters from the parent token.
+            3. Climb the parent chain until a valid Delimiters is found.
+            4. Raise AssertionError if no delimiters can be resolved.
 
-        This property is always resolved, climbing up the parent chain as needed.
-        Raises:
-            AssertionError: If no delimiters can be found.
+        This method never returns None; it either returns a Delimiters or raises.
+
+        Args:
+            indent: The current indentation level, or None for compact output.
+            separators: The current separators tuple, or None for defaults.
         """
-        token = self
-        while True:
+        token: Token | None = self
+        while token is not None:
             if token.kind is Kind.VALUE:
-                if token.customization and token.customization.delimiters:
-                    delimiters = token.customization.delimiters
-                else:
-                    delimiters = Delimiters.for_object(
-                        token.value, indent=indent, separators=separators
-                    )
+                # Use custom delimiters if provided
+                customization = token.customization
+                if customization and customization.delimiters is not None:
+                    return customization.delimiters
+
+                # Otherwise derive from the value type
+                delims = Delimiters.for_object(token.value, indent=indent, separators=separators)
+                if delims is not None:
+                    return delims
             else:
-                assert token.parent is not None, "Non-value tokens must have a parent"
-                delimiters = token.parent.delimiters(indent=indent, separators=separators)
-            if delimiters is not None:
-                return delimiters
-            if token.parent is None:
-                break
+                # Non-value tokens always defer to parent
+                assert token.parent is not None, (
+                    f"Non-value token of kind {token.kind.name} must have a parent."
+                )
+                return token.parent.delimiters(indent=indent, separators=separators)
             token = token.parent
         raise AssertionError(f"Missing delimiters for token: {self!r}")
 
