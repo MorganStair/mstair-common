@@ -32,7 +32,7 @@ def nltk_cache() -> diskcache.Cache:
 def load_stopwords() -> set[str]:
     """Retrieve English stopwords using NLTK, cached."""
     STOPWORDS_CACHE_KEY = "nltk.corpus.stopwords.en"
-    cached_value = nltk_cache().get(STOPWORDS_CACHE_KEY)  # type: ignore
+    cached_value = nltk_cache().get(STOPWORDS_CACHE_KEY)
     value: set[str] = cast(set[str], cached_value)
 
     # Validate cached data
@@ -42,7 +42,7 @@ def load_stopwords() -> set[str]:
     # Cache miss or invalid data - reload
     nltk_download("stopwords", quiet=True)
     value = set(nltk.corpus.stopwords.words("english"))
-    nltk_cache().set(STOPWORDS_CACHE_KEY, value)  # type: ignore
+    nltk_cache().set(STOPWORDS_CACHE_KEY, value)
     return value
 
 
