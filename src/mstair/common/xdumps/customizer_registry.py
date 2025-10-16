@@ -7,14 +7,15 @@ import dataclasses
 import logging
 import pathlib
 from collections.abc import Callable, Mapping, Sequence, Set
-from typing import Any, final
+from typing import Any, NoReturn, Protocol, cast, final
 
 from mstair.common.xdumps.model import Delimiters, XTokenCustomization
 
 
 __all__ = [
-    "CustomizerRegistry",
     "CUSTOMIZER",
+    "CustomizerNamespace",
+    "CustomizerRegistry",
     "XCustomizerFunction",
     "XRawString",
 ]
@@ -34,11 +35,27 @@ A callable that customizes the rendering of a value during structured dumping.
 """
 
 
+class CustomizerNamespace(Protocol):
+    @staticmethod
+    def libpath_path_as_posix() -> XCustomizerFunction: ...
+    @staticmethod
+    def max_container_width(*, max_width: int) -> XCustomizerFunction | None: ...
+    @staticmethod
+    def max_container_depth(*, max_depth: int) -> XCustomizerFunction | None: ...
+    @staticmethod
+    def wrap_derived_class_instances(
+        build_format_kwargs: Callable[[Any], Mapping[str, Any] | None] | None = ...,
+        open_fmt: str = ...,
+        close_fmt: str = ...,
+        max_strlen: int = ...,
+    ) -> XCustomizerFunction: ...
+
+
 @final
-class CUSTOMIZER:
+class CUSTOMIZER(CustomizerNamespace):
     """A namespace class for customizer functions."""
 
-    def __new__(cls, *_a: object, **_k: object) -> None:
+    def __new__(cls, *_a: object, **_k: object) -> NoReturn:
         raise TypeError(f"{cls.__name__} is a namespace, not instantiable")
 
     @staticmethod
@@ -100,7 +117,13 @@ class CUSTOMIZER:
             if max_width == 0 and (
                 isinstance(value, (Mapping, Sequence, Set)) or dataclasses.is_dataclass(value)
             ):
-                if dataclasses.is_dataclass(value):
+                # Only call is_dataclass if value is not a type and not a container
+                delimiters: Delimiters | None
+                if (
+                    not isinstance(value, type)
+                    and not isinstance(value, (Mapping, Sequence, Set))
+                    and dataclasses.is_dataclass(value)
+                ):
                     delimiters = Delimiters(open=type(value).__name__ + "(", close=")", kvsep="=")
                 else:
                     delimiters = Delimiters.for_object(value, indent=None, separators=None)
@@ -112,14 +135,16 @@ class CUSTOMIZER:
                 )
 
             # Truncate mappings
-            if isinstance(value, Mapping) and len(value) > max_width:
-                keys: list[Any] = list(value)[:max_width]
-                new_map: dict[Any, Any] = {k: value[k] for k in keys}
-                new_map[XRawString("...")] = XRawString("...")
-                result = XTokenCustomization(value=new_map)
+            if isinstance(value, Mapping):
+                value = cast(Mapping[object, object], value)
+                if len(value) > max_width:
+                    keys: list[Any] = list(value)[:max_width]
+                    new_map: dict[Any, Any] = {k: value[k] for k in keys}
+                    new_map[XRawString("...")] = XRawString("...")
+                    result = XTokenCustomization(value=new_map)
 
             # Truncate dataclasses by turning them into dicts
-            if result is None and dataclasses.is_dataclass(value):
+            if result is None and dataclasses.is_dataclass(value) and not isinstance(value, type):
                 fields: tuple[dataclasses.Field[Any], ...] = dataclasses.fields(value)
                 if len(fields) > max_width:
                     display_dict: dict[str | XRawString, Any] = {
@@ -131,17 +156,21 @@ class CUSTOMIZER:
                     result = XTokenCustomization(value=display_dict)
 
             # Truncate sequences (excluding str/bytes)
-            if result is None and isinstance(value, Sequence) and len(value) > max_width:
-                truncated: list[Any] = [*list(value[:max_width]), XRawString("...")]
-                result = XTokenCustomization(
-                    value=truncated if isinstance(value, list) else tuple(truncated)
-                )
+            if result is None and isinstance(value, Sequence):
+                value = cast(Sequence[object], value)
+                if len(value) > max_width:
+                    truncated: list[object] = [*list(value[:max_width]), XRawString("...")]
+                    result = XTokenCustomization(
+                        value=truncated if isinstance(value, list) else tuple(truncated)
+                    )
 
             # Truncate sets
-            if result is None and isinstance(value, Set) and len(value) > max_width:
-                truncated_set: set[Any] = set(list(value)[:max_width])
-                truncated_set.add(XRawString("..."))
-                result = XTokenCustomization(value=truncated_set)
+            if result is None and isinstance(value, Set):
+                value = cast(Set[object], value)
+                if len(value) > max_width:
+                    truncated_set: set[object] = set(list(value)[:max_width])
+                    truncated_set.add(XRawString("..."))
+                    result = XTokenCustomization(value=truncated_set)
 
             return result
 
@@ -149,7 +178,7 @@ class CUSTOMIZER:
 
     @staticmethod
     def wrap_derived_class_instances(
-        build_format_kwargs: Callable[[Any], Mapping[str, Any] | None] | None = None,
+        build_format_kwargs: Callable[[object], Mapping[str, object] | None] | None = None,
         open_fmt: str = "{__name__}(",
         close_fmt: str = ")",
         max_strlen: int = 1024,
@@ -157,46 +186,28 @@ class CUSTOMIZER:
         """
         Returns a customizer that wraps derived class instances with custom delimiters.
 
-        Args:
-            build_format_kwargs (Callable[[Any], Mapping[str, Any] | None] | None, optional):
-                A function that receives a value and returns a dictionary of keyword arguments
-                for formatting `open_fmt` and `close_fmt`. If None, a default implementation is used.
-                The default skips built-in types and returns a dict of safe-to-format attributes
-                from the type of the value, including: __name__, __module__, __qualname__, __doc__,
-                __bases__, and __mro__. Complex attributes are converted to truncated strings
-                (up to max_strlen).
-
-            open_fmt (str, optional): Format string for the opening delimiter. Defaults to "{__name__}(".
-            close_fmt (str, optional): Format string for the closing delimiter. Defaults to ")".
-            max_strlen (int, optional): Maximum length for string representations. Defaults to 1024.
-
-        Returns:
-            XCustomizerFunction: A customizer function suitable for use with xdumps().
-
-        Algorithm:
-            - For each value, call build_format_kwargs (or the default) to obtain formatting arguments.
-            - If build_format_kwargs returns None, the customizer does nothing for that value.
-            - Otherwise, the customizer uses open_fmt and close_fmt, formatted with the returned arguments,
-              to wrap the value with custom delimiters.
-            - The default build_format_kwargs:
-                * Skips values whose type is a built-in.
-                * Collects type attributes (__name__, __module__, __qualname__, __doc__, __bases__, __mro__).
-                * Converts non-primitive attributes to truncated strings (up to max_strlen).
+        The customizer inspects each value's type to build formatting arguments and
+        wraps the value with delimiters formatted using those arguments.
         """
 
-        def _value_to_dict(value: Any) -> Mapping[str, Any] | None:
-            """
-            Extract type attributes robustly, handling edge cases.
-            """
-            type_attrs: dict[str, Any] = {}
+        # ----------------------------------------------------------------------
+        # Helper: extract a dictionary of safe-to-format type attributes
+        # ----------------------------------------------------------------------
+        def _value_to_dict(value: object) -> Mapping[str, object] | None:
+            """Extract type attributes robustly, handling edge cases."""
+            type_attrs: dict[str, object] = {}
             try:
-                t = type(value)
+                t: type[object] = type(value)
                 if t.__module__ == "builtins":
                     return None
-                type_attrs.update(t.__dict__)
+
+                # Copy the type dict safely
+                if isinstance(t.__dict__, Mapping):
+                    type_attrs.update(cast(Mapping[str, object], t.__dict__))
             except Exception:
                 return None
-            essential_attrs = [
+
+            essential_attrs: list[str] = [
                 "__name__",
                 "__qualname__",
                 "__module__",
@@ -206,35 +217,45 @@ class CUSTOMIZER:
             ]
             for attr in essential_attrs:
                 try:
-                    attr_value = getattr(t, attr, None)
+                    attr_value: object | None = getattr(t, attr, None)
                     if attr_value is not None:
                         type_attrs[attr] = attr_value
                 except (AttributeError, TypeError):
                     continue
 
-            attr_keys = list(type_attrs.keys())
-            for key in attr_keys:
+            # Normalize complex attributes to truncated strings
+            for key, val in list(type_attrs.items()):
                 try:
-                    val = type_attrs[key]
                     if isinstance(val, (str, int, float, bool, type(None))):
-                        pass
-                    elif isinstance(val, (tuple, list)) and all(
-                        isinstance(x, (str, int, float, bool)) for x in val
+                        continue
+                    if isinstance(val, (tuple, list)) and all(
+                        isinstance(x, (str, int, float, bool, type(None)))
+                        for x in cast(Sequence[object], val)
                     ):
-                        pass
-                    else:
-                        str_val = str(val)
-                        str_val_trimmed = str_val[:_MAX_STRLEN]
-                        if str_val_trimmed and str_val_trimmed != str_val:
-                            type_attrs[key] = str_val_trimmed
+                        continue
+
+                    val_obj: object = cast(Any, val)
+                    str_val = str(val_obj)
+                    str_val_trimmed = str_val[:_MAX_STRLEN]
+                    if str_val_trimmed and str_val_trimmed != str_val:
+                        type_attrs[key] = str_val_trimmed
                 except Exception:
                     continue
+
             return type_attrs if type_attrs else None
 
-        def _wrap_derived_class_instances_customizer(value: Any, _depth: int):
-            format_args: Mapping[str, Any] | None = _FORMAT_ARGS_FN(value)
+        # ----------------------------------------------------------------------
+        # Helper: the actual customizer function
+        # ----------------------------------------------------------------------
+        def _wrap_derived_class_instances_customizer(
+            value: object,
+            _depth: int,
+        ) -> XTokenCustomization | None:
+            """Wrap a derived class instance with custom delimiters."""
+            format_args: Mapping[str, object] | None = _FORMAT_ARGS_FN(value)
             if format_args is None:
                 return None
+
             with contextlib.suppress(Exception):
                 return XTokenCustomization(
                     delimiters=Delimiters(
@@ -243,9 +264,12 @@ class CUSTOMIZER:
                     ),
                     value=value,
                 )
+            return None
 
-        # Define closures in all caps so they stand out
-        _FORMAT_ARGS_FN: Callable[[Any], Mapping[str, Any] | None] = (
+        # ----------------------------------------------------------------------
+        # Bind closure constants (upper case to emphasize they are closed-over)
+        # ----------------------------------------------------------------------
+        _FORMAT_ARGS_FN: Callable[[object], Mapping[str, object] | None] = (
             build_format_kwargs or _value_to_dict
         )
         _OPEN_FMT: str = open_fmt
