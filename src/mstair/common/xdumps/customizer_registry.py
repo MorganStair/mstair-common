@@ -16,6 +16,7 @@ __all__ = [
     "CUSTOMIZER",
     "CustomizerNamespace",
     "CustomizerRegistry",
+    "CustomizerType",
     "XCustomizerFunction",
     "XRawString",
 ]
@@ -49,6 +50,9 @@ class CustomizerNamespace(Protocol):
         close_fmt: str = ...,
         max_strlen: int = ...,
     ) -> XCustomizerFunction: ...
+
+
+CustomizerType: type[CustomizerNamespace]
 
 
 @final
