@@ -2,9 +2,10 @@
 
 This file is formatted for **GitHub Copilot** running weak or limited-context models (GPT-4o-mini, GPT-5-mini, etc.).
 
-Each step has explicit commands and @copilot triggers.
-Copilot must **not summarize, skip, or reorder steps**.
-Copilot must perform exactly one step at a time.
+- Each step has explicit commands and @copilot triggers.
+- Copilot must **not summarize, skip, or reorder steps**.
+- Copilot must perform exactly one step at a time.
+- Copilot must update context memory from `.github/copilot-quick-context.md` after every step.
 
 ---
 
