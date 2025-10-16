@@ -21,12 +21,16 @@ from collections.abc import Callable
 from datetime import timedelta
 from decimal import Decimal
 from fractions import Fraction
-from typing import Any, NamedTuple, cast
+from typing import Any, NamedTuple
 
 import pytest
 
-from mstair.common.base.types import CALCULATE, Calculate
-from mstair.common.xdumps.customizer_registry import CUSTOMIZER, CustomizerRegistry, XRawString
+from mstair.common.xdumps.customizer_registry import (
+    CUSTOMIZER,
+    CustomizerRegistry,
+    XRawString,
+    get_customizer,
+)
 from mstair.common.xdumps.model import Token, XTokenCustomization
 from mstair.common.xdumps.token_stream import TokenStream
 from mstair.common.xdumps.xdumps_api import xdumps
@@ -126,7 +130,7 @@ def value_with_container_variants() -> dict[str, Any]:
 
 
 @pytest.mark.unit
-def test_containers_flatten_correctly(kwargs_for_compact: dict[str, Any]):
+def test_containers_flatten_correctly(kwargs_for_compact: dict[str, Any]) -> None:
     """
     Verify that dictionaries and lists are rendered into compact, flat strings.
 
@@ -141,7 +145,7 @@ def test_containers_flatten_correctly(kwargs_for_compact: dict[str, Any]):
 @pytest.mark.unit
 def test_extended_types_are_rendered(
     value_with_extended_types: dict[str, Any], kwargs_for_compact: dict[str, Any]
-):
+) -> None:
     """Confirm that known extended types (timedelta, Decimal, Fraction, Exception) are rendered as strings."""
     result = xdumps(value_with_extended_types, **kwargs_for_compact)
     assert "1d:2h:03m:04s" in result
@@ -153,7 +157,7 @@ def test_extended_types_are_rendered(
 @pytest.mark.unit
 def test_partial_dataclass_does_not_crash(
     value_with_partial_dataclass: Any, kwargs_for_compact: dict[str, Any]
-):
+) -> None:
     """Validate that dataclasses with uninitialized fields still render safely."""
     result = xdumps(value_with_partial_dataclass, **kwargs_for_compact)
     assert "x" in result
@@ -163,59 +167,56 @@ def test_partial_dataclass_does_not_crash(
 @pytest.mark.unit
 def test_unrenderable_object_fallback(
     value_with_unrenderable_object: Any, kwargs_for_compact: dict[str, Any]
-):
+) -> None:
     """Ensure that objects with faulty or minimal __str__ implementations fall back gracefully."""
     result = xdumps(value_with_unrenderable_object, **kwargs_for_compact)
     assert "<bad>" in result
 
 
 @pytest.mark.unit
-def test_vs_json_dumps():
+def test_vs_json_dumps() -> None:
     """
     Compare xdumps output to json.dumps for standard types to ensure consistency.
 
     This test ensures that xdumps behaves similarly to json.dumps for common structures.
     """
 
-    obj = {"a": [1, 2, 3], "b": {"x": True, "y": None}}
-    tests = [
-        {
-            "indent": None,
-            "separators": None,
-        },
-        {
-            "indent": 2,
-            "separators": (",", ": "),
-        },
-        {
-            "indent": 4,
-            "separators": (",", ": "),
-        },
-        {
-            "indent": 2,
-            "separators": (",", ": "),
-        },
+    obj: dict[str, list[int] | dict[str, bool | None]] = {
+        "a": [1, 2, 3],
+        "b": {"x": True, "y": None},
+    }
+
+    @dataclasses.dataclass(frozen=True)
+    class DumpCase:
+        indent: int | None
+        separators: tuple[str, str] | None
+
+    tests: list[DumpCase] = [
+        DumpCase(indent=None, separators=None),
+        DumpCase(indent=2, separators=(",", ": ")),
+        DumpCase(indent=4, separators=(",", ": ")),
+        DumpCase(indent=2, separators=(",", ": ")),
     ]
 
     for test in tests:
         pott_result = xdumps(
             obj,
-            indent=cast(int | None | Calculate, test.get("indent", CALCULATE)),
-            separators=cast(tuple[str, str], test.get("separators")),
+            indent=test.indent,
+            separators=test.separators,
             literals=("null", "true", "false"),
         )
         # Only pass supported arguments to json.dumps
         json_kwargs: dict[str, Any] = {}
-        if test.get("indent", None) is not None:
-            json_kwargs["indent"] = test["indent"]
-        if test.get("separators", None) is not None:
-            json_kwargs["separators"] = test["separators"]
+        if test.indent is not None:
+            json_kwargs["indent"] = test.indent
+        if test.separators is not None:
+            json_kwargs["separators"] = test.separators
         json_result = json.dumps(obj, **json_kwargs)
         if pott_result != json_result:
             print("")
             print(
                 "xdumps with indent={} and separators={}:\n{}".format(
-                    test["indent"], test["separators"], pott_result
+                    test.indent, test.separators, pott_result
                 )
             )
             print("json.dumps result:\n{}".format(repr(json_result)))
@@ -226,7 +227,7 @@ def test_vs_json_dumps():
 @pytest.mark.unit
 def test_customize_value_format(
     customizer_for_decimals: Callable[[Any, int], str | None], kwargs_for_compact: dict[str, Any]
-):
+) -> None:
     """Validate that customizers can modify the rendering output as expected."""
     obj = {"dec": Decimal("3.14")}
     result = xdumps(obj, **kwargs_for_compact, customizers=[customizer_for_decimals])
@@ -234,7 +235,7 @@ def test_customize_value_format(
 
 
 @pytest.mark.unit
-def test_empty_list_and_dict_render_compactly():
+def test_empty_list_and_dict_render_compactly() -> None:
     """Empty lists and dicts render as [] and {} with no spaces between delimiters, regardless of indentation settings."""
     for indent in (None, 0, 2, 4):
         result = xdumps([], indent=indent, literals=("null", "true", "false"))
@@ -245,7 +246,7 @@ def test_empty_list_and_dict_render_compactly():
 
 
 @pytest.mark.unit
-def test_empty_and_nested_compact_rendering():
+def test_empty_and_nested_compact_rendering() -> None:
     """
     Structured containers (list, dict, tuple, set) render with correct spacing and delimiters.
     - Lists/dicts: match json.dumps
@@ -295,7 +296,7 @@ def test_empty_and_nested_compact_rendering():
 @pytest.mark.unit
 def test_xdumps_max_width_1_and_depth_1(
     value_with_width_and_depth: Any, kwargs_for_compact: dict[str, Any]
-):
+) -> None:
     """Verify that max_items=1 (width) and max_depth=1 (depth) work independently as intended."""
     result = xdumps(value_with_width_and_depth, max_width=1, max_depth=999, **kwargs_for_compact)
     assert "..." in result
@@ -309,33 +310,34 @@ def test_xdumps_max_width_1_and_depth_1(
 @pytest.mark.unit
 def test_xdumps_max_width_zero_all_ellipsis(
     value_with_width_and_depth: Any, kwargs_for_compact: dict[str, Any]
-):
+) -> None:
     """With max_items=0, all containers are replaced with an ellipsis."""
     result = xdumps(value_with_width_and_depth, max_width=0, **kwargs_for_compact)
-    assert result.strip() in ("{...}", '{"...": "..."}') or "..." in result
+    assert result.strip() in {"{...}", '{"...": "..."}'} or "..." in result
     assert result.count("...") >= 1
 
 
 @pytest.mark.unit
 def test_xdumps_width_and_depth_both_1(
     value_with_width_and_depth: Any, kwargs_for_compact: dict[str, Any]
-):
+) -> None:
     """If max_items=1 and max_depth=1, both constraints are applied simultaneously."""
     result = xdumps(value_with_width_and_depth, max_width=1, max_depth=1, **kwargs_for_compact)
     assert result.count("...") >= 2
 
 
-def test_customizer_applied_for_partial_dataclass(value_with_partial_dataclass: Any):
+def test_customizer_applied_for_partial_dataclass(value_with_partial_dataclass: Any) -> None:
     reg = CustomizerRegistry()
     result: XTokenCustomization | None = reg.customize(value_with_partial_dataclass, depth=0)
     assert result is not None, "Expected dataclass customizer to fire"
-    assert isinstance(result.value, dict)
-    value_dict: dict[str, Any] = result.value  # type: ignore
+    result_value = result.value
+    assert isinstance(result_value, dict)
+    value_dict: dict[str, Any] = result.value
     assert "x" in value_dict
     assert "y" not in value_dict
 
 
-def test_dataclass_root_token_uses_override():
+def test_dataclass_root_token_uses_override() -> None:
     d = D(x=42)
     ts = TokenStream(d, customizers=[])  # default customizers still included
     it = iter(ts)
@@ -343,8 +345,9 @@ def test_dataclass_root_token_uses_override():
     # Inspect whether override fired
     if token.kind.name == "VALUE":
         assert token.customization and token.customization.override
-        assert isinstance(token.value, dict)
-        assert "x" in token.value  # type: ignore
+        token_value = token.value
+        assert isinstance(token_value, dict)
+        assert "x" in token_value
     else:
         # if OPEN, then its parent VALUE token should have override
         parent = token.parent
@@ -352,19 +355,8 @@ def test_dataclass_root_token_uses_override():
         assert "x" in parent.value
 
 
-def test_max_width_positive_truncates_mapping():
-    c = CUSTOMIZER.max_container_width(max_width=1)
-    data = {"a": 1, "b": 2}
-    assert c is not None
-    result = c(data, 0)
-    assert isinstance(result, XTokenCustomization)
-    # should keep only one key and add ellipsis
-    keys = list(result.value.keys())  # type: ignore
-    assert any(isinstance(k, XRawString) and str(k) == "..." for k in keys)
-
-
-def test_max_width_zero_replaces_entire_mapping():
-    c = CUSTOMIZER.max_container_width(max_width=0)
+def test_max_width_zero_replaces_entire_mapping() -> None:
+    c = get_customizer().max_container_width(max_width=0)
     data = {"a": 1, "b": 2}
     assert c is not None
     result = c(data, 0)
@@ -373,8 +365,8 @@ def test_max_width_zero_replaces_entire_mapping():
     assert str(result.value) == "..."
 
 
-def test_max_width_positive_truncates_sequence():
-    c = CUSTOMIZER.max_container_width(max_width=2)
+def test_max_width_positive_truncates_sequence() -> None:
+    c = get_customizer().max_container_width(max_width=2)
     data = [1, 2, 3, 4]
     assert c is not None
     result = c(data, 0)
@@ -382,8 +374,8 @@ def test_max_width_positive_truncates_sequence():
     assert result.value[-1] == XRawString("...")
 
 
-def test_max_width_positive_truncates_set():
-    c = CUSTOMIZER.max_container_width(max_width=1)
+def test_max_width_positive_truncates_set() -> None:
+    c = get_customizer().max_container_width(max_width=1)
     data = {1, 2}
     assert c is not None
     result = c(data, 0)
@@ -391,8 +383,8 @@ def test_max_width_positive_truncates_set():
     assert any(isinstance(v, XRawString) and str(v) == "..." for v in result.value)
 
 
-def test_max_width_dataclass_truncated_fields():
-    c = CUSTOMIZER.max_container_width(max_width=0)
+def test_max_width_dataclass_truncated_fields() -> None:
+    c = get_customizer().max_container_width(max_width=0)
     d = D(x=42)
     assert c is not None
     result = c(d, 0)
@@ -400,8 +392,8 @@ def test_max_width_dataclass_truncated_fields():
     assert str(result.value) == "..."
 
 
-def test_max_width_dataclass_partial():
-    c = CUSTOMIZER.max_container_width(max_width=1)
+def test_max_width_dataclass_partial() -> None:
+    c = get_customizer().max_container_width(max_width=1)
     d = D(x=42)
     assert c is not None
     result = c(d, 0)
@@ -443,7 +435,7 @@ def test_xdumps_rshift_applies_global_padding(kwargs_for_compact: dict[str, Any]
     # Every line should start with exactly 4 spaces
     assert all(line.startswith("    ") for line in lines), f"Unexpected rshift result:\n{result}"
     # Sanity check: removing the padding should match normal xdumps output
-    kwargs: dict[str, Any] = {**kwargs_for_compact, "indent": 2, "rshift": 0}
+    kwargs = {**kwargs_for_compact, "indent": 2, "rshift": 0}
     unshifted = xdumps(obj, **kwargs)
     stripped = "\n".join(line[4:] if line.startswith("    ") else line for line in lines)
     assert stripped == unshifted

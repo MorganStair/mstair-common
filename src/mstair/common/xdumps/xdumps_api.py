@@ -21,12 +21,13 @@ import inspect
 from functools import cache
 from typing import Any
 
+import mstair.common.xdumps.customizer_registry
 from mstair.common.base.config import in_desktop_mode
 from mstair.common.base.constants import DEFAULT_INDENT
 from mstair.common.base.types import CALCULATE, Calculate
 from mstair.common.xdumps.customizer_registry import (
-    CUSTOMIZER,
     XCustomizerFunction,
+    get_customizer,
 )
 from mstair.common.xdumps.token_stream import TokenStream
 from mstair.common.xdumps.view import TokenFormatter
@@ -62,7 +63,7 @@ def dumps(value: Any, **kwargs: Any) -> str:
 def xdumps(
     value: Any,
     *,
-    indent: int | None | Calculate = CALCULATE,
+    indent: int | Calculate | None = CALCULATE,
     separators: tuple[str, str] | None = None,
     escape_unicode: bool = False,
     literals: tuple[str, str, str] = ("None", "True", "False"),
@@ -99,10 +100,10 @@ def xdumps(
     _customizers.extend(
         _c
         for _c in [
-            CUSTOMIZER.libpath_path_as_posix(),
-            CUSTOMIZER.max_container_width(max_width=max_width),
-            CUSTOMIZER.max_container_depth(max_depth=max_depth),
-            CUSTOMIZER.wrap_derived_class_instances(),
+            get_customizer().libpath_path_as_posix(),
+            get_customizer().max_container_width(max_width=max_width),
+            get_customizer().max_container_depth(max_depth=max_depth),
+            get_customizer().wrap_derived_class_instances(),
         ]
         if _c is not None
     )
@@ -146,10 +147,10 @@ def XDUMPS_VALID_KWARGS() -> set[str]:
         param.name
         for param in sig.parameters.values()
         if param.kind
-        in (
+        in {
             param.POSITIONAL_OR_KEYWORD,
             param.KEYWORD_ONLY,
-        )
+        }
     }
     return valid_arg_names
 

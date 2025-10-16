@@ -9,6 +9,7 @@ import pathlib
 from collections.abc import Callable, Mapping, Sequence, Set
 from typing import Any, NoReturn, Protocol, cast, final
 
+from mstair.common.base.types import C
 from mstair.common.xdumps.model import Delimiters, XTokenCustomization
 
 
@@ -16,7 +17,7 @@ __all__ = [
     "CUSTOMIZER",
     "CustomizerNamespace",
     "CustomizerRegistry",
-    "CustomizerType",
+    "get_customizer",
     "XCustomizerFunction",
     "XRawString",
 ]
@@ -50,9 +51,6 @@ class CustomizerNamespace(Protocol):
         close_fmt: str = ...,
         max_strlen: int = ...,
     ) -> XCustomizerFunction: ...
-
-
-CustomizerType: type[CustomizerNamespace]
 
 
 @final
@@ -494,6 +492,16 @@ class XRawString(str):
 
     def __repr__(self) -> str:
         return f"{self.__class__.__name__}({super().__repr__()})"
+
+
+def get_customizer() -> type[CustomizerNamespace]:
+    """
+    Return a properly typed reference to the CUSTOMIZER namespace.
+
+    This is a typing-friendly accessor to avoid Callable[..., Never] inference
+    caused by CUSTOMIZER.__new__ returning NoReturn.
+    """
+    return cast(type[CustomizerNamespace], CUSTOMIZER)
 
 
 # End of file: src/mstair/common/xdumps/customizer_registry.py
