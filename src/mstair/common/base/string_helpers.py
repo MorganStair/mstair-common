@@ -9,10 +9,9 @@ import string
 import sys
 import textwrap
 from collections.abc import Iterable
-from enum import Enum
 from hashlib import sha256
 from pathlib import Path
-from typing import Final
+from typing import Any, Final, TypeAlias
 
 from charset_normalizer import from_bytes
 
@@ -37,12 +36,25 @@ _PRINTF_SPECIFIER_RE: Final[re.Pattern[str]] = re.compile(
     re.VERBOSE,
 )
 
+Sanitized: TypeAlias = (
+    bool
+    | bytes
+    | dict[str, "Sanitized"]
+    | float
+    | int
+    | list["Sanitized"]
+    | set["Sanitized"]
+    | str
+    | tuple["Sanitized", ...]
+    | None
+)
+
 
 def dedent(text: str) -> str:
     return textwrap.dedent(text.replace("\t", "    "))
 
 
-def fqn(o: object):
+def fqn(o: object) -> str:
     return f"{o.__class__.__module__}.{o.__class__.__name__}"
 
 
@@ -51,7 +63,7 @@ def to_capfirst(s: str) -> str:
     return s[:1].upper() + s[1:]
 
 
-def to_dict(o):
+def to_dict(o: Any) -> dict[Any, Any]:
     assert hasattr(o, "__dict__"), f"Object has no __dict__: {o}"
     _dict = {k: copy.deepcopy(v) for k, v in o.__dict__.items()}
     return _dict
@@ -89,7 +101,7 @@ def to_header_case(name: str) -> str:
     return "-".join(word.capitalize() for word in words)
 
 
-def to_header_cases(names: list[str]):
+def to_header_cases(names: list[str]) -> list[str]:
     return sorted({to_header_case(name) for name in names})
 
 
@@ -100,7 +112,7 @@ def to_kabob_case(text: str) -> str:
     return kabob_case
 
 
-def get_cache_key(value):
+def get_cache_key(value: Any) -> str:
     """Generate a cache key from a raw object of any type."""
     if not isinstance(value, str):
         value = repr(value)
@@ -139,40 +151,7 @@ def to_snake_cases(texts: list[str]) -> list[str]:
     return sorted({to_snake_case(text) for text in texts})
 
 
-def sanitize_structure_for_dump(obj, seen: set[int] | None = None):
-    """Recursively traverse the object graph, handling basic containers and detecting circular references.
-
-    :param obj: The object to traverse.
-    :param seen: Set of object ids already visited (for internal use).
-    :return: A copy of the object with containers traversed and cycles marked.
-    """
-    if seen is None:
-        seen = set()
-
-    # Return primitives unchanged
-    if obj is None or isinstance(obj, bool | int | float | str | bytes):
-        return obj
-
-    obj_id = id(obj)
-    if obj_id in seen:
-        return f"<circular reference to {type(obj).__name__} id={obj_id}>"
-    seen.add(obj_id)
-
-    match obj:
-        case dict():
-            ret = {str(k): sanitize_structure_for_dump(v, seen) for k, v in obj.items()}
-        case list():
-            ret = [sanitize_structure_for_dump(i, seen) for i in obj]
-        case tuple():
-            ret = tuple(sanitize_structure_for_dump(i, seen) for i in obj)
-        case set():
-            ret = {sanitize_structure_for_dump(i, seen) for i in obj}
-        case _:
-            ret = obj
-    return ret
-
-
-def safe_decode_chunk(chunk: bytes):
+def safe_decode_chunk(chunk: bytes) -> str:
     try:
         _detection = from_bytes(chunk).best()
         if _detection:
@@ -332,12 +311,13 @@ def text_truncate(
     """
     Truncate text to a maximum number of lines or characters (not both), adding an ellipsis if needed.
     """
-    if (
+    invalid_args = (
         max_lines < 0
         or max_chars < 0
         or (max_lines > 0 and max_chars > 0)
         or (max_lines == 0 and max_chars == 0)
-    ):
+    )
+    if invalid_args:
         raise RuntimeError("Specify only one of max_lines or max_chars with a positive value")
 
     linesep = "\r\n" if "\r\n" in text else "\n"
