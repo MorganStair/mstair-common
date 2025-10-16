@@ -202,14 +202,15 @@ def periodic_integer(
     :return int: An integer in [`minimum`, `maximum`], cycling through the range as `seed` increases.
     :raises TypeError: If `seed` is not one of `datetime`, `timedelta`, or `int`.
     """
+    _seed: int
     if isinstance(seed, datetime.datetime):
-        _seed: int = int((seed - datetime.datetime.min).total_seconds())
+        _seed = int((seed - datetime.datetime.min).total_seconds())
     elif isinstance(seed, datetime.timedelta):
-        _seed: int = int(seed.total_seconds())
+        _seed = int(seed.total_seconds())
     elif isinstance(seed, int):
-        _seed: int = seed
+        _seed = seed
     elif seed is None:
-        _seed: int = int((now_utc() - datetime.datetime.min).total_seconds())
+        _seed = int((now_utc() - datetime.datetime.min).total_seconds())
     else:
         raise TypeError(f"Unsupported seed type: {type(seed)}. Must be datetime, timedelta, or int.")
     _range_size: int = maximum - minimum + 1
