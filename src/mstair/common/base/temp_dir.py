@@ -7,6 +7,7 @@ import shutil
 from collections.abc import Sequence
 from pathlib import Path
 from tempfile import TemporaryDirectory
+from types import TracebackType
 
 
 class TempDir(TemporaryDirectory[str]):
@@ -113,12 +114,17 @@ class TempDir(TemporaryDirectory[str]):
         """Return temporary directory as a Path object."""
         return Path(self.name)
 
-    def __enter__(self) -> "TempDir":
-        """Enter context manager, returning this instance."""
+    def __enter__(self) -> str:
+        """Enter context manager, returning the temp directory path as a string."""
         super().__enter__()
-        return self
+        return self.name
 
-    def __exit__(self, exc_type, exc_val, exc_tb) -> None:
+    def __exit__(
+        self,
+        exc_type: type[BaseException] | None,
+        exc_val: BaseException | None,
+        exc_tb: TracebackType | None,
+    ) -> None:
         """Exit context manager and clean up temporary directory."""
         return super().__exit__(exc_type, exc_val, exc_tb)
 

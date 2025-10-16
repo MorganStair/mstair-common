@@ -172,6 +172,7 @@ class Sentinel:
     __slots__ = ()
 
     _repr_name: str = "SENTINEL"
+    _instance: "Self"
 
     def __repr__(self) -> str:
         return self._repr_name
