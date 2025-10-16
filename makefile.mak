@@ -125,7 +125,7 @@ test: .venv/.install ## Run test suites and validate documentation generation
 	@$(_end)
 
 .PHONY: all
-all: stubs docs dist test lint ## Run all steps
+all: install stubs docs dist test lint ## Run all steps
 	@$(_end)
 
 # ----------------------------------------------------------
