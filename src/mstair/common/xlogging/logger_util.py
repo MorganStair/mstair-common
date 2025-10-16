@@ -57,9 +57,11 @@ class LogEnvVar:
     @classmethod
     def from_env_var(cls, name: str, value: str) -> LogEnvVar | None:
         """Return a LogEnvVar if the given (name, value) is valid, else None."""
-        if (m := LogEnvVar.NAME_RX.match(name)) and (m := m.groupdict()):
-            basename: str = m["BASENAME"]
-            suffix: str = m["SUFFIX"].lstrip("_")
+        re_match: re.Match[str] | None = LogEnvVar.NAME_RX.match(name)
+        if re_match is not None:
+            match: dict[str, str] = re_match.groupdict()
+            basename: str = match["BASENAME"]
+            suffix: str = match["SUFFIX"].lstrip("_")
             if not suffix or suffix.upper() == "ROOT":
                 module = ""  # default/root
             else:
@@ -101,7 +103,7 @@ class LogLevelConfig:
     pattern_to_level: dict[str, int] = field(default_factory=dict, init=True, repr=True)
     _level_names_mapping: dict[str, int] = field(default_factory=dict, init=False, repr=False)
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         if not self.pattern_to_level:
             self.update_from_environment()
 

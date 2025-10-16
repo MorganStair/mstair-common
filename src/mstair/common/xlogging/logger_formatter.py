@@ -129,7 +129,7 @@ class CoreFormatter(logging.Formatter):
         *,
         defaults: dict[str, Any] | None = None,
         _debug: Any = None,
-    ):
+    ) -> None:
         """
         Initialize the CoreFormatter with a format string, date format, and style.
 

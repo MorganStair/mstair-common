@@ -28,7 +28,7 @@ class ColorLogger(CoreLogger):
         prefix: str = "",
         suffix: str = "",
         caller_depth: int = 1,
-    ):
+    ) -> None:
         """
         A logger that adds color and a prefix to messages.
 
@@ -101,7 +101,9 @@ class ColorLogger(CoreLogger):
         super().log(level, formatted_msg, *formatted_args, **kwargs)
 
     @staticmethod
-    def _get_fallback_logger_name():
+    def _get_fallback_logger_name() -> (
+        Literal["HmnLambda"] | Literal["HmnCodeAnalyzer"] | Literal["HmnUnderTrace"] | Literal["Hmn"]
+    ):
         if cfg.in_lambda() and not cfg.in_test_mode():
             return K_HMN_LAMBDA
         elif cfg.in_analysis_mode():

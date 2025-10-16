@@ -14,7 +14,7 @@ SUPPRESS = -1  # Custom level for logs that will never be shown e.g., for intern
 _logging_constants_initialized = False
 
 
-def initialize_logger_constants():
+def initialize_logger_constants() -> None:
     """Initialize custom logging levels if not already initialized."""
     global _logging_constants_initialized
     if _logging_constants_initialized:

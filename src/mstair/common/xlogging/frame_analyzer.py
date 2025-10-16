@@ -16,8 +16,8 @@ from typing import Any
 
 
 def f_code_filename_relative(f_code_filename: str | Path) -> str:
-    path = Path(f_code_filename)
-    _rpath = ""
+    path: Path = Path(f_code_filename)
+    _rpath: Path | None = None
     with suppress(Exception):
         _rpath = path.relative_to(sys.path[0])
     if not _rpath:
@@ -72,14 +72,14 @@ class StackFrameInfo:
 
         def _get_class_name(locals_: dict[str, Any]) -> str:
             if (zelf := locals_.get("self")) and hasattr(zelf, "__class__"):
-                return type(zelf).__name__
+                return str(type(zelf).__name__)
             if (cls_obj := locals_.get("cls")) and hasattr(cls_obj, "__name__"):
-                return cls_obj.__name__
+                return str(cls_obj.__name__)
             return ""
 
         def _get_module(locals_: dict[str, Any], globals_: dict[str, Any]) -> str:
             if (zelf := locals_.get("self")) and isinstance(getattr(zelf, "__module__", None), str):
-                return zelf.__module__
+                return str(zelf.__module__)
             name: str = globals_.get("__name__", "<unknown>")
             return name
 
