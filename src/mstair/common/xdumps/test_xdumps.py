@@ -26,7 +26,6 @@ from typing import Any, NamedTuple
 import pytest
 
 from mstair.common.xdumps.customizer_registry import (
-    CUSTOMIZER,
     CustomizerRegistry,
     XRawString,
     get_customizer,

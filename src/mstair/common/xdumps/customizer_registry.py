@@ -9,7 +9,6 @@ import pathlib
 from collections.abc import Callable, Mapping, Sequence, Set
 from typing import Any, NoReturn, Protocol, cast, final
 
-from mstair.common.base.types import C
 from mstair.common.xdumps.model import Delimiters, XTokenCustomization
 
 

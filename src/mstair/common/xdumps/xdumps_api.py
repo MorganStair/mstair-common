@@ -21,7 +21,6 @@ import inspect
 from functools import cache
 from typing import Any
 
-import mstair.common.xdumps.customizer_registry
 from mstair.common.base.config import in_desktop_mode
 from mstair.common.base.constants import DEFAULT_INDENT
 from mstair.common.base.types import CALCULATE, Calculate
