@@ -73,7 +73,7 @@ ZIP   ?= 7z.exe a -tzip -mx5 -mm=Deflate -mcu -r
 # ----------------------------------------------------------
 
 define _activate
-	source $(VENV_BIN)/activate
+	{ printf "%ssource %s/activate\n" "$$PS4" "$(VENV_BIN)"; source $(VENV_BIN)/activate; }
 endef
 
 
@@ -82,7 +82,7 @@ define _begin
 endef
 
 define _clear_screen
-	@printf '\\n\\033[3J\\033[H\\033[2J\\n'
+	@tput clear 2>/dev/null || printf '\033[H\033[2J\033[3J\033[r'; : Clear screen and scrollback, tput fallback-safe
 endef
 
 define _end
