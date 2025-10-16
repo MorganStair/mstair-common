@@ -41,7 +41,7 @@ Follow stages in order. Stop after any failed test.
 ## Stage 1 — Directory and File Layout
 
  - [x] Code is in `src/mstair/common/`
- - [-] Delete `src/mstair/__init__.py` (namespace must have no init) <!-- @copilot-action:delete -->
+ - [x] Delete `src/mstair/__init__.py` (namespace must have no init) <!-- @copilot-action:delete -->
  - [ ] Run all tests to confirm imports still work <!-- @copilot-action:test -->
  - [x] Confirm `src/mstair/common/__init__.py` exists (regular package)
  - [x] Confirm `py.typed` exists in both `src/mstair/` and `src/mstair/common/`
