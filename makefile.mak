@@ -37,8 +37,7 @@ clean: clear ## Remove build artifacts and egg-info directories (not the virtual
 	@$(_end)
 
 .PHONY: virgin
-virgin: ## Remove virtual environment, log files, temp files, and .cache directory
-	@$(_clear_screen)
+virgin: clean ## Remove virtual environment, log files, temp files, and .cache directory
 	@$(_begin)
 	@set -x; rm -rf .venv *.log *.tmp
 	@set -x; rm -rf $(CACHE_DIR)
@@ -57,11 +56,13 @@ venv: .venv ## Create a virtual environment in .venv
 	@set -x; mv -n $(VENV_BIN)/Activate.ps1 $(VENV_BIN)/ActivateOriginal.ps1
 	@set -x; mv -n $(VENV_BIN)/activate.bat $(VENV_BIN)/activate-original.bat
 	@set -x; mv -n $(VENV_BIN)/activate.fish $(VENV_BIN)/activate-original.fish
-	@set -x; cp -nv scripts/venv-shims/* $(VENV_BIN)/
-	@set -x; cp -nv scripts/sitecustomize.py .venv/Lib/site-packages/
-	@$(_activate); { set -x; python -m ensurepip --upgrade || exit 1; } | /usr/bin/grep -vE '(Looking in|Requirement already)' || true
-	@$(_activate); set -x; pip install -q --upgrade mypy pip pip-tools setuptools wheel
+	@set -x; cp -n scripts/venv-shims/* $(VENV_BIN)/
+	@set -x; cp -n scripts/sitecustomize.py .venv/Lib/site-packages/
+	@$(_activate); set -x; python -m ensurepip --upgrade | /usr/bin/grep -vE '^(Looking in|Requirement already)' || true
+	@$(_activate); set -x; pip install -q --upgrade pip setuptools wheel
 	@$(_end)
+
+# 	@$(_activate); { set -x; python -m ensurepip --upgrade || exit 1; } | /usr/bin/grep -vE '(Looking in|Requirement already)' || true
 
 check:
 	@$(_clear_screen)

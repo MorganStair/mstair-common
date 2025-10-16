@@ -17,7 +17,6 @@
         "diskcache",
         "gitpython",
         "json5",
-        "mypy",
         "nltk",
         "pytest",
         "python-dotenv",
@@ -34,11 +33,13 @@
     [project.optional-dependencies]
         dev = [
             "mypy",
+            "pip-tools",
             "pylint",
+            "pytest",
             "ruff",
             "types-python-dateutil",
         ]
-        test = [ "pytest" ]
+        test = [ "pytest", "pytest-cov" ]
 
 
 [tool.build] # Installed from makefile.mak via pip-tools
