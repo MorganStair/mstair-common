@@ -10,7 +10,7 @@ class BBox:
     FT_TO_MI = 5280.0  # Feet per mile
     MAX_PRECISION = 50.0 / FT_TO_MI  # 50 feet in miles
 
-    def __init__(self, north: float, south: float, east: float, west: float):
+    def __init__(self, north: float, south: float, east: float, west: float) -> None:
         self.north = north  # max_lat
         self.south = south  # min_lat
         self.east = east  # max_lng
