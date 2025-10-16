@@ -1,4 +1,4 @@
-# File: tools/scan_missing_stubs.py
+# File: src/mstair/common/scan_missing_stubs.py
 """
 Scan the codebase for third-party imports that lack inline types or generated stubs.
 
@@ -179,4 +179,4 @@ def _has_pytyped_or_pyi(*, module_name: str) -> bool:
 if __name__ == "__main__":
     raise SystemExit(main(sys.argv[1:]))
 
-# End of file: tools/scan_missing_stubs.py
+# End of file: src/mstair/common/scan_missing_stubs.py

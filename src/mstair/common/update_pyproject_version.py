@@ -1,4 +1,4 @@
-# File: tools/update_pyproject_version.py
+# File: src/mstair/common/update_pyproject_version.py
 """
 Increment pyproject.toml [project.version] if the repo has uncommitted or unpushed changes.
 
@@ -6,7 +6,7 @@ Intended for use in build or release automation, ensuring that downstream
 pip installs see a version change whenever the source tree has been modified.
 
 Usage:
-    python tools/update_pyproject_version.py
+    python src/mstair/common/update_pyproject_version.py
 """
 
 from __future__ import annotations
@@ -104,4 +104,4 @@ def main(argv: list[str] | None = None) -> int:
 if __name__ == "__main__":
     raise SystemExit(main(sys.argv[1:]))
 
-# End of file: tools/update_pyproject_version.py
+# End of file: src/mstair/common/update_pyproject_version.py
