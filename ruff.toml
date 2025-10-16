@@ -16,7 +16,7 @@ exclude = [
 fix = true
 line-length = 101
 respect-gitignore = true
-src = [ "python", "scripts", "src", "tests", "tools" ]
+src = [ "scripts", "src" ]
 target-version = "py313"
 unsafe-fixes = false
 
