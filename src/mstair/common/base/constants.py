@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import contextlib
 import os
 from enum import Enum
 from functools import cache
@@ -24,43 +25,44 @@ def aws_account_id() -> str:
         )
     )
     if not _id:
-        import boto3  # noqa: PLC0415
-        import boto3.session  # noqa: PLC0415
+        # Fallback available if boto3 is installed
+        with contextlib.suppress(ImportError):
+            import boto3.session  # type: ignore  # noqa: PLC0415
 
-        session: Any = boto3.session.Session()
-        sts_client = session.client("sts")
-        caller_identity: Any = sts_client.get_caller_identity()
-        _id = str(caller_identity.get("Account", ""))
+            session: Any = boto3.session.Session()  # pyright: ignore[reportUnknownVariableType, reportUnknownMemberType]
+            sts_client = session.client("sts")  # pyright: ignore[reportUnknownVariableType, reportUnknownMemberType]
+            caller_identity: Any = sts_client.get_caller_identity()  # pyright: ignore[reportUnknownVariableType, reportUnknownMemberType]
+            _id = str(caller_identity.get("Account", ""))  # pyright: ignore[reportUnknownArgumentType, reportUnknownMemberType]
     if not _id:
         raise ValueError("AWS_ACCOUNT_ID is not set")
-    return _id or ""
+    return _id
 
 
 @cache
-def aws_region():
+def aws_region() -> str:
     return os.environ.get("AWS_REGION") or os.environ.get("AWS_DEFAULT_REGION", "us-east-1")
 
 
 # == Rotating stack IDs by appending the STACK_SUFFIX environment variable ==
 
 
-def core_stack_id():
+def core_stack_id() -> str:
     return "Core" + os.environ.get("STACK_SUFFIX", "")
 
 
-def cog_stack_id():
+def cog_stack_id() -> str:
     return "Cog" + os.environ.get("STACK_SUFFIX", "")
 
 
-def dyna_stack_id():
+def dyna_stack_id() -> str:
     return "Dyna" + os.environ.get("STACK_SUFFIX", "")
 
 
-def gate_stack_id():
+def gate_stack_id() -> str:
     return "Gate" + os.environ.get("STACK_SUFFIX", "")
 
 
-def web_stack_id():
+def web_stack_id() -> str:
     return "Web" + os.environ.get("STACK_SUFFIX", "")
 
 
