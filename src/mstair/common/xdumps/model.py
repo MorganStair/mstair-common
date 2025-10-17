@@ -84,7 +84,7 @@ class Delimiters:
         :param separators: Separators to use, or None for defaults.
         :return Delimiters | None: The delimiters instance, or None for atomic types.
         """
-        if typ in (str, bytes, int, float, bool, NoneType):
+        if typ in {str, bytes, int, float, bool, NoneType}:
             return None
 
         if separators is not None:

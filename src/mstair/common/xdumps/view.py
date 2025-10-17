@@ -192,7 +192,7 @@ class TokenFormatter:
             chunk = self.literals[2]  # 'false'
         elif isinstance(atom, Sentinel):
             chunk = str(atom)  # 'MISSING' or 'CALCULATE'
-        elif type(atom) in (str, int, float):
+        elif type(atom) in {str, int, float}:
             chunk = json.dumps(atom)
         else:
             renderer: _AtomRendererFunction = next(
