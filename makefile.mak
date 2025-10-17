@@ -51,15 +51,20 @@ virgin: clean ## Remove virtual environment, log files, temp files, and .cache d
 venv: .venv ## Create a virtual environment in .venv
 .venv:
 	@$(_begin)
-	@set -x; python -m venv ".venv"
-	@set -x; mv -n $(VENV_BIN)/activate $(VENV_BIN)/activate-original
-	@set -x; mv -n $(VENV_BIN)/Activate.ps1 $(VENV_BIN)/ActivateOriginal.ps1
-	@set -x; mv -n $(VENV_BIN)/activate.bat $(VENV_BIN)/activate-original.bat
-	@set -x; mv -n $(VENV_BIN)/activate.fish $(VENV_BIN)/activate-original.fish
-	@set -x; cp -n scripts/venv-shims/* $(VENV_BIN)/
-	@set -x; cp -n scripts/sitecustomize.py .venv/Lib/site-packages/
-	@$(_activate); set -x; python -m ensurepip --upgrade | /usr/bin/grep -vE '^(Looking in|Requirement already)' || true
-	@$(_activate); set -x; pip install -q --upgrade pip setuptools wheel
+	@trap "rm -rf .venv" INT TERM ERR; \
+	set -x;
+	python -m venv ".venv";
+	mv -n $(VENV_BIN)/activate $(VENV_BIN)/activate-original
+	mv -n $(VENV_BIN)/Activate.ps1 $(VENV_BIN)/ActivateOriginal.ps1
+	mv -n $(VENV_BIN)/activate.bat $(VENV_BIN)/activate-original.bat
+	mv -n $(VENV_BIN)/activate.fish $(VENV_BIN)/activate-original.fish
+	cp -n scripts/venv-shims/* $(VENV_BIN)/
+	cp -n scripts/sitecustomize.py .venv/Lib/site-packages/
+	@trap "rm -rf .venv" INT TERM ERR; \
+	$(_activate); \
+	set -x; \
+	python -m ensurepip --upgrade | /usr/bin/grep -vE '^(Looking in|Requirement already)' || true; \
+	pip install -q --upgrade pip setuptools wheel
 	@$(_end)
 
 .PHONY: check
@@ -74,7 +79,6 @@ install: .venv/.install; @: ## Install packages and custom wrappers in .venv
 .venv/.install: .venv
 	@$(_begin)
 	@$(_activate); set -x; pip install -q -e .[dev,test]
-	@$(_fn_make); fn_make mkinit; fn_make stubs
 	@set -x; touch $@
 	@$(_end)
 
@@ -85,7 +89,11 @@ install: .venv/.install; @: ## Install packages and custom wrappers in .venv
 .PHONY: mkinit
 mkinit: ## Regenerate __init__.py files for package src/mstair/common
 	@${_begin}
-	@${_activate}; set -x; mkinit src/mstair/common --inplace --relative --nomods --noattrs --recursive
+	@${_activate}; \
+	set -x; \
+	bin/reset_inits.sh src/mstair/common; \
+	mkinit src/mstair/common --inplace --relative --noattrs --recursive; \
+	ruff format src/mstair/common
 	@${_end}
 
 # ----------------------------------------------------------
@@ -167,7 +175,7 @@ test: .venv/.install ## Run test suites and validate documentation generation
 	@$(_end)
 
 .PHONY: all
-all: install stubs docs dist test lint ## Run all steps
+all: install stubs mkinit docs dist test lint ## Run all steps
 	@$(_end)
 
 # ----------------------------------------------------------
