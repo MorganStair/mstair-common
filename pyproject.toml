@@ -1,11 +1,9 @@
-# File: pyproject.toml
-
 [build-system]
     build-backend = "setuptools.build_meta"
-    requires      = [ "setuptools>=67", "wheel" ]
+    requires      = ["setuptools>=67", "wheel"]
 
 [project]
-    authors = [ { name = "Morgan Stair" } ]
+    authors = [{ name = "Morgan Stair", email = "morgan@tadmuck.com" }]
     dependencies = [
         "bs4",
         "charset_normalizer",
@@ -27,31 +25,30 @@
     requires-python = ">=3.13"
     version = "0.1.4"
 
-    [project.optional-dependencies]
-        dev = [
-            "diskcache-stubs",
-            "mkinit",
-            "mypy",
-            "pip-tools",
-            "pylint",
-            "pyright",
-            "pytest",
-            "ruff",
-            "types-colorama",
-            "types-python-dateutil",
-            "types-pytz",
-        ]
-        test = [ "pytest", "pytest-cov" ]
-
+[project.optional-dependencies]
+    dev = [
+        "diskcache-stubs",
+        "mkinit",
+        "mypy",
+        "pip-tools",
+        "pylint",
+        "pyright",
+        "pytest",
+        "ruff",
+        "types-colorama",
+        "types-python-dateutil",
+        "types-pytz",
+    ]
+    test = ["pytest", "pytest-cov"]
 
 [tool.build] # Installed from makefile.mak via pip-tools
     build-base = ".cache/tool-build"
 
 [tool.mkinit]
-    noattrs = false
-    nomods = false
-    recursive = true
-    relative = true
+    noattrs     = false
+    nomods      = false
+    recursive   = true
+    relative    = true
     respect_all = true
 
 [tool.pip-tools] # For future use with pip-tools
@@ -82,18 +79,24 @@
         "unit: fast, isolated tests with no external dependencies",
     ]
     minversion = "8.3"
-    norecursedirs = [ "*.egg-info" ]
-    testpaths = [ "scripts", "src", "tests" ]
+    norecursedirs = ["*.egg-info"]
+    testpaths = ["src"]
 
 [tool.setuptools]
     package-dir = { "" = "src" }
-    [tool.setuptools.packages.find]
-        include = [ "mstair", "mstair.*" ]
-        where   = [ "src" ]
+    script-files = [
+        "bin/pys",
+        "bin/pys.cmd",
+        "bin/reset_inits.sh",
+    ]
 
-    [tool.setuptools.package-data]
-        "mstair"        = [ "py.typed" ]
-        "mstair.common" = [ "**/*.pyi", "*.pyi", "py.typed" ]
+[tool.setuptools.packages.find]
+    include    = ["mstair.common*"]
+    namespaces = true
+    where      = ["src"]
+
+[tool.setuptools.package-data]
+    "mstair.common" = ["py.typed"]
 
 [tool.vulture]
     exclude = [
@@ -126,8 +129,6 @@
     ]
     make_whitelist = false
     min_confidence = 60
-    paths = [ "bin", "scripts", "src", "tests", "tools" ]
+    paths = ["bin", "scripts", "src"]
     sort_by_size = true
     verbose = false
-
-# End of file: pyproject.toml

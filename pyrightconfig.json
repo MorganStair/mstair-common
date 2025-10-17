@@ -2,7 +2,7 @@
 {
     "deprecateTypingAliases": true,
     "exclude": [
-        "**/.cache/**", // exclude stubgen outputs and cache directories
+        "**/.cache/**",
         "**/.git/**",
         "**/.pio/**",
         "**/.venv*/**",
@@ -16,19 +16,16 @@
     ],
     "executionEnvironments": [
         {
-            "extraPaths": [".cache/typings", "scripts", "src", "tests", "tools"],
+            "extraPaths": [".cache/typings", "scripts", "src"],
             "root": "."
         }
     ],
     "ignore": [],
-    "include": ["scripts", "src", "tests", "tools"],
+    "include": ["scripts", "src"],
     "pythonVersion": "3.13",
     "reportArgumentType": "warning",
     "reportCallIssue": "warning",
     "reportGeneralTypeIssues": "warning",
-    // "reportIncompatibleMethodOverride": "none",
-    // "reportMissingParameterType": "none",
-    // "reportMissingTypeArgument": "none",
     "reportMissingTypeStubs": "warning",
     "reportOptionalCall": "warning",
     "reportPrivateImportUsage": "warning",
@@ -36,13 +33,9 @@
     "reportReturnType": "warning",
     "reportTypedDictNotRequiredAccess": "warning",
     "reportUnknownArgumentType": "none",
-    // "reportUnknownLambdaType": "none",
     "reportUnknownMemberType": "none",
-    // "reportUnknownParameterType": "none",
     "reportUnknownVariableType": "none",
     "reportUnnecessaryIsInstance": "none",
-    // "reportUntypedFunctionDecorator": "none",
-    // "reportUnusedFunction": "none",
     "reportUnusedImport": "warning",
     "reportUnusedVariable": "warning",
     "stubPath": ".cache/typings",

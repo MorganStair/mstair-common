@@ -1,16 +1,5 @@
 # File: MANIFEST.in
 #
-# ----------------------------------------------------------
-# Source distribution inclusion rules
-# ----------------------------------------------------------
-# This package (mstair-common) owns the mstair package and ships inline types.
-#
-# Include:
-# - py.typed (PEP 561 marker) for both mstair and mstair.common
-# - source files under src/mstair/common/
-# - generated stubs (.pyi) that live alongside sources
-# ----------------------------------------------------------
-
-recursive-include src/mstair *.py
-recursive-include src/mstair *.pyi
-recursive-include src/mstair py.typed
+recursive-include src/mstair/common *.py *.typed *.md *.txt
+recursive-include bin *
+recursive-include scripts *

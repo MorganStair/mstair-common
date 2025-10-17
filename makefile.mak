@@ -91,9 +91,10 @@ mkinit: ## Regenerate __init__.py files for package src/mstair/common
 	@${_begin}
 	@${_activate}; \
 	set -x; \
-	bin/reset_inits.sh src/mstair/common; \
-	mkinit src/mstair/common --inplace --relative --noattrs --recursive; \
-	ruff format src/mstair/common
+	bin/reset_inits.sh src/mstair; \
+	mkinit src/mstair --inplace --noattrs --recursive; \
+	rm -f src/mstair/__init__.py; \
+	ruff format src/mstair
 	@${_end}
 
 # ----------------------------------------------------------
@@ -162,10 +163,10 @@ dist: .venv/.install ## Build the source and wheel packages
 	@$(_end)
 
 .PHONY: lint
-lint: .venv/.install $(CACHE_DIR)/.stubs ## Run linters
+lint: .venv/.install $(PACKAGES_DOT_STUB) ## Run linters
 	@$(_begin)
 	@$(_activate); set -x; ruff check .
-	@$(_activate); set -x; mypy --config-file=mypy.ini
+	@$(_activate); set -x; mypy --config-file=mypy.toml
 	@$(_end)
 
 .PHONY: test
@@ -175,7 +176,7 @@ test: .venv/.install ## Run test suites and validate documentation generation
 	@$(_end)
 
 .PHONY: all
-all: install stubs mkinit docs dist test lint ## Run all steps
+all: install stubs mkinit test lint docs dist ## Run all steps
 	@$(_end)
 
 # ----------------------------------------------------------

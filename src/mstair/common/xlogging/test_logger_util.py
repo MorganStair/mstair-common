@@ -28,7 +28,7 @@ from mstair.common.xlogging.logger_util import LogLevelConfig
 def clean_env(monkeypatch: pytest.MonkeyPatch) -> Iterator[None]:
     """Clear LOG_LEVEL* vars and reset singleton around each test, skipping .env loads."""
     # Prevent .env file from being read
-    monkeypatch.setattr(lu, "fs_load_dotenv", lambda *a, **k: False)
+    monkeypatch.setattr(lu, "fs_load_dotenv", lambda *a, **k: False)  # pyright: ignore[reportUnknownLambdaType]
 
     keys_to_delete = [k for k in os.environ if k.startswith("LOG_LEVEL")]
     for k in keys_to_delete:

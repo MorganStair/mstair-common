@@ -15,7 +15,7 @@
     # A comma-separated list of package or module names from where C extensions may
     # be loaded. Extensions are loading into the active Python interpreter and may
     # run arbitrary code.
-    extension-pkg-allow-list = [ "pycognito" ]
+    extension-pkg-allow-list = ["pycognito"]
 
     # A comma-separated list of package or module names from where C extensions may
     # be loaded. Extensions are loading into the active Python interpreter and may
@@ -54,19 +54,27 @@
     # ignore-list. The regex matches against paths and can be in Posix or Windows
     # format. Because '\\' represents the directory delimiter on Windows systems, it
     # can't be used as an escape character.
-    ignore-paths = [ ".*__pycache__.*|.*__pycache__.*", ".*node_modules.*|.*node_modules.*" ]
+    ignore-paths = [
+        ".*__pycache__.*|.*__pycache__.*",
+        ".*node_modules.*|.*node_modules.*",
+    ]
 
     # Files or directories matching the regular expression patterns are skipped. The
     # regex matches against base names, not paths. The default value ignores Emacs
     # file locks
-    ignore-patterns = [ "^\\.#" ]
+    ignore-patterns = ["^\\.#"]
 
     # List of module names for which member attributes should not be checked and will
     # not be imported (useful for modules/projects where namespaces are manipulated
     # during runtime and thus existing member attributes cannot be deduced by static
     # analysis). It supports qualified module names, as well as Unix pattern
     # matching.
-    ignored-modules = [ "boto3", "flask_smorest.blueprint", "h3._h3shape", "pycognito.exceptions" ]
+    ignored-modules = [
+        "boto3",
+        "flask_smorest.blueprint",
+        "h3._h3shape",
+        "pycognito.exceptions",
+    ]
 
     # Python code to execute, usually for sys.path manipulation such as
     # pygtk.require().
@@ -104,7 +112,7 @@
     # source root is an absolute path or a path relative to the current working
     # directory used to determine a package namespace for modules located under the
     # source root.
-    source-roots = [ "scripts", "src" ]
+    source-roots = ["src"]
 
     # Allow loading of arbitrary C extensions. Extensions are imported into the
     # active Python interpreter and may run arbitrary code.
@@ -127,7 +135,7 @@
     # attr-rgx =
 
     # Bad variable names which should always be refused, separated by a comma.
-    bad-names = [ "bar", "baz", "foo", "tata", "toto", "tutu" ]
+    bad-names = ["bar", "baz", "foo", "tata", "toto", "tutu"]
 
     # Bad variable names regexes, separated by a comma. If names match any regex,
     # they will always be refused
@@ -175,7 +183,7 @@
     # function-rgx =
 
     # Good variable names which should always be accepted, separated by a comma.
-    good-names = [ "Run", "_", "ex", "i", "j", "k" ]
+    good-names = ["Run", "_", "ex", "i", "j", "k"]
 
 
     # Good variable names regexes, separated by a comma. If names match any regex,
@@ -223,7 +231,7 @@
     # List of decorators that produce properties, such as abc.abstractproperty. Add
     # to this list to register other decorators that produce valid properties. These
     # decorators are taken in consideration only for invalid-name.
-    property-classes = [ "abc.abstractproperty" ]
+    property-classes = ["abc.abstractproperty"]
 
     # Regular expression matching correct type alias names. If left empty, type alias
     # names will be checked with the set naming style.
@@ -249,17 +257,30 @@
     # check-protected-access-in-special-methods =
 
     # List of method names used to declare (i.e. assign) instance attributes.
-    defining-attr-methods = [ "__init__", "__new__", "__post_init__", "asyncSetUp", "setUp" ]
+    defining-attr-methods = [
+        "__init__",
+        "__new__",
+        "__post_init__",
+        "asyncSetUp",
+        "setUp",
+    ]
 
     # List of member names, which should be excluded from the protected access
     # warning.
-    exclude-protected = [ "_asdict", "_fields", "_make", "_replace", "_source", "os._exit" ]
+    exclude-protected = [
+        "_asdict",
+        "_fields",
+        "_make",
+        "_replace",
+        "_source",
+        "os._exit",
+    ]
 
     # List of valid names for the first argument in a class method.
-    valid-classmethod-first-arg = [ "cls" ]
+    valid-classmethod-first-arg = ["cls"]
 
     # List of valid names for the first argument in a metaclass class method.
-    valid-metaclass-classmethod-first-arg = [ "mcs" ]
+    valid-metaclass-classmethod-first-arg = ["mcs"]
 
 [tool.pylint.design]
     # List of regular expressions of class ancestor names to ignore when counting
@@ -304,7 +325,7 @@
 
 [tool.pylint.exceptions]
     # Exceptions that will emit a warning when caught.
-    overgeneral-exceptions = [ "builtins.BaseException", "builtins.Exception" ]
+    overgeneral-exceptions = ["builtins.BaseException", "builtins.Exception"]
 
 [tool.pylint.format]
     # Expected format of line ending, e.g. empty (any line ending), LF or CRLF.
@@ -364,7 +385,7 @@
     # known-standard-library =
 
     # Force import order to recognize a module as part of a third party library.
-    known-third-party = [ "enchant" ]
+    known-third-party = ["enchant"]
 
     # Couples of modules and preferred modules, separated by a comma.
     # preferred-modules =
@@ -376,12 +397,18 @@
 
     # Logging modules to check that the string format arguments are in logging
     # function parameter format.
-    logging-modules = [ "logging" ]
+    logging-modules = ["logging"]
 
 [tool.pylint."messages control"]
     # Only show warnings with the listed confidence levels. Leave empty to show all.
     # Valid levels: HIGH, CONTROL_FLOW, INFERENCE, INFERENCE_FAILURE, UNDEFINED.
-    confidence = [ "CONTROL_FLOW", "HIGH", "INFERENCE", "INFERENCE_FAILURE", "UNDEFINED" ]
+    confidence = [
+        "CONTROL_FLOW",
+        "HIGH",
+        "INFERENCE",
+        "INFERENCE_FAILURE",
+        "UNDEFINED",
+    ]
 
     # Disable the message, report, category or checker with the given id(s). You can
     # either give multiple identifiers separated by comma (,) or put this option
@@ -480,7 +507,7 @@
     # check-fixme-in-docstring =
 
     # List of note tags to take in consideration, separated by a comma.
-    notes = [ "BUGBUG", "FIXME", "TODO", "XXX" ]
+    notes = ["BUGBUG", "FIXME", "TODO", "XXX"]
 
     # Regular expression of note tags to take in consideration.
     # notes-rgx =
@@ -492,7 +519,7 @@
     # Complete name of functions that never returns. When checking for inconsistent-
     # return-statements if a never returning function is called then it will be
     # considered as an explicit return statement and no message will be printed.
-    never-returning-functions = [ "argparse.parse_error", "sys.exit" ]
+    never-returning-functions = ["argparse.parse_error", "sys.exit"]
 
     # Let 'consider-using-join' be raised when the separator to join on would be non-
     # empty (resulting in expected fixes of the type: ``"- " + " - ".join(items)``)
@@ -564,7 +591,7 @@
     # List of decorators that produce context managers, such as
     # contextlib.contextmanager. Add to this list to register other decorators that
     # produce valid context managers.
-    contextmanager-decorators = [ "contextlib.contextmanager" ]
+    contextmanager-decorators = ["contextlib.contextmanager"]
 
     # List of members which are set dynamically and missed by pylint inference
     # system, and so shouldn't trigger E1101 when accessed. Python regular
@@ -596,7 +623,12 @@
     # List of class names for which member attributes should not be checked (useful
     # for classes with dynamically set attributes). This supports the use of
     # qualified names.
-    ignored-classes = [ "_thread._local", "argparse.Namespace", "optparse.Values", "thread._local" ]
+    ignored-classes = [
+        "_thread._local",
+        "argparse.Namespace",
+        "optparse.Values",
+        "thread._local",
+    ]
 
     # Show a hint with possible names when a member name was not found. The aspect of
     # finding the hint is based on edit distance.
@@ -629,7 +661,7 @@
 
     # List of strings which can identify a callback function by name. A callback name
     # must start or end with one of those strings.
-    callbacks = [ "_cb", "cb_" ]
+    callbacks = ["_cb", "cb_"]
 
     # A regular expression matching the name of dummy variables (i.e. expected to not
     # be used).
