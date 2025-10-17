@@ -1,4 +1,4 @@
-# File: tests/test_formatters.py
+# File:
 """
 Tests for Ruff-based formatter wrapper `format_source_code`.
 
@@ -8,6 +8,7 @@ The tests monkeypatch `subprocess.run` to avoid invoking real tools.
 from __future__ import annotations
 
 import logging
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
@@ -16,13 +17,13 @@ import pytest
 from mstair.common.format_helpers import format_source_code
 
 
+@dataclass
 class _Completed:
     """Minimal stand-in for subprocess.CompletedProcess."""
 
-    def __init__(self, returncode: int, stdout: str = "", stderr: str = "") -> None:
-        self.returncode: int = returncode
-        self.stdout: str = stdout
-        self.stderr: str = stderr
+    returncode: int
+    stdout: str = ""
+    stderr: str = ""
 
 
 def test_successful_import_sort_and_format(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:

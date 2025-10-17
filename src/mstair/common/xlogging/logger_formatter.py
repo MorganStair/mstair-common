@@ -1,4 +1,4 @@
-# File: python/plib_/xlogging/logger_formatter.py
+# File: src/mstair/common/xlogging/logger_formatter.py
 
 import ctypes
 import logging
@@ -399,21 +399,17 @@ def format_logging_error(record: logging.LogRecord, exc: Exception, debug_config
     ]
 
     if getattr(debug_config, "verbose", False):
-        message_lines.extend(
-            [
-                "",
-                "xdumps(record):",
-                f"  {xdumps(vars(record), **getattr(record, 'extra', {}))}",
-            ]
-        )
+        message_lines.extend([
+            "",
+            "xdumps(record):",
+            f"  {xdumps(vars(record), **getattr(record, 'extra', {}))}",
+        ])
     else:
-        message_lines.extend(
-            [
-                f"record.msg: {getattr(record, 'msg', None)!r}",
-                f"record.args: {getattr(record, 'args', None)!r}",
-                "",
-            ]
-        )
+        message_lines.extend([
+            f"record.msg: {getattr(record, 'msg', None)!r}",
+            f"record.args: {getattr(record, 'args', None)!r}",
+            "",
+        ])
 
     message_lines.extend(full_traceback.splitlines())
     message_lines.extend(["."])

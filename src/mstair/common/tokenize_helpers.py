@@ -80,7 +80,7 @@ class CodeRegions:
         return result
 
     @classmethod
-    def regions_from_code(cls, source_code: str) -> Self:
+    def regions_from_code(cls, source_code: str) -> Self:  # noqa: PLR0914
         """
         Parses Python source code into named regions, using the first "# End of file:" line
         (case-insensitive, ignoring whitespace) as the footers marker.
@@ -90,7 +90,6 @@ class CodeRegions:
         :param source_code: The complete source code as a string.
         :return: An instance of CodeRegions containing the parsed regions.
         """
-        ### Main parsing logic starts here ###
         linesep = "\r\n" if "\r\n" in source_code else "\n"
         lines: list[str] = source_code.splitlines()
 

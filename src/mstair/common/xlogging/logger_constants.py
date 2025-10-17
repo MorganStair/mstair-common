@@ -1,4 +1,4 @@
-# File: python/plib_/xlogging/logger_constants.py
+# File: src/mstair/common/xlogging/logger_constants.py
 
 import logging
 

@@ -1,4 +1,4 @@
-# File: python/plib_/xlogging/logger_factory.py
+# File: src/mstair/common/xlogging/logger_factory.py
 """
 Logger factory for creating and configuring CoreLogger instances.
 

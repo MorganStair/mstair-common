@@ -1,4 +1,4 @@
-# File: python/plib_/xlogging/color_logger.py
+# File: src/mstair/common/xlogging/color_logger.py
 """
 A logger that adds color and a prefix to messages.
 """

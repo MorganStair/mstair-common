@@ -1,4 +1,4 @@
-# File: python/plib_/xlogging/frame_analyzer.py
+# File: src/mstair/common/xlogging/frame_analyzer.py
 """
 Module: mstair.common.xlogging.frame_analyzer
 

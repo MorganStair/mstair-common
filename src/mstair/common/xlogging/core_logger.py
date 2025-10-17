@@ -1,4 +1,4 @@
-# File: python/plib_/xlogging/core_logger.py
+# File: src/mstair/common/xlogging/core_logger.py
 """
 Structured logging with environment-driven configuration.
 

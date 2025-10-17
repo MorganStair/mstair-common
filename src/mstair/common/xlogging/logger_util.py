@@ -1,4 +1,4 @@
-# File: python/plib_/xlogging/logger_util.py
+# File: src/mstair/common/xlogging/logger_util.py
 """
 Environment variable-driven log level configuration.
 

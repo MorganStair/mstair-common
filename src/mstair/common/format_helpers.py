@@ -1,9 +1,6 @@
-# File: python/plib_/format_helpers.py
+# File: src/mstair/common/format_helpers.py
+#
 """
-File: plib_/format_helpers.py
-Module: mstair.common.format_helpers
-Author: Morgan Stair <morgan@tadmuck.com>
-
 Provides a single wrapper around Ruff for formatting and import sorting.
 Uses stdin/stdout approach with --stdin-filename to preserve project context.
 """
@@ -127,7 +124,7 @@ def _run_ruff_command(
 
 def _ruff_not_available(proc: subprocess.CompletedProcess[str]) -> bool:
     """Check for missing Ruff tool based on stderr."""
-    if proc.returncode in (0, 1):
+    if proc.returncode in {0, 1}:
         return False
     stderr = proc.stderr if proc else ""
     if not stderr:
