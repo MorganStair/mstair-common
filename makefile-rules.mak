@@ -59,12 +59,6 @@ endif
 # Other tools and settings
 # ----------------------------------------------------------
 
-CAT   ?= /usr/bin/cat
-CP    ?= /usr/bin/cp
-GREP  ?= /usr/bin/grep
-SED   ?= /usr/bin/sed
-SORT  ?= /usr/bin/sort
-TR    ?= /usr/bin/tr
 UNZIP ?= 7z.exe x -y -o
 ZIP   ?= 7z.exe a -tzip -mx5 -mm=Deflate -mcu -r
 
@@ -73,28 +67,17 @@ ZIP   ?= 7z.exe a -tzip -mx5 -mm=Deflate -mcu -r
 # ----------------------------------------------------------
 
 define _activate
-	{ printf "%ssource %s/activate\n" "$$PS4" "$(VENV_BIN)"; source $(VENV_BIN)/activate; PS4="+$${PS4}"; }
+	printf "%ssource %s/activate\n" "$$PS4" "$(VENV_BIN)"; source $(VENV_BIN)/activate; PS4="+$${PS4}"
 endef
 
-
 define _begin
-	@printf '\\n### %s ###\\n' "$@"
+	@printf '\\n### BEGIN %s: %s ###\\n' "$@" "$*"
 endef
 
 define _clear_screen
-	@tput clear 2>/dev/null || printf '\033[H\033[2J\033[3J\033[r'; : Clear screen and scrollback, tput fallback-safe
+	@tput clear 2>/dev/null || printf '\033[H\033[2J\033[3J\033[r'
 endef
 
 define _end
-	@printf "### %s ###\\n" "$@ done"
-endef
-
-define _stubgen
-	( set -x; stubgen -p "$(1)" -o "$(2)" --include-private -q 2>/dev/null > /dev/null; ); \
-	if [ ! -s "$(2)/$(1)/__init__.pyi" ]; then \
-		( set -x; stubgen -p "$(1)" -o "$(2)" --include-private -q --no-import --ignore-errors 2>/dev/null > /dev/null; ); \
-	fi; \
-	if [ ! -s "$(2)/$(1)/__init__.pyi" ]; then \
-		printf "\n*** stubgen '$(1)' failed ***\n\n" >&2; exit 1; \
-	fi
+	@printf "### END %s: %s ###\\n" "$@" "$*"
 endef

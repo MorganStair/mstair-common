@@ -30,6 +30,7 @@
     [project.optional-dependencies]
         dev = [
             "diskcache-stubs",
+            "mkinit",
             "mypy",
             "pip-tools",
             "pylint",
@@ -46,6 +47,12 @@
 [tool.build] # Installed from makefile.mak via pip-tools
     build-base = ".cache/tool-build"
 
+[tool.mkinit]
+    noattrs = false
+    nomods = false
+    recursive = true
+    relative = true
+    respect_all = true
 
 [tool.pip-tools] # For future use with pip-tools
     annotate        = true
@@ -123,4 +130,4 @@
     sort_by_size = true
     verbose = false
 
-    # End of file: pyproject.toml
+# End of file: pyproject.toml
