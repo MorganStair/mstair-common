@@ -1,8 +1,6 @@
-# File: python/plib_/base/__init__.py
-"""
-This package contains standalone modules that are safe to import with no circular dependency risk.
-"""
+# File: src/mstair/common/base/__init__.py
 
+# <AUTOGEN_INIT>
 from . import (
     accessor_mixin,
     bbox,
@@ -17,6 +15,7 @@ from . import (
     fs_helpers,
     git_helpers,
     interpolate,
+    mapping_helpers,
     network_helpers,
     nltk_helpers,
     normalize_helpers,
@@ -43,6 +42,7 @@ __all__ = [
     "fs_helpers",
     "git_helpers",
     "interpolate",
+    "mapping_helpers",
     "network_helpers",
     "nltk_helpers",
     "normalize_helpers",
@@ -53,5 +53,6 @@ __all__ = [
     "trailing_modules",
     "types",
 ]
+# </AUTOGEN_INIT>
 
 # End of file: src/mstair/common/base/__init__.py

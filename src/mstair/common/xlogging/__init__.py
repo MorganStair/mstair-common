@@ -1,5 +1,6 @@
-# File: python/plib_/xlogging/__init__.py
+# File: src/mstair/common/xlogging/__init__.py
 
+# <AUTOGEN_INIT>
 from . import (
     color_logger,
     core_logger,
@@ -22,5 +23,6 @@ __all__ = [
     "logger_util",
     "test_logger_util",
 ]
+# </AUTOGEN_INIT>
 
 # End of file: src/mstair/common/xlogging/__init__.py

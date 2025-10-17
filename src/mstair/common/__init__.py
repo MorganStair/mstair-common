@@ -1,13 +1,32 @@
-# File: python/plib_/__init__.py
+# File: src/mstair/common/__init__.py
 
-from __future__ import annotations
+# <AUTOGEN_INIT>
+from . import (
+    base,
+    format_helpers,
+    io,
+    scan_missing_stubs,
+    test_format_helpers,
+    tokenize_helpers,
+    update_pyproject_version,
+    vscode_settings_diff,
+    xdumps,
+    xlogging,
+)
 
-from . import base, format_helpers, tokenize_helpers, xdumps, xlogging
 
-
-__all__ = ["base", "format_helpers", "tokenize_helpers", "xdumps", "xlogging", "__version__"]
-
-__version__: str = "0.1.4"
-
+__all__ = [
+    "base",
+    "format_helpers",
+    "io",
+    "scan_missing_stubs",
+    "test_format_helpers",
+    "tokenize_helpers",
+    "update_pyproject_version",
+    "vscode_settings_diff",
+    "xdumps",
+    "xlogging",
+]
+# </AUTOGEN_INIT>
 
 # End of file: src/mstair/common/__init__.py
