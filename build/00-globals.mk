@@ -56,19 +56,19 @@ UNZIP ?= 7z.exe x -y -o
 ZIP   ?= 7z.exe a -tzip -mx5 -mm=Deflate -mcu -r
 
 define _activate
-        printf "%ssource %s/activate\n" "$$PS4" "$(VENV_BIN)"; source $(VENV_BIN)/activate; PS4="+$${PS4}"
+	printf "%ssource %s/activate\n" "$$PS4" "$(VENV_BIN)"; source $(VENV_BIN)/activate; PS4="+$${PS4}"
 endef
 
 define _begin
-        @printf '\\n### BEGIN %s: %s ###\\n' "$@" "$*"
+	@printf '\\n### BEGIN %s: %s ###\\n' "$@" "$*"
 endef
 
 define _clear_screen
-        @tput clear 2>/dev/null || printf '\033[H\033[2J\033[3J\033[r'
+	@tput clear 2>/dev/null || printf '\033[H\033[2J\033[3J\033[r'
 endef
 
 define _end
-        @printf "### END %s: %s ###\\n" "$@" "$*"
+	@printf "### END %s: %s ###\\n" "$@" "$*"
 endef
 
 # --------------------------------------------------------------
