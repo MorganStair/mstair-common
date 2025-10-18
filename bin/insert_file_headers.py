@@ -42,6 +42,7 @@ __all__ = ["process_file", "expand_args", "main"]
 # --------------------------------------------------------------
 def process_file(path: Path) -> bool:
     """Insert or replace the header/footer lines in a single file."""
+    path = path.resolve()  # always normalize
     if path.suffix not in ALLOWED_SUFFIXES:
         print(f"[skip] {path} (unsupported extension)", file=sys.stderr)
         return False
@@ -66,10 +67,18 @@ def process_file(path: Path) -> bool:
     while lines and not lines[-1].strip():
         lines.pop(-1)
 
+    # Try to compute relative path for header display
+    try:
+        rel_path = path.relative_to(Path.cwd())
+        header_path = rel_path.as_posix()
+    except ValueError:
+        # Fall back to filename only (still relative-looking)
+        header_path = path.name
+
     new_lines: list[str] = []
     if shebang_line:
         new_lines.append(shebang_line)
-    new_lines.append(f"# File: {path.as_posix()}")
+    new_lines.append(f"# File: {header_path}")
     new_lines.extend(lines)
     new_lines.append("")  # one blank line before footer
     new_lines.append(FOOTER_LINE)
