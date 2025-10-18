@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+# Simple shim so "python3" invokes the venv's Python.
+# Usage: python3 [args...]
+
+# Determine directory containing this script (resolves symlinks).
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# Execute the local Python interpreter.
+exec "${SCRIPT_DIR}/python" "$@"
