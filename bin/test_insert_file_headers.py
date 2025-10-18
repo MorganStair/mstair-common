@@ -9,6 +9,7 @@ Validates:
     • Exactly one blank line before the footer
     • Idempotent output (second run makes no changes)
     • Skip behavior for unsupported file types
+    • Globbing expansion for wildcard arguments
 """
 
 from __future__ import annotations
@@ -38,9 +39,16 @@ except ImportError as exc:
 class TestInsertFileHeaders(unittest.TestCase):
     def setUp(self) -> None:
         self.tmpdir = Path(tempfile.mkdtemp(prefix="hdrtest_"))
+        self.old_cwd = Path.cwd()
+        # Change into temp directory so relative globs work cleanly
+        os.chdir(self.tmpdir)
+
+    def tearDown(self) -> None:
+        os.chdir(self.old_cwd)
 
     def _write(self, name: str, text: str) -> Path:
         path = self.tmpdir / name
+        path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(text, encoding="utf-8")
         return path
 
@@ -82,8 +90,7 @@ class TestInsertFileHeaders(unittest.TestCase):
         self.assertNotIn("old.mak", "".join(lines))
 
     def test_trailing_blank_lines_collapsed(self) -> None:
-        content = "X=1\n\n\n\n"
-        path = self._write("manyblanks.mk", content)
+        path = self._write("manyblanks.mk", "X=1\n\n\n\n")
         ifh.process_file(path)
         lines = self._read(path)
         self.assertEqual(lines[-2], "")
@@ -105,6 +112,39 @@ class TestInsertFileHeaders(unittest.TestCase):
         self.assertFalse(ok)
         self.assertIn("unsupported extension", stderr_buf.getvalue())
 
+    # ----------------------------------------------------------
+    # Globbing and CLI tests
+    # ----------------------------------------------------------
+    def test_expand_args_with_globs(self) -> None:
+        # Create some files matching patterns
+        f1 = self._write("src/a.py", "print('A')\n")
+        f2 = self._write("src/b.py", "print('B')\n")
+        f3 = self._write("docs/readme.txt", "not allowed\n")
+
+        # Should match both .py files, skip txt
+        results = ifh.expand_args(["src/*.py", "docs/*.txt"])
+        self.assertIn(f1, results)
+        self.assertIn(f2, results)
+        self.assertNotIn(f3, results)
+
+    def test_main_with_glob_patterns(self) -> None:
+        # Create a few files in nested dirs
+        f1 = self._write("src/one.py", "print('one')\n")
+        f2 = self._write("src/two.mk", "VAR=1\n")
+
+        # Run main with wildcard patterns
+        argv = ["src/*.py", "src/*.mk"]
+        with redirect_stderr(io.StringIO()):
+            code = ifh.main(argv)
+
+        self.assertEqual(code, 0)
+        for f in (f1, f2):
+            lines = self._read(f)
+            self.assertIn(ifh.FOOTER_LINE, lines)
+            self.assertIn(f"# File: {f.as_posix()}", lines[0])
+
 
 if __name__ == "__main__":
+    import os
+
     unittest.main(verbosity=2)
