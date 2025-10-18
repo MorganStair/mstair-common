@@ -44,3 +44,5 @@ git-crlf:
         set -x; git config --global core.eol crlf
 
 # End of file: makefile.mak
+
+# --------------------------------------------------------------

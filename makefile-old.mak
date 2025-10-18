@@ -1,4 +1,4 @@
-# File: makefile.mak
+# File: makefile-old.mak
 
 # ----------------------------------------------------------
 # Set Variables, rules, and functions:
@@ -205,3 +205,5 @@ $(TYPINGS_TXT): # Ensure the typings file exists
 	@touch $@
 
 # End of file: makefile.mak
+
+# --------------------------------------------------------------

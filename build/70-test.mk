@@ -19,4 +19,5 @@ test: .venv/.install # Run test suites and validate documentation generation
 
 .PHONY: tests
 tests: test lint ; @: ## Run all tests and linters
+
 # --------------------------------------------------------------
