@@ -3,7 +3,10 @@
 Insert or replace standardized header and footer lines in specified files.
 
 Usage:
-    insert_file_headers.py <file1> [<file2> ...]
+    insert_file_headers.py <file1> [<file2> ... | <pattern> ...]
+
+Examples:
+    insert_file_headers.py build/*.mk src/**/*.py
 
 Each file will be updated *in place* if its extension is allowed (.mak, .mk, .py).
 
@@ -12,6 +15,7 @@ Behavior:
     • Any existing header "# File: ..." or footer line of dashes is replaced.
     • The shebang (#!) line, if present, is preserved at the top.
     • Exactly one blank line will appear before the footer.
+    • Globs like "*.py" and "**/*.mk" are expanded recursively.
 """
 
 from __future__ import annotations
@@ -30,22 +34,14 @@ HEADER_RE = re.compile(r"^#\s*File:\s+.*$")
 FOOTER_RE = re.compile(r"^#\s*-{10,}\s*$")
 SHEBANG_RE = re.compile(r"^#!")
 FOOTER_LINE = "# " + "-" * 62
-__all__ = ["process_file", "main"]
+__all__ = ["process_file", "expand_args", "main"]
 
 
 # --------------------------------------------------------------
 # Core logic
 # --------------------------------------------------------------
 def process_file(path: Path) -> bool:
-    """
-    Insert or replace the header/footer lines in a single file.
-
-    Args:
-        path: Path to the file to modify.
-
-    Returns:
-        True if modified successfully, False if skipped or error.
-    """
+    """Insert or replace the header/footer lines in a single file."""
     if path.suffix not in ALLOWED_SUFFIXES:
         print(f"[skip] {path} (unsupported extension)", file=sys.stderr)
         return False
@@ -63,23 +59,19 @@ def process_file(path: Path) -> bool:
     if lines and SHEBANG_RE.match(lines[0]):
         shebang_line = lines.pop(0)
 
-    # Remove existing header/footer if present
     if lines and HEADER_RE.match(lines[0]):
         lines.pop(0)
     if lines and FOOTER_RE.match(lines[-1]):
         lines.pop(-1)
-
-    # Remove any trailing blank lines before reappending the footer
     while lines and not lines[-1].strip():
         lines.pop(-1)
 
-    # Reassemble
     new_lines: list[str] = []
     if shebang_line:
         new_lines.append(shebang_line)
     new_lines.append(f"# File: {path.as_posix()}")
     new_lines.extend(lines)
-    new_lines.append("")  # ensure exactly one blank line before footer
+    new_lines.append("")  # one blank line before footer
     new_lines.append(FOOTER_LINE)
 
     try:
@@ -93,17 +85,51 @@ def process_file(path: Path) -> bool:
 
 
 # --------------------------------------------------------------
+# Globbing helper
+# --------------------------------------------------------------
+def expand_args(args: Iterable[str]) -> list[Path]:
+    """
+    Expand shell-style glob patterns into file paths.
+    Supports recursive patterns like **/*.py.
+    """
+    results: list[Path] = []
+    for arg in args:
+        p = Path(arg)
+        if any(ch in arg for ch in "*?[]"):
+            # If pattern includes glob chars, expand relative to current dir
+            base = Path.cwd()
+            matches = base.glob(arg) if "**" not in arg else base.rglob(arg.replace("**/", ""))
+            for m in matches:
+                if m.is_file():
+                    results.append(m)
+        else:
+            results.append(p)
+    # Deduplicate while preserving order
+    seen: set[Path] = set()
+    unique: list[Path] = []
+    for p in results:
+        if p not in seen:
+            seen.add(p)
+            unique.append(p)
+    return unique
+
+
+# --------------------------------------------------------------
 # CLI entry
 # --------------------------------------------------------------
 def main(argv: Iterable[str] | None = None) -> int:
-    argv = list(sys.argv[1:] if argv is None else argv)
-    if not argv:
-        print("Usage: insert_file_headers.py <file1> [<file2> ...]", file=sys.stderr)
+    args = list(sys.argv[1:] if argv is None else argv)
+    if not args:
+        print("Usage: insert_file_headers.py <file1|pattern> ...", file=sys.stderr)
+        return 1
+
+    paths = expand_args(args)
+    if not paths:
+        print("[error] No files matched given arguments.", file=sys.stderr)
         return 1
 
     success = True
-    for arg in argv:
-        path = Path(arg)
+    for path in paths:
         if not process_file(path):
             success = False
     return 0 if success else 1
