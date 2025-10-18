@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# File: bin/split_makefiles.py
 #
 """
 Split concatenated Makefile stream (from `make cat`) into individual files.
@@ -104,4 +105,4 @@ def main() -> int:
 if __name__ == "__main__":
     raise SystemExit(main())
 
-# End of file: d:\mstair-common\bin\split_makefiles.py
+# --------------------------------------------------------------
