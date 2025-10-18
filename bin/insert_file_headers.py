@@ -91,19 +91,28 @@ def expand_args(args: Iterable[str]) -> list[Path]:
     """
     Expand shell-style glob patterns into file paths.
     Supports recursive patterns like **/*.py.
+    Filters results by ALLOWED_SUFFIXES.
     """
     results: list[Path] = []
+
     for arg in args:
         p = Path(arg)
-        if any(ch in arg for ch in "*?[]"):
-            # If pattern includes glob chars, expand relative to current dir
-            base = Path.cwd()
-            matches = base.glob(arg) if "**" not in arg else base.rglob(arg.replace("**/", ""))
-            for m in matches:
-                if m.is_file():
-                    results.append(m)
+        has_glob = any(ch in arg for ch in "*?[]")
+        matches: Iterable[Path]
+
+        if has_glob:
+            # Use glob or rglob depending on recursive pattern
+            if "**" in arg:
+                matches = Path().rglob(arg.replace("**/", ""))
+            else:
+                matches = Path().glob(arg)
         else:
-            results.append(p)
+            matches = [p]
+
+        for m in matches:
+            if m.is_file() and m.suffix in ALLOWED_SUFFIXES:
+                results.append(m)
+
     # Deduplicate while preserving order
     seen: set[Path] = set()
     unique: list[Path] = []
