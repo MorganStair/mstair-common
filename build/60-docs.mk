@@ -6,7 +6,9 @@ docs: # Generate documentation in docs/
 
 .PHONY: docs-serve
 docs-serve: docs # Helper to generate and serve documentation locally
-	@set -x
-	python -m http.server 8000 --directory docs/
+	@:
+	(	set -x
+		python -m http.server 8000 --directory docs/
+	)
 
 # --------------------------------------------------------------

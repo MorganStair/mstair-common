@@ -1,23 +1,25 @@
 # File: build/70-test.mk
 
-.PHONY: lint
-lint: .venv/.install $(STUBS) # Run all linters
+.PHONY: test-lint
+test-lint: ## Run all linters
 	$(_begin)
 	$(_activate)
-	{
-		set -x
+	(	set -x
 		ruff check .
-		mypy --config-file=mypy.toml
-	}
+		mypy --config-file=mypy.ini
+	)
 	$(_end)
 
-.PHONY: test
-test: .venv/.install # Run test suites and validate documentation generation
+.PHONY: test-pytest
+test-pytest: ## Run test suites and validate documentation generation
 	@$(_begin)
-	@$(_activate); set -x; pytest -v
+	@$(_activate)
+	(	set -x
+		pytest -v
+	)
 	@$(_end)
 
-.PHONY: tests
-tests: test lint ; @: ## Run all tests and linters
+.PHONY: test
+test: test-pytest test-lint ; @: ## Run all tests and linters
 
 # --------------------------------------------------------------

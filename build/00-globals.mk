@@ -7,7 +7,6 @@ $(info MAKEFILE_LIST=$(MAKEFILE_LIST))
 $(info )
 endif
 
-
 export SHELL    := bash
 .SHELLFLAGS     := -e -u -c
 .ONESHELL:
@@ -56,7 +55,9 @@ UNZIP ?= 7z.exe x -y -o
 ZIP   ?= 7z.exe a -tzip -mx5 -mm=Deflate -mcu -r
 
 define _activate
-	printf "%ssource %s/activate\n" "$$PS4" "$(VENV_BIN)"; source $(VENV_BIN)/activate; PS4="+$${PS4}"
+	printf "%ssource %s/activate\n" "$$PS4" "$(VENV_BIN)"
+	source $(VENV_BIN)/activate
+	PS4="+$${PS4}"
 endef
 
 define _begin
