@@ -1,4 +1,4 @@
-# File: makefile-rules.mak
+# File: build/00-globals.mk
 
 ifdef VERBOSE
 $(info CURDIR=$(CURDIR))
@@ -8,14 +8,11 @@ $(info )
 endif
 
 
-export SHELL := C:\Program Files\Git\usr\bin\bash.exe
-.SHELLFLAGS	:= -eu -c
+export SHELL    := bash
+.SHELLFLAGS     := -e -u -c
+.ONESHELL:
 
 asposix = $(subst \,/,$(1))
-
-# ----------------------------------------------------------
-# Project directories and environment
-# ----------------------------------------------------------
 
 ifndef PROJECT_DIR
 export PROJECT_DIR := .
@@ -55,29 +52,23 @@ else
 export VENV_BIN := .venv/bin
 endif
 
-# ----------------------------------------------------------
-# Other tools and settings
-# ----------------------------------------------------------
-
 UNZIP ?= 7z.exe x -y -o
 ZIP   ?= 7z.exe a -tzip -mx5 -mm=Deflate -mcu -r
 
-# ----------------------------------------------------------
-# Other settings
-# ----------------------------------------------------------
-
 define _activate
-	printf "%ssource %s/activate\n" "$$PS4" "$(VENV_BIN)"; source $(VENV_BIN)/activate; PS4="+$${PS4}"
+        printf "%ssource %s/activate\n" "$$PS4" "$(VENV_BIN)"; source $(VENV_BIN)/activate; PS4="+$${PS4}"
 endef
 
 define _begin
-	@printf '\\n### BEGIN %s: %s ###\\n' "$@" "$*"
+        @printf '\\n### BEGIN %s: %s ###\\n' "$@" "$*"
 endef
 
 define _clear_screen
-	@tput clear 2>/dev/null || printf '\033[H\033[2J\033[3J\033[r'
+        @tput clear 2>/dev/null || printf '\033[H\033[2J\033[3J\033[r'
 endef
 
 define _end
-	@printf "### END %s: %s ###\\n" "$@" "$*"
+        @printf "### END %s: %s ###\\n" "$@" "$*"
 endef
+
+# --------------------------------------------------------------
