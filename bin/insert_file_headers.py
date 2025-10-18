@@ -98,33 +98,38 @@ def process_file(path: Path) -> bool:
 # --------------------------------------------------------------
 def expand_args(args: Iterable[str]) -> list[Path]:
     """
-    Expand shell-style glob patterns into file paths.
+    Expand shell-style glob patterns into absolute file paths.
     Supports recursive patterns like **/*.py.
     Filters results by ALLOWED_SUFFIXES.
     """
     results: list[Path] = []
 
+    cwd = Path.cwd()
+
     for arg in args:
-        p = Path(arg)
         has_glob = any(ch in arg for ch in "*?[]")
         matches: Iterable[Path]
 
         if has_glob:
-            # Use glob or rglob depending on recursive pattern
+            # Always expand relative to current directory
             if "**" in arg:
-                matches = Path().rglob(arg.replace("**/", ""))
+                matches = cwd.rglob(arg)
             else:
-                matches = Path().glob(arg)
+                matches = cwd.glob(arg)
         else:
-            matches = [p]
+            matches = [cwd / arg]
 
         for m in matches:
-            if m.is_file() and m.suffix in ALLOWED_SUFFIXES:
-                results.append(m)
+            try:
+                if m.is_file() and m.suffix in ALLOWED_SUFFIXES:
+                    results.append(m.resolve())
+            except OSError:
+                # Ignore any inaccessible files
+                continue
 
     # Deduplicate while preserving order
-    seen: set[Path] = set()
     unique: list[Path] = []
+    seen: set[Path] = set()
     for p in results:
         if p not in seen:
             seen.add(p)
