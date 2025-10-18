@@ -6,21 +6,23 @@
 
 # Common text file types
 *.bat  text eol=crlf
-*.cmd  text eol=crlf
-*.ps1  text eol=crlf
-*.py   text eol=crlf
-*.toml text eol=crlf
-*.json text eol=crlf
-*.yml  text eol=crlf
-*.yaml text eol=crlf
-*.ini  text eol=crlf
 *.cfg  text eol=crlf
-*.sh   text eol=lf
-*.md   text eol=lf
-*.ts   text eol=crlf
-*.js   text eol=crlf
+*.cmd  text eol=crlf
 *.css  text eol=crlf
 *.html text eol=crlf
+*.ini  text eol=crlf
+*.js   text eol=crlf
+*.json text eol=crlf
+*.mak  text eol=crlf
+*.md   text eol=lf
+*.mk   text eol=crlf
+*.ps1  text eol=crlf
+*.py   text eol=crlf
+*.sh   text eol=lf
+*.toml text eol=crlf
+*.ts   text eol=crlf
+*.yaml text eol=crlf
+*.yml  text eol=crlf
 
 # Binary files (no EOL conversion)
 *.bin  binary
@@ -38,7 +40,6 @@
 *.zip  binary
 
 # Build and vendor outputs — skip text normalization entirely
-build/**         -text
 dist/**          -text
 node_modules/**  -text
 out/**           -text

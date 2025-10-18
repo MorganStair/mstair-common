@@ -40,7 +40,6 @@
         ".cache",
         ".venv",
         "__pycache__",
-        "build",
         "cdk.out",
         "data",
         "dist",

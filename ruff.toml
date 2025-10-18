@@ -9,21 +9,20 @@ exclude = [
     ".venv",
     ".venv*",
     "__pycache__",
-    "build",
     "dist",
     "node_modules",
 ]
 fix = true
 line-length = 101
 respect-gitignore = true
-src = [ "scripts", "src" ]
+src = ["scripts", "src"]
 target-version = "py313"
 unsafe-fixes = false
 
 
 [lint]
-    extend-select = [ "I001", "I002" ]
-    fixable = [ "ALL" ]
+    extend-select = ["I001", "I002"]
+    fixable = ["ALL"]
     ignore = [
         "B007",
         "B009",
@@ -68,26 +67,26 @@ unsafe-fixes = false
         "UP037",
         "UP040",
     ]
-    select = [ "B", "C4", "E", "F", "I", "PL", "RUF", "SIM", "TID", "UP" ]
-    unfixable = [ "F401", "F403", "TID252" ]
+    select = ["B", "C4", "E", "F", "I", "PL", "RUF", "SIM", "TID", "UP"]
+    unfixable = ["F401", "F403", "TID252"]
 
-    [lint.pylint]
-        max-args           = 8
-        max-branches       = 15
-        max-public-methods = 30
-        max-returns        = 9
+[lint.pylint]
+    max-args           = 8
+    max-branches       = 15
+    max-public-methods = 30
+    max-returns        = 9
 
-    [lint.isort]
-        detect-same-package = true
-        force-single-line   = false
-        force-to-top        = [ "__future__" ]
-        known-first-party   = [ "autocomment", "pdf2rtf", "plib_", "tests" ]
-        known-local-folder  = [ "src" ]
-        lines-after-imports = 2
-        order-by-type       = true
+[lint.isort]
+    detect-same-package = true
+    force-single-line   = false
+    force-to-top        = ["__future__"]
+    known-first-party   = ["autocomment", "pdf2rtf", "plib_", "tests"]
+    known-local-folder  = ["src"]
+    lines-after-imports = 2
+    order-by-type       = true
 
-    [lint.mccabe]
-        max-complexity = 8
+[lint.mccabe]
+    max-complexity = 8
 
 [format]
     indent-style              = "space"
