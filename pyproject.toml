@@ -80,7 +80,7 @@
     ]
     minversion = "8.3"
     norecursedirs = ["*.egg-info"]
-    testpaths = ["src"]
+    testpaths = ["bin", "scripts", "src"]
 
 [tool.setuptools]
     package-dir = { "" = "src" }
