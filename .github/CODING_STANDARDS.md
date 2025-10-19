@@ -2,13 +2,12 @@
 
 ## File layout
 
-Every Python file must follow this structure:
+Every Python file must follow this structurem, including blank lines:
 
 ```python
-# File: path/to/module.py
-#
+<placeholder: shebang line for executable scripts only>
 """
-<placeholder: module summary line>
+<placeholder: module summary on its own line>
 
 <placeholder: brief description with purpose and example>
 """
@@ -17,37 +16,23 @@ from __future__ import annotations
 
 <placeholder: stdlib imports>
 <placeholder: third-party imports>
-<placeholder: local imports>
+<placeholder: local imports (absolute only)>
 <placeholder: __all__ definition>
 
-# --------------------------------------------------------------
-# Section: Module-level constants and configuration
-# --------------------------------------------------------------
+<placeholder: heading for the section below>
 <placeholder: module constants and configuration>
 
-# --------------------------------------------------------------
-# Section: Type definitions and dataclasses
-# --------------------------------------------------------------
+<placeholder: heading for the section below>
 <placeholder: type definitions and dataclasses>
 
-# --------------------------------------------------------------
-# Section: Main public API
-# --------------------------------------------------------------
+<placeholder: heading for the section below>
 <placeholder: public functions and classes>
 
-# --------------------------------------------------------------
-# Section: Private implementation details
-# --------------------------------------------------------------
+<placeholder: heading for the section below>
 <placeholder: private helpers with docstrings>
 
-# End of file: path/to/module.py
+# End of file: <path>
 ```
-
-Rules:
-
-* Use **absolute imports** only (never relative).
-* Maintain the header and footer markers exactly.
-* Separate logical sections with section comments.
 
 ---
 
