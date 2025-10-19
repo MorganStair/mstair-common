@@ -30,8 +30,6 @@ from __future__ import annotations
 
 <placeholder: heading for the section below>
 <placeholder: private helpers with docstrings>
-
-# End of file: <path relative to project root>
 ```
 
 ---
