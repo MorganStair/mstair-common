@@ -1,0 +1,19 @@
+{
+    "python.analysis.packageIndexDepths": [
+        {
+            "depth": 5,
+            "includeAllSymbols": true,
+            "name": "mstair"
+        },
+        {
+            "depth": 4,
+            "includeAllSymbols": true,
+            "name": "mstair.common"
+        },
+        {
+            "depth": 4,
+            "includeAllSymbols": true,
+            "name": "mstair.rentals"
+        }
+    ]
+}

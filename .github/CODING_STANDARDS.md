@@ -7,7 +7,8 @@ Every Python file must follow this structurem, including blank lines:
 ```python
 <placeholder: shebang line for executable scripts only>
 """
-<placeholder: module summary on its own line>
+<placeholder: path relative to project root>
+<placeholder: brief summary of what this module or package is>
 
 <placeholder: brief description with purpose and example>
 """
@@ -112,9 +113,8 @@ def fields_and_values_from_email_header(*, text: str, default: dict[str, str] | 
 ## Example module skeleton
 
 ```python
-# File: src/mstair/common/example_helpers.py
 """
-<placeholder: brief summary of what this module does>
+mstair.common.example_helpers: Example helper functions.
 
 Example:
     >>> result = normalize_path("C:\\Temp")
@@ -128,8 +128,6 @@ from pathlib import Path
 def normalize_path(value: str) -> str:
     """Return a forward-slash normalized path string."""
     return Path(value).as_posix()
-
-# End of file: src/mstair/common/example_helpers.py
 ```
 
 ---
