@@ -88,7 +88,7 @@ def find_ruff_config() -> dict[str, Any]:
     return {}
 
 
-def main() -> None:
+def collect_ruff_env_main() -> None:
     """Main entry point."""
     print("# === Ruff Environment Summary ===")
 
@@ -114,6 +114,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    collect_ruff_env_main()
 
 # End of file: collect_ruff_env.py

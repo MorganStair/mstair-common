@@ -6,9 +6,9 @@ Split concatenated Makefile stream (from `make cat`) into individual files.
 
 Example:
     >>> from collections.abc import Iterable
-    >>> lines = ["# File: build/core.mk\\n", "all:\\n", "\\t@echo hi\\n"]
+    >>> lines = ["# File: make/00-globals.mk\\n", "all:\\n", "\\t@echo hi\\n"]
     >>> written = split_makefiles(lines)
-    >>> written[0].name.endswith("core.mk")
+    >>> written[0].name.endswith("00-globals.mk")
     True
 
 This module reads lines from a stream and writes blocks that follow lines of
@@ -27,7 +27,7 @@ from pathlib import Path
 # Section: Module-level constants and configuration
 # --------------------------------------------------------------
 FILE_PATTERN = re.compile(r"^# File:\s+(.+)$")
-__all__ = ["split_makefiles", "main"]
+__all__ = ["split_makefiles", "split_makefiles_main"]
 
 
 # --------------------------------------------------------------
@@ -82,7 +82,7 @@ def split_makefiles(lines: Iterable[str]) -> list[Path]:
     return written
 
 
-def main() -> int:
+def split_makefiles_main() -> int:
     """
     Entry point for CLI usage. Reads from sys.stdin and writes files.
 
@@ -103,6 +103,6 @@ def main() -> int:
 # (no additional private helpers required)
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    raise SystemExit(split_makefiles_main())
 
 # --------------------------------------------------------------

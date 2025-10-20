@@ -45,7 +45,7 @@ CHANGELOG: Final[Path] = Path("CHANGELOG.md")
 
 
 __all__ = [
-    "main",
+    "project_version_change_main",
     "read_current_version",
     "bump_version",
     "find_version_commit",
@@ -55,7 +55,7 @@ __all__ = [
 ]
 
 
-def main(argv: list[str]) -> int:
+def project_version_change_main(argv: list[str]) -> int:
     """Generate a changelog entry and bump the project version.
 
     Args:
@@ -295,6 +295,6 @@ def _ensure_git_repo() -> None:
 
 
 if __name__ == "__main__":
-    raise SystemExit(main(sys.argv[1:]))
+    raise SystemExit(project_version_change_main(sys.argv[1:]))
 
 # End of file: bin/project_version_change.py

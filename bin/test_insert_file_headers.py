@@ -152,7 +152,7 @@ class TestInsertFileHeaders(unittest.TestCase):
 
             argv = ["src/*.py", "src/*.mk"]
             with redirect_stderr(io.StringIO()):
-                code = ifh.main(argv)
+                code = ifh.insert_file_headers_main(argv)
 
             self.assertEqual(code, 0)
             for f in (f1, f2):

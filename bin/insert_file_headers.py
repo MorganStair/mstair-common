@@ -6,7 +6,7 @@ Usage:
     insert_file_headers.py <file1> [<file2> ... | <pattern> ...]
 
 Examples:
-    insert_file_headers.py build/*.mk src/**/*.py
+    insert_file_headers.py make/*.mk src/**/*.py
 
 Each file will be updated *in place* if its extension is allowed (.mak, .mk, .py).
 
@@ -26,6 +26,8 @@ from collections.abc import Iterable
 from pathlib import Path
 
 
+__all__ = ["process_file", "expand_args", "insert_file_headers_main"]
+
 # --------------------------------------------------------------
 # Configuration
 # --------------------------------------------------------------
@@ -34,7 +36,6 @@ HEADER_RE = re.compile(r"^#\s*File:\s+.*$")
 FOOTER_RE = re.compile(r"^#\s*-{10,}\s*$")
 SHEBANG_RE = re.compile(r"^#!")
 FOOTER_LINE = "# " + "-" * 62
-__all__ = ["process_file", "expand_args", "main"]
 
 
 # --------------------------------------------------------------
@@ -140,7 +141,7 @@ def expand_args(args: Iterable[str]) -> list[Path]:
 # --------------------------------------------------------------
 # CLI entry
 # --------------------------------------------------------------
-def main(argv: Iterable[str] | None = None) -> int:
+def insert_file_headers_main(argv: Iterable[str] | None = None) -> int:
     args = list(sys.argv[1:] if argv is None else argv)
     if not args:
         print("Usage: insert_file_headers.py <file1|pattern> ...", file=sys.stderr)
@@ -159,6 +160,6 @@ def main(argv: Iterable[str] | None = None) -> int:
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    raise SystemExit(insert_file_headers_main())
 
 # End of file: insert_file_headers.py
