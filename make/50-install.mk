@@ -1,4 +1,4 @@
-# File: build/50-install.mk
+# File: make/50-install.mk
 
 STUBS_FILE              = .typings.txt
 STUBS                   = $(addsuffix .stub,$(shell cat $(STUBS_FILE) 2>/dev/null || true))
@@ -33,55 +33,46 @@ define _awk_insert_line
 	' '$(1)' 2>/dev/null || true
 endef
 
-.PHONY: install-deps
-install-deps: ## Install dependencies
+.PHONY : install-deps
+install-deps : .venv ## Install dependencies
 	@:
 	$(_begin)
 	$(_activate)
 	(	set -x
 		pip install -q -e .[dev,test]
-		touch $@
 	)
 	$(_end)
 
 .PHONY : install-stubs $(STUBS)
-install-stubs : $(STUBS) ; @$(_end) ## Generate stubs for listed packages
+install-stubs : .venv $(STUBS) ; @$(_end) ## Generate stubs for listed packages
 
 .NOTINTERMEDIATE : $(CACHE_DIR)/typings/%/__init__.pyi
 $(STUBS) : %.stub : $(CACHE_DIR)/typings/%/__init__.pyi # Alias package.stub to package/__init__.pyi
 	@$(_end)
 
-.PHONY: %.stub
-%.stub: ; @:
-$(CACHE_DIR)/typings/%/__init__.pyi: # Generate stub for package %
+.PHONY : %.stub
+%.stub :
+	@:
+$(CACHE_DIR)/typings/%/__init__.pyi : .venv # Generate stub for package %
 	@$(_begin)
 	$(_activate)
 	$(call _stubgen,$*,$(CACHE_DIR)/typings)
 	$(_end)
 
-.PHONY: install-mkinit
-install-mkinit: ## Regenerate __init__.py files using mkinit
+.PHONY : install-mkinit
+install-mkinit : .venv ## Regenerate __init__.py files using mkinit
 	@$(_begin)
-	@$(_activate)
+	$(_activate)
 	(	set -x
-		bin/reset_inits.sh src/mstair
-		mkinit src/mstair --inplace --noattrs --recursive
-		rm -f src/mstair/__init__.py
+		python -P -s bin/reset_inits.py;
 	)
 	$(_end)
 
-.PHONY: install-format
-install-format: ## Format code using ruff
-	@$(_begin)
-	@$(_activate)
-	(	set -x
-		ruff check src/mstair/common --fix
-		ruff format src/mstair/common
+.PHONY : install
+install : .venv install-deps install-mkinit install-stubs ## Install dependencies, generate stubs, and regenerate __init__.py files
+	@(	set -x
+		touch .venv/.install
 	)
-	@$(_end)
-
-.PHONY: install
-install:  install-deps install-mkinit install-stubs install-format ## Install dependencies, generate stubs, and regenerate __init__.py files
 	@$(_end)
 
 # --------------------------------------------------------------

@@ -1,4 +1,4 @@
-# File: build/00-globals.mk
+# File: make/00-globals.mk
 
 ifdef VERBOSE
 $(info CURDIR=$(CURDIR))
@@ -9,7 +9,7 @@ endif
 
 export SHELL    := bash
 .SHELLFLAGS     := -e -u -c
-.ONESHELL:
+.ONESHELL :
 
 asposix = $(subst \,/,$(1))
 

@@ -1,15 +1,15 @@
-# File: build/30-clean.mk
+# File: make/30-clean.mk
 
-.PHONY: virgin
-virgin: clean ## Remove all generated files and the virtual environment.
+.PHONY : virgin
+virgin : clean ## Remove all generated files and the virtual environment.
 	@$(_begin)
 	(	set -x
 		rm -rf .venv
 	)
 	$(_end)
 
-.PHONY: clean
-clean: clear ## Remove all generated files, but not the virtual environment.
+.PHONY : clean
+clean : clear ## Remove all generated files, but not the virtual environment.
 	@$(_begin)
 	( 	set -x
 		rm -rf $(CACHE_DIR) dist uploads

@@ -1,8 +1,8 @@
-# File: build/40-venv.mk
+# File: make/40-venv.mk
 
-.PHONY: venv
-venv: .venv ## Create a virtual environment in .venv
-.venv:
+.PHONY : venv
+venv : .venv ## Create a virtual environment in .venv
+.venv :
 	@$(_begin)
 	trap "rm -rf .venv" INT TERM ERR
 	(	set -x
