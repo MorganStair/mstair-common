@@ -21,10 +21,12 @@ from __future__ import annotations
 
 import argparse
 import logging
+import os
 import re
 import subprocess
 import sys
 import tomllib
+from collections.abc import Iterator
 from pathlib import Path
 
 
@@ -35,10 +37,9 @@ from pathlib import Path
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 _LOG: logging.Logger = logging.getLogger(__name__)
 
-_ROOT_DIR: Path = Path("src")
-_NAMESPACE_PATHS: list[Path] = [dir for dir in _ROOT_DIR.glob("*") if dir.is_dir()]
+_SRC: Path = Path("src").resolve()
 
-_DOCSTRING_TEMPLATE: str = '"""\n{package}\n"""'
+_INIT_DOCSTRING_TEMPLATE: str = '"""\npackage: {package}\n"""'
 _AUTOGEN_BLOCK: str = "# <AUTOGEN_INIT>\npass\n# </AUTOGEN_INIT>\n"
 _VERSION_PATTERN: re.Pattern[str] = re.compile(r"^__version__\s*=\s*['\"](.+?)['\"]", re.MULTILINE)
 _ALL_PATTERN: re.Pattern[str] = re.compile(r"^\s*__all__\s*=\s*\[[^\]]*\]\s*$", re.MULTILINE)
@@ -53,7 +54,7 @@ _DOCSTRING_PATTERN: re.Pattern[str] = re.compile(r'^\s*""".*?"""', re.DOTALL)
 def _ensure_docstring(content: str, package: str) -> str:
     """Insert a package docstring if missing."""
     if not _DOCSTRING_PATTERN.search(content):
-        doc = _DOCSTRING_TEMPLATE.format(package=package)
+        doc = _INIT_DOCSTRING_TEMPLATE.format(package=package)
         return f"{doc}\n\n{content.lstrip()}"
     return content
 
@@ -106,12 +107,18 @@ def _read_pyproject_version(pyproject_path: Path) -> str:
 # -----------------------------------------------------------------------------
 
 
-def _process_init_file(init_path: Path, package_fqn: str, version: str | None) -> bool:
+def _process_init_file(
+    init_path: Path,
+    package_fqn: str,
+    version: str | None,
+) -> bool:
     """
     Ensure a single __init__.py file has the correct structure.
 
     Returns True if the file was modified.
     """
+    if not init_path.exists():
+        init_path.touch()
     original_content: str = init_path.read_text(encoding="utf-8") if init_path.exists() else ""
     content: str = original_content
 
@@ -128,8 +135,8 @@ def _process_init_file(init_path: Path, package_fqn: str, version: str | None) -
     content = content.rstrip() + "\n"
 
     if content != original_content:
+        _LOG.info("Updating %s", init_path)
         init_path.write_text(content, encoding="utf-8")
-        _LOG.info("Updated %s", init_path)
         return True
 
     _LOG.debug("No changes needed for %s", init_path)
@@ -153,46 +160,68 @@ def reset_inits_main(argv: list[str] | None = None) -> None:
     parser.add_argument(
         "--dry-run", action="store_true", help="Show planned changes without modifying files."
     )
+    parser.add_argument(
+        "--clean", "-c", action="store_true", help="Remove all existing __init__.py files first."
+    )
     args = parser.parse_args(argv)
 
-    pyproject_path: Path = _ROOT_DIR.parent / "pyproject.toml"
-    version: str = _read_pyproject_version(pyproject_path)
+    pyproject_path: Path = _SRC.parent / "pyproject.toml"
+    version_string: str = _read_pyproject_version(pyproject_path)
+    src_subdirs = (d for d in _SRC.iterdir() if d.is_dir())
+    top_package_dirs: list[Path] = []
 
-    modified_count: int = 0
-    for namespace_path in _NAMESPACE_PATHS:
-        _LOG.info("Processing namespace: %s", namespace_path.stem)
-        for root_package_in_namespace in (p for p in namespace_path.rglob("*") if p.is_dir()):
-            _LOG.info(
-                "Processing top level package %s.%s",
-                namespace_path.stem,
-                root_package_in_namespace.stem,
-            )
-            relative = root_package_in_namespace.relative_to(_ROOT_DIR)
-            package_fqn = ".".join(relative.parts)
-            init_path = root_package_in_namespace / "__init__.py"
+    for package_dir in recurse_package_paths(*src_subdirs):
+        _LOG.info("Processing: %s", package_dir.as_posix())
+        package_tree = package_dir.relative_to(_SRC).parts
+        package_fqn = ".".join(package_tree)
+        package_init_path = package_dir / "__init__.py"
+        if args.clean and package_init_path.exists():
+            _LOG.info("Removing existing __init__.py: %s", package_init_path.as_posix())
+            package_init_path.unlink()
+        _process_init_file(
+            package_init_path,
+            package_fqn,
+            version_string if len(package_tree) == 2 else None,
+        )
+        if len(package_tree) == 1:
+            top_package_dirs.append(package_dir)
 
-            if not init_path.exists():
-                init_path.touch()
-                _LOG.info("Created missing %s", init_path)
-
-            if not args.dry_run:
-                if _process_init_file(init_path, package_fqn, version):
-                    modified_count += 1
-
-        _LOG.info("Processed all __init__.py files. %d modified.", modified_count)
-        _run_subprocess(["mkinit", str(namespace_path), "--noattrs", "--inplace", "--recursive"])
+    for top_package_dir in top_package_dirs:
+        _LOG.info("Reprocessing top-level package: %s", top_package_dir.as_posix())
+        mkinit_cmd: list[str] = [
+            "mkinit",
+            top_package_dir.as_posix(),
+            "--inplace",
+            "--noattrs",
+            "--recursive",
+        ]
+        _LOG.info("mkinit_cmd:\n> %s", " ".join(mkinit_cmd))
+        _run_subprocess(mkinit_cmd)
 
     if args.dry_run:
         _LOG.info("Dry run complete. No changes written.")
         return
 
-    _run_subprocess(["ruff", "check", str(_ROOT_DIR), "--fix"])
-    _run_subprocess(["ruff", "format", str(_ROOT_DIR)])
+    _run_subprocess(["ruff", "check", _SRC.as_posix(), "--fix"])
+    _run_subprocess(["ruff", "format", _SRC.as_posix()])
+
+
+def recurse_package_paths(*package_paths: Path) -> Iterator[Path]:
+    """Recursively yield package directories."""
+    queue: list[Path] = [*package_paths]
+    while queue:
+        path = queue.pop()
+        if re.fullmatch(r"[a-z_][a-z0-9_]*[a-z0-9]", path.name):
+            yield path
+        for _subdir in path.iterdir():
+            if _subdir.is_dir():
+                queue.append(_subdir)
 
 
 # -----------------------------------------------------------------------------
 # Entry point
 # -----------------------------------------------------------------------------
+
 
 if __name__ == "__main__":
     try:

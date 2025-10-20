@@ -1,7 +1,32 @@
-# File: src/mstair/common/__init__.py
+"""
+package: mstair.common
+"""
 
 # <AUTOGEN_INIT>
-pass
-# </AUTOGEN_INIT>
+from mstair.common import (
+    base,
+    format_helpers,
+    io,
+    scan_missing_stubs,
+    test_format_helpers,
+    tokenize_helpers,
+    update_pyproject_version,
+    vscode_settings_diff,
+    xdumps,
+    xlogging,
+)
 
-# End of file: src/mstair/common/__init__.py
+
+__all__ = [
+    "base",
+    "format_helpers",
+    "io",
+    "scan_missing_stubs",
+    "test_format_helpers",
+    "tokenize_helpers",
+    "update_pyproject_version",
+    "vscode_settings_diff",
+    "xdumps",
+    "xlogging",
+]
+# </AUTOGEN_INIT>

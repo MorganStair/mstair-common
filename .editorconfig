@@ -25,10 +25,8 @@ max_line_length = 80               # Matches wrap column for rewrap (80 cols)
 # === JavaScript and JSON (Prettier) ===
 # -----------------------------------------------------------------------------
 [*.{js,jsx,json}]
-indent_style = space               # Enforce spaces
 indent_size = 2                    # Prettier default
 tab_width = 2
-insert_final_newline = true
 trim_trailing_whitespace = true
 # Formatter handled by VS Code extension "esbenp.prettier-vscode"
 
@@ -36,7 +34,6 @@ trim_trailing_whitespace = true
 # === JSON with Comments (.jsonc) ===
 # -----------------------------------------------------------------------------
 [*.jsonc]
-indent_style = space
 indent_size = 2
 tab_width = 2
 # Formatter handled by "vscode.json-language-features"
@@ -46,8 +43,7 @@ tab_width = 2
 # -----------------------------------------------------------------------------
 [Makefile]
 indent_style = tab                 # Make syntax requires literal tabs
-tab_width = 8                      # Use visible wide tab width
-insert_final_newline = true
+tab_width = 4                      # Use visible wide tab width
 trim_trailing_whitespace = true
 # Display all whitespace characters; handled by VS Code editor.renderWhitespace
 
@@ -55,10 +51,7 @@ trim_trailing_whitespace = true
 # === Markdown ===
 # -----------------------------------------------------------------------------
 [*.md]
-indent_style = space
-indent_size = 4
 trim_trailing_whitespace = false   # Preserve intentional trailing spaces for line breaks
-insert_final_newline = true
 # Formatter: yzhang.markdown-all-in-one
 # Quick suggestions enabled for comments/strings; keep UTF-8 only visible ASCII
 
@@ -66,12 +59,8 @@ insert_final_newline = true
 # === Python ===
 # -----------------------------------------------------------------------------
 [*.py]
-indent_style = space
-indent_size = 4
-tab_width = 4
 trim_trailing_whitespace = true
-insert_final_newline = true
-max_line_length = 80
+max_line_length = 101
 # Formatter: charliermarsh.ruff
 # On save: fixAll.ruff + organizeImports.ruff
 # rewrap.autoWrap disabled (handled by Ruff formatting)
@@ -80,12 +69,7 @@ max_line_length = 80
 # === TOML ===
 # -----------------------------------------------------------------------------
 [*.toml]
-indent_style = space
-indent_size = 4
-tab_width = 4
 trim_trailing_whitespace = true
-insert_final_newline = true
-max_line_length = 80
 # Formatter: tamasfe.even-better-toml
 # Format on save enabled; array and key alignment per Taplo settings
 
@@ -93,10 +77,8 @@ max_line_length = 80
 # === TypeScript ===
 # -----------------------------------------------------------------------------
 [*.ts]
-indent_style = space
 indent_size = 2
 tab_width = 2
-insert_final_newline = true
 trim_trailing_whitespace = true
 # Formatter: vscode.typescript-language-features
 
@@ -104,21 +86,16 @@ trim_trailing_whitespace = true
 # === Miscellaneous text and Markdown-like files ===
 # -----------------------------------------------------------------------------
 [*.{txt,mdx,markdown}]
-charset = utf-8
-insert_final_newline = true
 trim_trailing_whitespace = false
 
 # -----------------------------------------------------------------------------
 # === Overrides for project conventions ===
 # -----------------------------------------------------------------------------
 [*.{yml,yaml}]
-indent_style = space
 indent_size = 2                    # YAML best practice
 tab_width = 2
 
 [*.{ini,editorconfig}]
-indent_style = space
-indent_size = 4
 
 # =============================================================================
 # End of file
