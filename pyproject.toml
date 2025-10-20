@@ -1,9 +1,14 @@
 [build-system]
     build-backend = "setuptools.build_meta"
-    requires      = ["setuptools>=67", "wheel"]
+    requires = [
+        "setuptools>=67",
+        "wheel",
+    ]
 
 [project]
-    authors = [{ name = "Morgan Stair", email = "morgan@tadmuck.com" }]
+    authors = [
+        { name = "Morgan Stair", email = "morgan@tadmuck.com" },
+    ]
     dependencies = [
         "bs4",
         "charset_normalizer",
@@ -27,6 +32,7 @@
 
 [project.optional-dependencies]
     dev = [
+        "build",
         "diskcache-stubs",
         "mkinit",
         "mypy",
@@ -38,6 +44,7 @@
         "types-colorama",
         "types-python-dateutil",
         "types-pytz",
+        "vulture",
     ]
     test = ["pytest", "pytest-cov"]
 
@@ -80,14 +87,22 @@
     ]
     minversion = "8.3"
     norecursedirs = ["*.egg-info"]
-    testpaths = ["bin", "scripts", "src"]
+    testpaths = [
+        "bin",
+        "scripts",
+        "src",
+    ]
 
 [tool.setuptools]
     package-dir = { "" = "src" }
     script-files = [
+        "bin/collect_ruff_env.py",
+        "bin/insert_file_header.py",
+        "bin/project_version_change.py",
         "bin/pys",
         "bin/pys.cmd",
-        "bin/reset_inits.sh",
+        "bin/reset_inits.py",
+        "bin/split_makefiles.py",
     ]
 
 [tool.setuptools.packages.find]
@@ -107,6 +122,7 @@
         ".ruff_cache",
         ".venv",
         "__pycache__",
+        "build",
         "dist",
         "docs",
         "legacy",
