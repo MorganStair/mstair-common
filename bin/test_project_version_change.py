@@ -178,7 +178,7 @@ def test_prepend_changelog_entry_prepends(mod: ModuleType, tmp_path: Path) -> No
     assert text.endswith("Existing\n")
 
 
-def test_main_happy_path_bumps_and_writes_files(
+def test_happy_path_bumps_and_writes_files(
     mod: ModuleType,
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
@@ -207,7 +207,7 @@ def test_main_happy_path_bumps_and_writes_files(
 
     monkeypatch.setattr(mod, "_run_git", fake_run_git)
 
-    rc = mod.main([])
+    rc = mod.project_version_change_main([])
     assert rc == 0
 
     # Version bumped

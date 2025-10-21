@@ -97,7 +97,7 @@
     package-dir = { "" = "src" }
     script-files = [
         "bin/collect_ruff_env.py",
-        "bin/insert_file_header.py",
+        "bin/insert_file_headers.py",
         "bin/project_version_change.py",
         "bin/pys",
         "bin/pys.cmd",
