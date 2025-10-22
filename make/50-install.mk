@@ -37,9 +37,8 @@ endef
 install-deps : .venv ## Install dependencies
 	@:
 	$(_begin)
-	$(_activate)
 	(	set -x
-		pip install -q -e .[dev,test]
+		$(VENV_BIN)/python -m pip install -q -e .[dev,test]
 	)
 	$(_end)
 
@@ -72,6 +71,7 @@ install-inits : .venv ## Regenerate __init__.py files
 install : .venv/.install
 .venv/.install : .venv install-deps install-inits install-stubs ## Install dependencies, generate stubs, and regenerate __init__.py files
 	@(	set -x
+		cp -n $(VENV_BIN)/sitecustomize.py .venv/Lib/site-packages/
 		touch .venv/.install
 	)
 	@$(_end)

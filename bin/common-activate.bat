@@ -1,16 +1,5 @@
 @echo off
-rem File: scripts/activate.bat
-rem
 rem Minimal environment setup wrapper for Windows batch.
-
-rem Check if we have the original activation script
-if not exist ".venv\Scripts\activate-original.bat" (
-    echo Error: activate-original.bat not found
-    echo 1. Copy .venv\Scripts\activate.bat to .venv\Scripts\activate-original.bat
-    echo 2. Copy this script to .venv\Scripts\activate.bat
-    echo 3. Run .venv\Scripts\activate.bat to activate with custom settings
-    exit /b 1
-)
 
 rem Set project directory
 set "PROJECT_DIR=%CD%"
@@ -39,7 +28,7 @@ rem Deduplicate PATH-like variables
 call :dedupe_path_var PATH
 
 rem Call the original activation script
-call ".venv\Scripts\activate-original.bat"
+call ".venv\Scripts\activate.bat"
 
 rem Return control to caller with the same errorlevel
 exit /b %ERRORLEVEL%
@@ -73,6 +62,3 @@ for %%P in ("%ORIG:;=" "%") do (
 )
 endlocal & set "%VAR_NAME%=%CLEANED%"
 goto :eof
-
-
-rem End of file: scripts/activate.bat

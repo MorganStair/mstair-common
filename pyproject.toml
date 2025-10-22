@@ -98,6 +98,10 @@
 [tool.setuptools]
     package-dir = { "" = "src" }
     script-files = [
+        "bin/common-activate",
+        "bin/common-activate.bat",
+        "bin/common-activate.fish",
+        "bin/common-activate.ps1",
         "bin/common_file_headers.py",
         "bin/common_reset_inits.py",
         "bin/common_ruff_env.py",

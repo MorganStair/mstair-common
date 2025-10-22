@@ -24,10 +24,10 @@ Use the provided `makefile.mak` and project virtual environment.
 
 ### Activate the environment before running any non-make command
 
-| Shell      | Command                         |
-| ---------- | ------------------------------- |
-| PowerShell | `.venv/Scripts/Activate.ps1`    |
-| Bash       | `source .venv/Scripts/activate` |
+| Shell      | Command                                |
+| ---------- | -------------------------------------- |
+| PowerShell | `.venv/Scripts/CommonActivate.ps1`     |
+| Bash       | `source .venv/Scripts/common-activate` |
 
 ---
 

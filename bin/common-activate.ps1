@@ -1,17 +1,8 @@
-# File: scripts/Activate.ps1
-#
 # Minimal environment setup wrapper for PowerShell.
 
 # Ensure we are in the project root and the virtual environment is set up
 if (-not (Test-Path ".venv\Scripts\Activate.ps1")) {
     Write-Error "This script must be run from the project root directory after setting up the virtual environment."
-    return 1
-}
-# Ensure the original activation script exists
-if (-not (Test-Path ".venv\Scripts\ActivateOriginal.ps1")) {
-    Write-Error "1. Copy .venv\Scripts\Activate.ps1 to .venv\Scripts\ActivateOriginal.ps1"
-    Write-Error "2. Copy this script to .venv\Scripts\Activate.ps1"
-    Write-Error "3. Run .venv\Scripts\Activate.ps1 to activate the virtual environment with custom settings."
     return 1
 }
 
@@ -61,6 +52,6 @@ Dedupe-PathVar "PYTHONPATH"
 Dedupe-PathVar "MYPYPATH"
 
 # Call the original activation script
-. ".venv\Scripts\ActivateOriginal.ps1"
+. ".venv\Scripts\Activate.ps1"
 
 # Note: When dot-sourced, PowerShell will naturally propagate the exit code

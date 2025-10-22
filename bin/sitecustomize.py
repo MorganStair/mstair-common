@@ -1,4 +1,4 @@
-# File: scripts/sitecustomize.py
+# File: bin/sitecustomize.py
 """
 Ensures that Git for Windows is always available on PATH inside this virtual environment.
 This fixes pip install errors like:

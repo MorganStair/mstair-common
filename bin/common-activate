@@ -1,6 +1,5 @@
 #!/bin/bash
 # -*- mode: sh; eol-unix -*-
-# File: scripts/activate
 #
 # Minimal environment setup wrapper for bash/zsh.
 
@@ -26,13 +25,13 @@ if [[ ! -d "$VENV_BIN" ]]; then
     echo "Error: This script must be run from the project root directory after setting up the virtual environment." >&2
     return 1 2>/dev/null || exit 1
 fi
-ACTIVATE_ORIGINAL="$VENV_BIN/activate-original"
+ACTIVATE_ORIGINAL="$VENV_BIN/activate"
 
 # ---------------------------------------------------------------------------
 # Make sure this script has been set up correctly
 # ---------------------------------------------------------------------------
 if [[ ! -f "$ACTIVATE_ORIGINAL" ]]; then
-    echo "1. Copy $VENV_BIN/activate to $VENV_BIN/activate-original" >&2
+    echo "1. Copy $VENV_BIN/activate to $VENV_BIN/activate" >&2
     echo "2. Copy this script to $VENV_BIN/activate" >&2
     echo "3. Run $VENV_BIN/activate to activate the virtual environment with custom settings." >&2
     return 1 2>/dev/null || exit 1
@@ -85,7 +84,7 @@ dedupe_path_var() {
 dedupe_path_var PATH
 
 # ---------------------------------------------------------------------------
-# Prevent the activate-original script from corrupting PATH and PYTHONHOME
+# Prevent the original activate script from corrupting PATH and PYTHONHOME
 # ---------------------------------------------------------------------------
 
 if [[ "${_OLD_VIRTUAL_PATH:-}" == *";"* ]]; then

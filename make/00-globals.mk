@@ -55,8 +55,8 @@ UNZIP ?= 7z.exe x -y -o
 ZIP   ?= 7z.exe a -tzip -mx5 -mm=Deflate -mcu -r
 
 define _activate
-	printf "%ssource %s/activate\n" "$$PS4" "$(VENV_BIN)"
-	source $(VENV_BIN)/activate
+	printf "%ssource %s/common-activate\n" "$$PS4" "$(VENV_BIN)"
+	source $(VENV_BIN)/common-activate
 	PS4="+$${PS4}"
 endef
 

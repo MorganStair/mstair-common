@@ -7,25 +7,18 @@ venv : .venv ## Create a virtual environment in .venv
 	trap "rm -rf .venv" INT TERM ERR
 	(	set -x
 		python -m venv ".venv"
-		mv -n $(VENV_BIN)/activate $(VENV_BIN)/activate-original
-		mv -n $(VENV_BIN)/Activate.ps1 $(VENV_BIN)/ActivateOriginal.ps1
-		mv -n $(VENV_BIN)/activate.bat $(VENV_BIN)/activate-original.bat
-		mv -n $(VENV_BIN)/activate.fish $(VENV_BIN)/activate-original.fish
-		cp -n scripts/venv-shims/* $(VENV_BIN)/
-		cp -n scripts/sitecustomize.py .venv/Lib/site-packages/
 	)
-	$(_activate)
 	if [ "0$(VERBOSE)" -gt 0 ]; then
 		(	set -x
-			 python -m ensurepip --upgrade
+			$(VENV_BIN)/python -m ensurepip --upgrade
 		)
 	else
 		(	set -x
-			python -m ensurepip --upgrade
+			$(VENV_BIN)/python -m ensurepip --upgrade
 		) | grep -vE '^(Looking in|Requirement already)' || true
 	fi
 	(	set -x
-		pip install -q --upgrade pip setuptools wheel
+		$(VENV_BIN)/python -m pip install -q --upgrade pip setuptools wheel
 	)
 	@$(_end)
 

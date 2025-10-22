@@ -1,15 +1,4 @@
-# File: scripts/activate.fish
-#
 # Minimal environment setup wrapper for fish shell.
-
-# Check if original activation script exists
-if not test -f ".venv/bin/activate-original.fish"
-    echo "Error: activate-original.fish not found"
-    echo "1. Copy .venv/bin/activate.fish to .venv/bin/activate-original.fish"
-    echo "2. Copy this script to .venv/bin/activate.fish"
-    echo "3. Run source .venv/bin/activate.fish to activate with custom settings"
-    return 1
-end
 
 # Set project directory
 set -gx PROJECT_DIR (pwd)
@@ -62,6 +51,6 @@ end
 dedupe_path_var PATH
 
 # Source the original activation script
-source ".venv/bin/activate-original.fish"
+source ".venv/bin/activate.fish"
 
 # Note: Fish naturally propagates the exit code of the last command
