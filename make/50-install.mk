@@ -70,8 +70,10 @@ install-inits : .venv ## Regenerate __init__.py files
 .PHONY : install
 install : .venv/.install
 .venv/.install : .venv install-deps install-inits install-stubs ## Install dependencies, generate stubs, and regenerate __init__.py files
+	@$(_begin)
+	$(_activate)
 	@(	set -x
-		cp -n $(VENV_BIN)/sitecustomize.py .venv/Lib/site-packages/
+		common_sitecustomize_setup.py
 		touch .venv/.install
 	)
 	@$(_end)

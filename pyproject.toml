@@ -105,11 +105,11 @@
         "bin/common_file_headers.py",
         "bin/common_reset_inits.py",
         "bin/common_ruff_env.py",
+        "bin/common_sitecustomize_setup.py",
         "bin/common_split_makefiles.py",
         "bin/common_version_bump.py",
         "bin/pys",
         "bin/pys.cmd",
-        "bin/sitecustomize.py",
     ]
 
 [tool.setuptools.packages.find]
