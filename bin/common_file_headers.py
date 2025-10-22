@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- mode: python; eol-unix -*-
 """
 Insert or replace standardized header and footer lines in specified files.
 

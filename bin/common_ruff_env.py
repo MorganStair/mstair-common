@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- mode: python; eol-unix -*-
 """
 Collect VSCode Ruff settings, Ruff configuration, CLI version, and platform details.
 

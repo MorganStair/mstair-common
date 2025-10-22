@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- mode: python; eol-unix -*-
 """
 Create the next-version changelog entry and update the project version.
 

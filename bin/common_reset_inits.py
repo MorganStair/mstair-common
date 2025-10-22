@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- mode: python; eol-unix -*-
 """
 Reset and normalize all __init__.py files in the mstair source tree.
 

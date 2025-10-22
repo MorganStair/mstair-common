@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- mode: python; eol-unix -*-
 # File: bin/common_split_makefiles.py
 #
 """
