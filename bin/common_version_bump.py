@@ -48,7 +48,7 @@ __all__ = [
     "read_current_version",
     "bump_version",
     "find_version_commit",
-    "collect_src_commit_messages_since",
+    "collect_commit_messages_since",
     "prepend_changelog_entry",
     "update_pyproject_version",
 ]
@@ -74,9 +74,9 @@ def common_version_bump_main(argv: list[str]) -> int:
     next_version = args.next_version or bump_version(current_version)
 
     last_version_hash = find_version_commit(current_version)
-    src_messages = collect_src_commit_messages_since(last_version_hash)
-    if src_messages:
-        combined = "; ".join(src_messages)
+    commit_messages = collect_commit_messages_since(last_version_hash)
+    if commit_messages:
+        combined = "; ".join(commit_messages)
     else:
         base = last_version_hash[:7] if last_version_hash else "<start>"
         combined = f"No changes in src since {base}."
@@ -164,8 +164,8 @@ def find_version_commit(version: str) -> str | None:
     return None
 
 
-def collect_src_commit_messages_since(base_commit: str | None) -> list[str]:
-    """Return commit subjects for changes under `./src` since `base_commit`.
+def collect_commit_messages_since(base_commit: str | None) -> list[str]:
+    """Return commit subjects for changes under `./src` or `./bin` since `base_commit`.
 
     Args:
         base_commit: The baseline commit hash (exclusive). If `None`, uses the
@@ -175,14 +175,7 @@ def collect_src_commit_messages_since(base_commit: str | None) -> list[str]:
         A list of commit subject lines (most recent first).
     """
     rev_range = [] if not base_commit else [f"{base_commit}..HEAD"]
-    args = [
-        "log",
-        "--no-merges",
-        "--pretty=%s",
-        *rev_range,
-        "--",
-        "src",
-    ]
+    args = ["log", "--no-merges", "--pretty=%s", *rev_range, "--", "src", "bin", "pyproject.toml"]
     try:
         out = _run_git(args)
     except RuntimeError:

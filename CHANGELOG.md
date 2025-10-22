@@ -1,3 +1,6 @@
+## 0.1.9 - 2025-10-22
+- feat: Replace sitecustomize.py with common_sitecustomize_setup.py for improved Git PATH management in virtual environments
+
 ## 0.1.8 - 2025-10-22
 - refactor: Rename and enhance initialization functions, normalize imports, and update __all__ exports; Normalize LF line endings; refactor: Clean up settings and initialization files; remove unused package references and update version.
 
