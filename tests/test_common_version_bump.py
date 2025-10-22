@@ -160,7 +160,7 @@ def test_collect_src_commit_messages_since_ranges_and_parsing(
         return "feat: A\n\nfix: B \n"
 
     monkeypatch.setattr(mod, "_run_git", fake_run_git)
-    msgs = mod.collect_src_commit_messages_since("abc1234")
+    msgs = mod.collect_commit_messages_since("abc1234")
     assert "abc1234..HEAD" in recorded["args"]
     assert msgs == ["feat: A", "fix: B"]
 
