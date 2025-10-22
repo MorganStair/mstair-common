@@ -1,4 +1,5 @@
 #!/bin/bash
+# -*- mode: sh; eol-unix -*-
 # File: scripts/activate
 #
 # Minimal environment setup wrapper for bash/zsh.

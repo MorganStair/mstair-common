@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# -*- mode: sh; eol-unix -*-
 # Simple shim so "python3" invokes the venv's Python.
 # Usage: python3 [args...]
 
