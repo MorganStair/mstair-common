@@ -13,9 +13,10 @@ clean : clear ## Remove all generated files, but not the virtual environment.
 	@$(_begin)
 	( 	set -x
 		rm -rf $(CACHE_DIR) dist uploads
+		find \( -regex '.*/\..*' \) -prune -o -regex ".*\.egg-info" \
+			-printf "+$${PS4}rm -rf %p\n" -exec rm -rf {} +
 	)
-	find . -name .venv -prune -o -type d -name "*.egg-info" \
-		-exec $${SHELL} -x -c 'rm -rf "$@"' _ {} +
 	$(_end)
 
+# 	find src -name "*.egg-info" -printf "$${PS4}rm -rf %p\n" -exec rm -rf {} +
 # --------------------------------------------------------------

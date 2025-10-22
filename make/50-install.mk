@@ -69,7 +69,8 @@ install-mkinit : .venv ## Regenerate __init__.py files using mkinit
 	$(_end)
 
 .PHONY : install
-install : .venv install-deps install-mkinit install-stubs ## Install dependencies, generate stubs, and regenerate __init__.py files
+install : .venv/.install
+.venv/.install : .venv install-deps install-mkinit install-stubs ## Install dependencies, generate stubs, and regenerate __init__.py files
 	@(	set -x
 		touch .venv/.install
 	)

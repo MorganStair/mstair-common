@@ -20,7 +20,8 @@ test-pytest : .venv/.install ## Run test suites and validate documentation gener
 	@$(_end)
 
 .PHONY : test
-test : .venv/.install test-pytest test-lint ## Run all tests and linters
+test : .venv/.test
+.venv/.test : .venv/.install test-pytest test-lint ## Run all tests and linters
 	@(	set -x
 		touch .venv/.test
 	)
