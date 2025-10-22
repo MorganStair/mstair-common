@@ -59,8 +59,8 @@ $(CACHE_DIR)/typings/%/__init__.pyi : .venv # Generate stub for package %
 	$(call _stubgen,$*,$(CACHE_DIR)/typings)
 	$(_end)
 
-.PHONY : install-mkinit
-install-mkinit : .venv ## Regenerate __init__.py files using mkinit
+.PHONY : install-inits
+install-inits : .venv ## Regenerate __init__.py files
 	@$(_begin)
 	$(_activate)
 	(	set -x
@@ -70,7 +70,7 @@ install-mkinit : .venv ## Regenerate __init__.py files using mkinit
 
 .PHONY : install
 install : .venv/.install
-.venv/.install : .venv install-deps install-mkinit install-stubs ## Install dependencies, generate stubs, and regenerate __init__.py files
+.venv/.install : .venv install-deps install-inits install-stubs ## Install dependencies, generate stubs, and regenerate __init__.py files
 	@(	set -x
 		touch .venv/.install
 	)

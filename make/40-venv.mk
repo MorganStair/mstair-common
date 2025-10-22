@@ -15,8 +15,18 @@ venv : .venv ## Create a virtual environment in .venv
 		cp -n scripts/sitecustomize.py .venv/Lib/site-packages/
 	)
 	$(_activate)
-	(	set -x; python -m ensurepip --upgrade; ) | grep -vE '^(Looking in|Requirement already)' || true
-	(	set -x; pip install -q --upgrade pip setuptools wheel; )
+	if [ "0$(VERBOSE)" -gt 0 ]; then
+		(	set -x
+			 python -m ensurepip --upgrade
+		)
+	else
+		(	set -x
+			python -m ensurepip --upgrade
+		) | grep -vE '^(Looking in|Requirement already)' || true
+	fi
+	(	set -x
+		pip install -q --upgrade pip setuptools wheel
+	)
 	@$(_end)
 
 # --------------------------------------------------------------

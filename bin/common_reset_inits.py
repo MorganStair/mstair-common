@@ -24,6 +24,7 @@ import logging
 import re
 import subprocess
 import sys
+import time
 import tomllib
 from collections.abc import Iterator
 from pathlib import Path
@@ -145,6 +146,7 @@ def _process_init_file(
 def _run_subprocess(cmd: list[str]) -> None:
     """Run a subprocess command and exit on failure."""
     _LOG.info("> %s", " ".join(cmd))
+    time.sleep(0.2)
     subprocess.run(cmd, check=True)
 
 
