@@ -109,6 +109,7 @@
         "bin/common_version_bump.py",
         "bin/pys",
         "bin/pys.cmd",
+        "bin/sitecustomize.py",
     ]
 
 [tool.setuptools.packages.find]
