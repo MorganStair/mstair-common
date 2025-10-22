@@ -1,3 +1,6 @@
+## 0.1.8 - 2025-10-22
+- refactor: Rename and enhance initialization functions, normalize imports, and update __all__ exports; Normalize LF line endings; refactor: Clean up settings and initialization files; remove unused package references and update version.
+
 ## 0.1.7 - 2025-10-21
 - Bump project version to 0.1.7.
 - Update project structure and configuration files: enhance .editorconfig, .pylintrc.toml, and taplo.toml; refactor reset_inits.py; add __init__.py files with package docstrings and imports.
