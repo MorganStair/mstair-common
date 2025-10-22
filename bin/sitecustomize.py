@@ -1,4 +1,5 @@
-# File: bin/sitecustomize.py
+#!/usr/bin/env python
+# -*- mode: python; eol-unix -*-
 """
 Ensures that Git for Windows is always available on PATH inside this virtual environment.
 This fixes pip install errors like:
@@ -21,5 +22,3 @@ def _ensure_git_in_path() -> None:
 
 
 _ensure_git_in_path()
-
-# End of file: scripts/sitecustomize.py
