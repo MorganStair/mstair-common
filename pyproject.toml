@@ -91,18 +91,19 @@
         "bin",
         "scripts",
         "src",
+        "tests",
     ]
 
 [tool.setuptools]
     package-dir = { "" = "src" }
     script-files = [
-        "bin/collect_ruff_env.py",
-        "bin/insert_file_headers.py",
-        "bin/project_version_change.py",
+        "bin/common_file_headers.py",
+        "bin/common_reset_inits.py",
+        "bin/common_ruff_env.py",
+        "bin/common_split_makefiles.py",
+        "bin/common_version_bump.py",
         "bin/pys",
         "bin/pys.cmd",
-        "bin/reset_inits.py",
-        "bin/split_makefiles.py",
     ]
 
 [tool.setuptools.packages.find]
@@ -144,6 +145,6 @@
     ]
     make_whitelist = false
     min_confidence = 60
-    paths = ["bin", "scripts", "src"]
+    paths = ["src"]
     sort_by_size = true
     verbose = false

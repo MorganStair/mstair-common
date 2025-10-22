@@ -15,12 +15,12 @@
     ],
     "executionEnvironments": [
         {
-            "extraPaths": [".cache/typings", "scripts", "src"],
+            "extraPaths": ["bin", "scripts", "src", ".cache/typings"],
             "root": "."
         }
     ],
     "ignore": [],
-    "include": ["scripts", "src"],
+    "include": ["bin", "scripts", "src", "tests"],
     "pythonVersion": "3.13",
     "reportArgumentType": "warning",
     "reportCallIssue": "warning",

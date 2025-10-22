@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# File: bin/split_makefiles.py
+# File: bin/common_split_makefiles.py
 #
 """
 Split concatenated Makefile stream (from `make cat`) into individual files.
@@ -7,7 +7,7 @@ Split concatenated Makefile stream (from `make cat`) into individual files.
 Example:
     >>> from collections.abc import Iterable
     >>> lines = ["# File: make/00-globals.mk\\n", "all:\\n", "\\t@echo hi\\n"]
-    >>> written = split_makefiles(lines)
+    >>> written = common_split_makefiles(lines)
     >>> written[0].name.endswith("00-globals.mk")
     True
 
@@ -27,7 +27,7 @@ from pathlib import Path
 # Section: Module-level constants and configuration
 # --------------------------------------------------------------
 FILE_PATTERN = re.compile(r"^# File:\s+(.+)$")
-__all__ = ["split_makefiles", "split_makefiles_main"]
+__all__ = ["common_split_makefiles", "common_split_makefiles_main"]
 
 
 # --------------------------------------------------------------
@@ -39,7 +39,7 @@ __all__ = ["split_makefiles", "split_makefiles_main"]
 # --------------------------------------------------------------
 # Section: Main public API
 # --------------------------------------------------------------
-def split_makefiles(lines: Iterable[str]) -> list[Path]:
+def common_split_makefiles(lines: Iterable[str]) -> list[Path]:
     """
     Split a stream of lines into files based on lines matching FILE_PATTERN.
 
@@ -82,7 +82,7 @@ def split_makefiles(lines: Iterable[str]) -> list[Path]:
     return written
 
 
-def split_makefiles_main() -> int:
+def common_split_makefiles_main() -> int:
     """
     Entry point for CLI usage. Reads from sys.stdin and writes files.
 
@@ -90,7 +90,7 @@ def split_makefiles_main() -> int:
         Exit code (0 for success, non-zero for filesystem errors).
     """
     try:
-        split_makefiles(sys.stdin)
+        common_split_makefiles(sys.stdin)
     except OSError as exc:
         print(f"Error writing files: {exc}", file=sys.stderr)
         return 1
@@ -103,6 +103,6 @@ def split_makefiles_main() -> int:
 # (no additional private helpers required)
 
 if __name__ == "__main__":
-    raise SystemExit(split_makefiles_main())
+    raise SystemExit(common_split_makefiles_main())
 
 # --------------------------------------------------------------

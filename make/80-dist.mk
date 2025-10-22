@@ -5,9 +5,13 @@ dist : build
 build : .venv/.test ## Build the source and wheel packages
 	$(_begin)
 	$(_activate)
-	(	set -x
-		python -m build .
-	)
+	if [ "0$(VERBOSE)" -gt 0 ] ; then
+		(	set -x
+			python -m build -v .
+		)
+	else
+		(	set -x; python -m build . 2>/dev/null; ) | grep -vE '^[A-Za-z]\w+ing |^\* |^  - '
+	fi
 	$(_end)
 
 # --------------------------------------------------------------

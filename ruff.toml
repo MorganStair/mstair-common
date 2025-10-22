@@ -15,10 +15,9 @@ exclude = [
 fix = true
 line-length = 101
 respect-gitignore = true
-src = ["scripts", "src"]
+src = ["bin", "scripts", "src", "tests"]
 target-version = "py313"
 unsafe-fixes = false
-
 
 [lint]
     extend-select = ["I001", "I002"]
@@ -67,8 +66,23 @@ unsafe-fixes = false
         "UP037",
         "UP040",
     ]
-    select = ["B", "C4", "E", "F", "I", "PL", "RUF", "SIM", "TID", "UP"]
-    unfixable = ["F401", "F403", "TID252"]
+    select = [
+        "B",
+        "C4",
+        "E",
+        "F",
+        "I",
+        "PL",
+        "RUF",
+        "SIM",
+        "TID",
+        "UP",
+    ]
+    unfixable = [
+        "F401",
+        "F403",
+        "TID252",
+    ]
 
 [lint.pylint]
     max-args           = 8

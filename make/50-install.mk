@@ -64,7 +64,7 @@ install-mkinit : .venv ## Regenerate __init__.py files using mkinit
 	@$(_begin)
 	$(_activate)
 	(	set -x
-		python -P -s bin/reset_inits.py;
+		python -P -s bin/common_reset_inits.py;
 	)
 	$(_end)
 

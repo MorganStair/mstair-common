@@ -17,9 +17,13 @@
 # - ?  matches a single character
 # - [seq] or [!seq] character classes
 
-recursive-include src/mstair/common *.py *.typed *.md *.txt
+recursive-include src/mstair/common *.py *.typed
 recursive-include bin *
-recursive-include scripts *
-recursive-include make *
-include .git* *.ini *.jsonc *.mak *.md *.py *.toml LICENSE*
-prune .venv .cache
+
+# include .git* *.ini *.jsonc *.mak *.md *.py *.toml LICENSE*
+# recursive-include scripts *
+# recursive-include src/mstair/common *.md *.txt
+
+# prune .venv
+# prune .cache
+# prune dist

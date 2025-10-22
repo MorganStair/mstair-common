@@ -1,12 +1,10 @@
-#!/usr/bin/env python3
-# File: bin/project_version_change.py
-#
+#!/usr/bin/env python
 """
 Create the next-version changelog entry and update the project version.
 
 Example:
-    $ python bin/project_version_change.py
-    $ python bin/project_version_change.py 1.2.4
+    $ python bin/common_version_bump.py
+    $ python bin/common_version_bump.py 1.2.4
 
 Details:
     - Reads current version from `pyproject.toml` `[project].version`.
@@ -45,7 +43,7 @@ CHANGELOG: Final[Path] = Path("CHANGELOG.md")
 
 
 __all__ = [
-    "project_version_change_main",
+    "common_version_bump_main",
     "read_current_version",
     "bump_version",
     "find_version_commit",
@@ -55,7 +53,7 @@ __all__ = [
 ]
 
 
-def project_version_change_main(argv: list[str]) -> int:
+def common_version_bump_main(argv: list[str]) -> int:
     """Generate a changelog entry and bump the project version.
 
     Args:
@@ -295,6 +293,6 @@ def _ensure_git_repo() -> None:
 
 
 if __name__ == "__main__":
-    raise SystemExit(project_version_change_main(sys.argv[1:]))
+    raise SystemExit(common_version_bump_main(sys.argv[1:]))
 
-# End of file: bin/project_version_change.py
+# End of file: bin/common_version_bump.py

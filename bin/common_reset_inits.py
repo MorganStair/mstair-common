@@ -1,4 +1,4 @@
-# File: bin/reset_inits.py
+#!/usr/bin/env python
 """
 Reset and normalize all __init__.py files in the mstair source tree.
 
@@ -14,7 +14,7 @@ with the expected header structure. It performs the following steps:
 6. Finally, run mkinit and Ruff to rebuild and format the package structure.
 
 Example:
-    $ python bin/reset_inits.py
+    $ python bin/common_reset_inits.py
 """
 
 from __future__ import annotations
@@ -148,7 +148,7 @@ def _run_subprocess(cmd: list[str]) -> None:
     subprocess.run(cmd, check=True)
 
 
-def reset_inits_main(argv: list[str] | None = None) -> None:
+def common_reset_inits_main(argv: list[str] | None = None) -> None:
     """
     Reset and normalize all __init__.py files in the mstair package tree.
 
@@ -224,7 +224,7 @@ def recurse_package_paths(*package_paths: Path) -> Iterator[Path]:
 
 if __name__ == "__main__":
     try:
-        reset_inits_main()
+        common_reset_inits_main()
     except subprocess.CalledProcessError as exc:
         _LOG.error("Subprocess failed: %s", exc)
         sys.exit(exc.returncode)
@@ -232,4 +232,4 @@ if __name__ == "__main__":
         _LOG.warning("Interrupted by user.")
         sys.exit(130)
 
-# End of file: bin/reset_inits.py
+# End of file: bin/common_reset_inits.py

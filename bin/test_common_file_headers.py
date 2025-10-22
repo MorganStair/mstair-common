@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Unit tests for insert_file_headers.py.
+Unit tests for common_file_headers.py.
 
 Validates:
     • Allowed extensions (.py, .mk, .mak)
@@ -32,9 +32,9 @@ if str(BIN_DIR) not in sys.path:
     sys.path.insert(0, str(BIN_DIR))
 
 try:
-    import insert_file_headers as ifh  # type: ignore
+    import common_file_headers as ifh  # type: ignore
 except ImportError as exc:
-    raise SystemExit(f"Cannot import insert_file_headers from {BIN_DIR}: {exc}") from exc
+    raise SystemExit(f"Cannot import common_file_headers from {BIN_DIR}: {exc}") from exc
 
 
 # --------------------------------------------------------------
@@ -152,7 +152,7 @@ class TestInsertFileHeaders(unittest.TestCase):
 
             argv = ["src/*.py", "src/*.mk"]
             with redirect_stderr(io.StringIO()):
-                code = ifh.insert_file_headers_main(argv)
+                code = ifh.common_file_headers_main(argv)
 
             self.assertEqual(code, 0)
             for f in (f1, f2):

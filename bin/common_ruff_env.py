@@ -1,4 +1,4 @@
-# File: collect_ruff_env.py
+#!/usr/bin/env python
 """
 Collect VSCode Ruff settings, Ruff configuration, CLI version, and platform details.
 
@@ -88,7 +88,7 @@ def find_ruff_config() -> dict[str, Any]:
     return {}
 
 
-def collect_ruff_env_main() -> None:
+def common_ruff_env_main() -> None:
     """Main entry point."""
     print("# === Ruff Environment Summary ===")
 
@@ -114,6 +114,6 @@ def collect_ruff_env_main() -> None:
 
 
 if __name__ == "__main__":
-    collect_ruff_env_main()
+    common_ruff_env_main()
 
-# End of file: collect_ruff_env.py
+# End of file: common_ruff_env.py

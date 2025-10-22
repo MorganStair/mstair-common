@@ -1,5 +1,5 @@
 """
-Tests for the project_version_change helper module.
+Tests for the common_version_bump helper module.
 
 Example:
     >>> # Run a subset of tests:
@@ -17,11 +17,11 @@ import pytest
 
 
 def _load_module() -> ModuleType:
-    """Load the project_version_change module from the adjacent file."""
+    """Load the common_version_bump module from the adjacent file."""
     here = Path(__file__).resolve()
-    mod_path = here.with_name("project_version_change.py")
+    mod_path = here.with_name("common_version_bump.py")
     spec: ModuleSpec | None = importlib.util.spec_from_file_location(
-        "project_version_change", str(mod_path)
+        "common_version_bump", str(mod_path)
     )
     if not spec:
         raise ImportError(f"Cannot load module from {mod_path}")
@@ -207,7 +207,7 @@ def test_happy_path_bumps_and_writes_files(
 
     monkeypatch.setattr(mod, "_run_git", fake_run_git)
 
-    rc = mod.project_version_change_main([])
+    rc = mod.common_version_bump_main([])
     assert rc == 0
 
     # Version bumped
@@ -222,4 +222,4 @@ def test_happy_path_bumps_and_writes_files(
     assert "Next version:    1.2.4" in out
 
 
-# End of file: bin/test_project_version_change.py
+# End of file: bin/test_common_version_bump.py
