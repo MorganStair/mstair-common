@@ -108,7 +108,7 @@ def _read_pyproject_version(pyproject_path: Path) -> str:
 # -----------------------------------------------------------------------------
 
 
-def _process_init_file(
+def common_process_init_file(
     init_path: Path,
     package_fqn: str,
     version: str | None,
@@ -120,7 +120,10 @@ def _process_init_file(
     """
     if not init_path.exists():
         init_path.touch()
-    original_content: str = init_path.read_text(encoding="utf-8") if init_path.exists() else ""
+
+    original_content: str = (
+        init_path.read_text(encoding="utf-8").replace("\r\n", "\n") if init_path.exists() else ""
+    )
     content: str = original_content
 
     # Apply non-destructive edits
@@ -132,19 +135,22 @@ def _process_init_file(
     if version is not None and len(package_fqn.split(".")) == 2:
         content = _set_or_update_version(content, version)
 
-    # Normalize trailing newlines
+    # Normalize trailing newlines and check for NULs
     content = content.rstrip() + "\n"
+    if "\x00" in content:
+        _LOG.error("Null byte detected in %s", init_path)
+        raise SystemExit(1)
 
     if content != original_content:
         _LOG.info("Updating %s", init_path)
-        init_path.write_text(content, encoding="utf-8")
+        init_path.write_text(content, encoding="utf-8", newline="\n")
         return True
 
     _LOG.debug("No changes needed for %s", init_path)
     return False
 
 
-def _run_subprocess(cmd: list[str]) -> None:
+def common_run_subprocess(cmd: list[str]) -> None:
     """Run a subprocess command and exit on failure."""
     _LOG.info("> %s", " ".join(cmd))
     time.sleep(0.2)
@@ -173,14 +179,13 @@ def common_reset_inits_main(argv: list[str] | None = None) -> None:
     top_package_dirs: list[Path] = []
 
     for package_dir in recurse_package_paths(*src_subdirs):
-        _LOG.info("Processing: %s", package_dir.as_posix())
         package_tree = package_dir.relative_to(_SRC).parts
         package_fqn = ".".join(package_tree)
         package_init_path = package_dir / "__init__.py"
         if args.clean and package_init_path.exists():
-            _LOG.info("Removing existing __init__.py: %s", package_init_path.as_posix())
+            _LOG.info("Removing __init__.py: %s", package_init_path.as_posix())
             package_init_path.unlink()
-        _process_init_file(
+        common_process_init_file(
             package_init_path,
             package_fqn,
             version_string if len(package_tree) == 2 else None,
@@ -197,15 +202,15 @@ def common_reset_inits_main(argv: list[str] | None = None) -> None:
             "--noattrs",
             "--recursive",
         ]
-        _LOG.info("mkinit_cmd:\n> %s", " ".join(mkinit_cmd))
-        _run_subprocess(mkinit_cmd)
+        _LOG.info("> %s", " ".join(mkinit_cmd))
+        common_run_subprocess(mkinit_cmd)
 
     if args.dry_run:
         _LOG.info("Dry run complete. No changes written.")
         return
 
-    _run_subprocess(["ruff", "check", _SRC.as_posix(), "--fix"])
-    _run_subprocess(["ruff", "format", _SRC.as_posix()])
+    common_run_subprocess(["ruff", "check", _SRC.as_posix(), "--fix"])
+    common_run_subprocess(["ruff", "format", _SRC.as_posix()])
 
 
 def recurse_package_paths(*package_paths: Path) -> Iterator[Path]:

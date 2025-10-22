@@ -14,8 +14,6 @@ from mstair.common.xlogging.logger_constants import (
 )
 
 
-color_logger = None
-
 LoggerNameType = Literal["HmnLambda", "HmnCodeAnalyzer", "HmnUnderTrace", "Hmn"]
 
 K_HMN: LoggerNameType = "Hmn"  # Fallback logger name during script execution (e.g. cdk scripts)
