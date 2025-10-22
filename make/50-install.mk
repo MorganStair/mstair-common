@@ -63,7 +63,7 @@ install-inits : .venv ## Regenerate __init__.py files
 	@$(_begin)
 	$(_activate)
 	(	set -x
-		python -P -s bin/common_reset_inits.py;
+		python -P -s $(VENV_BIN)/common_reset_inits.py;
 	)
 	$(_end)
 
