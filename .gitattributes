@@ -1,30 +1,43 @@
 # File: .gitattributes
-# Normalize line endings across platforms
-# Store LF in repo, use CRLF on checkout in Windows
+# ---------------------------------------------------------------------------
+# Default: Normalize all text files to LF in repo.
+# Git converts to CRLF on checkout only if user's core.autocrlf=true.
+# ---------------------------------------------------------------------------
 
-* text eol=crlf
+* text=auto eol=lf
 
-# Common text file types
+# ---------------------------------------------------------------------------
+# Windows-only script types (force CRLF)
+# ---------------------------------------------------------------------------
 *.bat  text eol=crlf
-*.cfg  text eol=crlf
 *.cmd  text eol=crlf
-*.css  text eol=crlf
-*.html text eol=crlf
-*.ini  text eol=crlf
-*.js   text eol=crlf
-*.json text eol=crlf
-*.mak  text eol=crlf
-*.md   text eol=lf
-*.mk   text eol=crlf
 *.ps1  text eol=crlf
-*.py   text eol=crlf
-*.sh   text eol=lf
-*.toml text eol=crlf
-*.ts   text eol=crlf
-*.yaml text eol=crlf
-*.yml  text eol=crlf
 
-# Binary files (no EOL conversion)
+# ---------------------------------------------------------------------------
+# Cross-platform text/code (force LF)
+# ---------------------------------------------------------------------------
+*.py   text eol=lf
+*.sh   text eol=lf
+*.mk   text eol=lf
+*.mak  text eol=lf
+*.md   text eol=lf
+*.toml text eol=lf
+*.yaml text eol=lf
+*.yml  text eol=lf
+*.json text eol=lf
+*.ini  text eol=lf
+*.cfg  text eol=lf
+*.html text eol=lf
+*.css  text eol=lf
+*.ts   text eol=lf
+*.js   text eol=lf
+
+# Force LF for all files in the scripts directory, regardless of extension
+scripts/* text eol=lf
+
+# ---------------------------------------------------------------------------
+# Binary files (no EOL normalization)
+# ---------------------------------------------------------------------------
 *.bin  binary
 *.dll  binary
 *.exe  binary
@@ -39,7 +52,9 @@
 *.stl  binary
 *.zip  binary
 
-# Build and vendor outputs — skip text normalization entirely
+# ---------------------------------------------------------------------------
+# Build / virtual environment / cache directories (no normalization)
+# ---------------------------------------------------------------------------
 dist/**          -text
 node_modules/**  -text
 out/**           -text

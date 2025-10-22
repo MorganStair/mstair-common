@@ -24,19 +24,12 @@ max_line_length = 80               # Matches wrap column for rewrap (80 cols)
 # -----------------------------------------------------------------------------
 # === JavaScript and JSON (Prettier) ===
 # -----------------------------------------------------------------------------
-[*.{js,jsx,json}]
-indent_size = 2                    # Prettier default
-tab_width = 2
+[*.{js,jsx,json,jsonc}]
+end_of_line = lf
+indent_size = 4
+tab_width = 4
 trim_trailing_whitespace = true
 # Formatter handled by VS Code extension "esbenp.prettier-vscode"
-
-# -----------------------------------------------------------------------------
-# === JSON with Comments (.jsonc) ===
-# -----------------------------------------------------------------------------
-[*.jsonc]
-indent_size = 2
-tab_width = 2
-# Formatter handled by "vscode.json-language-features"
 
 # -----------------------------------------------------------------------------
 # === Makefiles ===
@@ -51,6 +44,7 @@ trim_trailing_whitespace = true
 # === Markdown ===
 # -----------------------------------------------------------------------------
 [*.md]
+end_of_line = lf
 trim_trailing_whitespace = false   # Preserve intentional trailing spaces for line breaks
 # Formatter: yzhang.markdown-all-in-one
 # Quick suggestions enabled for comments/strings; keep UTF-8 only visible ASCII
@@ -81,6 +75,15 @@ indent_size = 2
 tab_width = 2
 trim_trailing_whitespace = true
 # Formatter: vscode.typescript-language-features
+
+# -----------------------------------------------------------------------------
+# === Shell Scripts ===
+# -----------------------------------------------------------------------------
+[*.sh]
+end_of_line = lf
+indent_size = 2
+tab_width = 2
+trim_trailing_whitespace = true
 
 # -----------------------------------------------------------------------------
 # === Miscellaneous text and Markdown-like files ===
