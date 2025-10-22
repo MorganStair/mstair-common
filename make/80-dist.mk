@@ -4,6 +4,9 @@
 dist : build
 build : .venv/.test ## Build the source and wheel packages
 	$(_begin)
+	if [ ! -f "MANIFEST.in" ]; then
+		exit 0
+	fi
 	$(_activate)
 	if [ "0$(VERBOSE)" -gt 0 ] ; then
 		(	set -x

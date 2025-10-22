@@ -37,9 +37,15 @@ endef
 install-deps : .venv ## Install dependencies
 	@:
 	$(_begin)
-	(	set -x
-		$(VENV_BIN)/python -m pip install -q -e .[dev,test]
-	)
+	if [ "0$(VERBOSE)" -gt 0 ]; then
+		(	set -x
+			$(VENV_BIN)/python -m pip install -e .[dev,test]
+		)
+	else
+		(	set -x
+			$(VENV_BIN)/python -m pip install -q -e .[dev,test]
+		)
+	fi
 	$(_end)
 
 .PHONY : install-stubs $(STUBS)
