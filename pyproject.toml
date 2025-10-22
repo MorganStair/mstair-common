@@ -44,6 +44,7 @@
         "types-colorama",
         "types-python-dateutil",
         "types-pytz",
+        "types-setuptools",
         "vulture",
     ]
     test = ["pytest", "pytest-cov"]

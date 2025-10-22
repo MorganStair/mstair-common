@@ -126,8 +126,8 @@ def _process_init_file(
     content = _ensure_autogen_markers(content)
     content = _remove_all_definitions(content)
 
-    # Apply version only for mstair.rentals
-    if version is not None and package_fqn == "mstair.rentals":
+    # Apply version only for second-level packages
+    if version is not None and len(package_fqn.split(".")) == 2:
         content = _set_or_update_version(content, version)
 
     # Normalize trailing newlines

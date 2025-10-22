@@ -50,7 +50,7 @@ def common_split_makefiles(lines: Iterable[str]) -> list[Path]:
         A list of Path objects for files that were written, in write order.
     """
     written: list[Path] = []
-    out_file = None  # type: ignore[assignment]
+    out_file = None
     try:
         for line in lines:
             match = FILE_PATTERN.match(line)

@@ -10,10 +10,5 @@
             "includeAllSymbols": true,
             "name": "mstair.common"
         },
-        {
-            "depth": 4,
-            "includeAllSymbols": true,
-            "name": "mstair.rentals"
-        }
     ]
 }

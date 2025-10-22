@@ -9,6 +9,7 @@ Example:
 from __future__ import annotations
 
 import importlib.util
+import os
 from importlib.machinery import ModuleSpec
 from pathlib import Path
 from types import ModuleType
@@ -16,18 +17,19 @@ from types import ModuleType
 import pytest
 
 
+SCRIPT_PATH = "bin/common_version_bump.py"
+
+
 def _load_module() -> ModuleType:
     """Load the common_version_bump module from the adjacent file."""
-    here = Path(__file__).resolve()
-    mod_path = here.with_name("common_version_bump.py")
-    spec: ModuleSpec | None = importlib.util.spec_from_file_location(
-        "common_version_bump", str(mod_path)
-    )
+    location: Path = Path(os.environ.get("VIRTUAL_ENV", ".")).resolve().parent / SCRIPT_PATH
+    name = location.stem.removesuffix(".py")
+    spec: ModuleSpec | None = importlib.util.spec_from_file_location(name=name, location=location)
     if not spec:
-        raise ImportError(f"Cannot load module from {mod_path}")
-    module = importlib.util.module_from_spec(spec)
+        raise ImportError(f"Cannot load module from {location}")
+    module: ModuleType = importlib.util.module_from_spec(spec)
     assert spec and spec.loader
-    spec.loader.exec_module(module)  # type: ignore[attr-defined]
+    spec.loader.exec_module(module)
     return module
 
 
