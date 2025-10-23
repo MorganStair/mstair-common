@@ -317,6 +317,3 @@ def test_delegates_to_reset_inits_and_updates_inits(
     nested_init = (tmp_path / "src" / "foo" / "bar" / "__init__.py").read_text(encoding="utf-8")
     assert '__version__ = "1.2.4"' in top_init
     assert '__version__ = "1.2.4"' in nested_init
-
-
-# End of file: bin/test_common_version_bump.py

@@ -239,5 +239,3 @@ if __name__ == "__main__":
     except KeyboardInterrupt:
         _LOG.warning("Interrupted by user.")
         sys.exit(130)
-
-# End of file: bin/common_reset_inits.py

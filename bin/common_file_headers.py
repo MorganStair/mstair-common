@@ -162,5 +162,3 @@ def common_file_headers_main(argv: Iterable[str] | None = None) -> int:
 
 if __name__ == "__main__":
     raise SystemExit(common_file_headers_main())
-
-# End of file: common_file_headers.py

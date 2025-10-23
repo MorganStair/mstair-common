@@ -116,5 +116,3 @@ def common_ruff_env_main() -> None:
 
 if __name__ == "__main__":
     common_ruff_env_main()
-
-# End of file: common_ruff_env.py

@@ -301,11 +301,11 @@ def _maybe_reset_inits() -> None:
         return
     try:
         subprocess.run([sys.executable, str(reset_script)], check=True)
-    except Exception as exc:  # noqa: BLE001 - best-effort delegation
-        print(f"Warning: failed to update __init__ versions via {reset_script}: {exc}", file=sys.stderr)
+    except Exception as exc:
+        print(
+            f"Warning: failed to update __init__ versions via {reset_script}: {exc}", file=sys.stderr
+        )
 
 
 if __name__ == "__main__":
     raise SystemExit(common_version_bump_main(sys.argv[1:]))
-
-# End of file: bin/common_version_bump.py
