@@ -1,3 +1,6 @@
+## 0.1.10 - 2025-10-23
+- No changes in src since 22fe7b9.
+
 ## 0.1.9 - 2025-10-22
 - feat: Replace sitecustomize.py with common_sitecustomize_setup.py for improved Git PATH management in virtual environments
 
