@@ -1,3 +1,6 @@
+## 0.1.13 - 2025-10-23
+- refactor: Update cache_dir usage in constants and nltk_helpers for improved path management; Add cache_dir() to constants and update nltk_helpers to use cache_dir for path management.
+
 ## 0.1.12 - 2025-10-23
 - Fix common_reset_inits.py and common_version_bump.py to update version dunders in the first and second level package __init__.py files from pyproject.toml.
 - Adopt PEP compliance and remove start-of-file and end-of-file comments from Python files.
