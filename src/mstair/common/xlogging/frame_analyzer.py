@@ -1,4 +1,3 @@
-# File: src/mstair/common/xlogging/frame_analyzer.py
 """
 Module: mstair.common.xlogging.frame_analyzer
 
@@ -100,6 +99,3 @@ class StackFrameInfo:
             f_locals_self=_f_locals.get("self"),
             stack_position=stack_position,
         )
-
-
-# End of file: src/mstair/common/xlogging/frame_analyzer.py

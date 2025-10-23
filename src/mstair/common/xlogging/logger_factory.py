@@ -1,4 +1,3 @@
-# File: src/mstair/common/xlogging/logger_factory.py
 """
 Logger factory for creating and configuring CoreLogger instances.
 
@@ -115,6 +114,3 @@ def get_caller_logger_name(*, stacklevel: int = 1) -> str:
         executable = sys.argv[0] if sys.argv and sys.argv[0] else sys.executable
         name = Path(executable).stem
     return name
-
-
-# End of file: src/mstair/common/xlogging/logger_factory.py

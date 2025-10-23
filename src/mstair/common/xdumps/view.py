@@ -1,4 +1,3 @@
-# File: python/plib_/xdumps/view.py
 """
 Visual formatting for structured object rendering.
 
@@ -206,6 +205,3 @@ class TokenFormatter:
             value = renderer(atom)
             chunk = json.dumps(value)
         return chunk
-
-
-# End of file: src/mstair/common/xdumps/view.py

@@ -1,4 +1,3 @@
-# File: python/plib_/base/mapping_helpers.py
 """
 Helpers for accessing and modifying nested mappings (e.g., dicts) via key paths.
 """
@@ -42,6 +41,3 @@ def mapping_attr_at_keypath[T](
         actual_type = type(current).__name__
         raise TypeError(f"Expected type {wanted_type} at {this_origin} (got {actual_type})")
     return current
-
-
-# End of file: src/mstair/common/base/mapping_helpers.py

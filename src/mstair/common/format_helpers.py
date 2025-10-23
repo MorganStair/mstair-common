@@ -1,5 +1,3 @@
-# File: src/mstair/common/format_helpers.py
-#
 """
 Provides a single wrapper around Ruff for formatting and import sorting.
 Uses stdin/stdout approach with --stdin-filename to preserve project context.
@@ -139,6 +137,3 @@ def _ruff_not_available(proc: subprocess.CompletedProcess[str]) -> bool:
             "ruff: command not found",
         )
     )
-
-
-# End of file: src/mstair/common/format_helpers.py

@@ -1,5 +1,3 @@
-# File: python/plib_/base/bbox.py
-
 from __future__ import annotations
 
 from math import atan2, cos, floor, log10, radians, sin, sqrt
@@ -119,5 +117,3 @@ if __name__ == "__main__":
             self.assertEqual(BBox.decimal_places(BBox.MAX_PRECISION), 3)  # pyright: ignore[reportPrivateUsage]
 
     unittest.main()
-
-# End of file: src/mstair/common/base/bbox.py

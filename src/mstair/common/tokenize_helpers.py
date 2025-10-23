@@ -1,4 +1,3 @@
-# File: python/plib_/tokenize_helpers.py
 """
 Responsible for parsing Python source code into sections and regions.
 """
@@ -194,6 +193,3 @@ def _is_triple_quoted_string(token: tokenize.TokenInfo) -> bool:
     return token.type == tokenize.STRING and (
         token.string.startswith('"""') or token.string.startswith("'''")
     )
-
-
-# End of file: python/plib_/tokenize_helpers.py

@@ -1,5 +1,3 @@
-# File: src/mstair/common/xlogging/logger_constants.py
-
 import logging
 
 
@@ -27,6 +25,3 @@ def initialize_logger_constants() -> None:
     }.items():
         if key not in logging.getLevelNamesMapping():
             logging.addLevelName(value, key)
-
-
-# End of file: src/mstair/common/xlogging/logger_constants.py

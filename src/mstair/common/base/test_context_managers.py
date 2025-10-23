@@ -1,4 +1,3 @@
-# File: tests/test_context_managers.py
 """
 Unit tests for mstair.common.base.context_managers.
 

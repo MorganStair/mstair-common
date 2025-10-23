@@ -1,5 +1,3 @@
-# File: python/plib_/xdumps/customizer_registry.py
-
 from __future__ import annotations
 
 import contextlib
@@ -501,6 +499,3 @@ def get_customizer() -> type[CustomizerNamespace]:
     caused by CUSTOMIZER.__new__ returning NoReturn.
     """
     return cast(type[CustomizerNamespace], CUSTOMIZER)
-
-
-# End of file: src/mstair/common/xdumps/customizer_registry.py

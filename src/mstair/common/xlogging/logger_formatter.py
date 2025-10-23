@@ -1,5 +1,3 @@
-# File: src/mstair/common/xlogging/logger_formatter.py
-
 import ctypes
 import logging
 import os
@@ -419,6 +417,3 @@ def format_logging_error(record: logging.LogRecord, exc: Exception, debug_config
     message_lines.extend(["."])
 
     return "\n>> " + "\n>> ".join(message_lines) + "\n\n"
-
-
-# End of file: src/mstair/common/xlogging/logger_formatter.py

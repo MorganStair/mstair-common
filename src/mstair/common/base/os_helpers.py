@@ -1,5 +1,3 @@
-# File: python/plib_/base/os_helpers.py
-
 from __future__ import annotations
 
 import os
@@ -37,6 +35,3 @@ def os_environ_truthy(var_name: str, default: bool = False) -> bool:
         return False
     else:
         return default  # Return default for unrecognized values
-
-
-# End of file: src/mstair/common/base/os_helpers.py

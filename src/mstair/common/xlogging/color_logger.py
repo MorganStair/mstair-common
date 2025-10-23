@@ -1,4 +1,3 @@
-# File: src/mstair/common/xlogging/color_logger.py
 """
 A logger that adds color and a prefix to messages.
 """
@@ -113,6 +112,3 @@ class ColorLogger(CoreLogger):
             return "HmnUnderTrace"
         else:
             return K_HMN
-
-
-# End of file: src/mstair/common/xlogging/color_logger.py

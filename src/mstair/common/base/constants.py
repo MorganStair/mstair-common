@@ -1,5 +1,3 @@
-# File: src/mstair/common/base/constants.py
-
 from __future__ import annotations
 
 import contextlib
@@ -257,5 +255,3 @@ CORS_EXPOSE_HEADERS = [
     "X-Amzn-RequestId",
     "X-Amzn-Trace-Id",
 ]  # + X_CUSTOM_HEADER_NAMES
-
-# End of file: src/mstair/common/base/constants.py

@@ -1,4 +1,3 @@
-# File: python/plib_/xdumps/test_xdumps.py
 """
 Refactored unit tests for xdumps: one test per major rendering story.
 
@@ -438,6 +437,3 @@ def test_xdumps_rshift_applies_global_padding(kwargs_for_compact: dict[str, Any]
     unshifted = xdumps(obj, **kwargs)
     stripped = "\n".join(line[4:] if line.startswith("    ") else line for line in lines)
     assert stripped == unshifted
-
-
-# End of file: src/mstair/common/xdumps/test_xdumps.py

@@ -1,4 +1,3 @@
-# File: python/plib_/base/email.py
 """
 mstair.common.base.email - Email related helpers
 """
@@ -81,6 +80,3 @@ def name_addr_from_email(
             domain=domain.lower(),
         ),
     )
-
-
-# End of file: src/mstair/common/base/email.py

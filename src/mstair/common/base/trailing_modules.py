@@ -1,5 +1,3 @@
-# File: python/plib_/base/trailing_modules.py
-
 import inspect
 import re
 
@@ -20,6 +18,3 @@ def trailing_modules(*, module_name: str = "", limit: int = 0, stacklevel: int =
     if limit > 0:
         result = ".".join(result.split(".")[-limit:])
     return result
-
-
-# End of file: src/mstair/common/base/trailing_modules.py

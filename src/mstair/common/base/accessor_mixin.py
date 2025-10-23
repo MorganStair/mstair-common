@@ -1,5 +1,3 @@
-# File: python/plib_/base/accessor_mixin.py
-
 from typing import Any
 
 
@@ -107,6 +105,3 @@ class AccessorMixin:
             else:
                 object.__setattr__(self, name, value)
                 return
-
-
-# End of file: src/mstair/common/base/accessor_mixin.py

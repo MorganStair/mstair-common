@@ -1,4 +1,3 @@
-# File: python/plib_/base/fs_helpers.py
 """
 File System Helpers
 """
@@ -401,6 +400,3 @@ def fs_find_file_in_parents(
             if candidate.is_file():
                 return candidate
     return None
-
-
-# End of file: src/mstair/common/base/fs_helpers.py

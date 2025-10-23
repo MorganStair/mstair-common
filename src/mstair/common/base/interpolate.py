@@ -1,4 +1,3 @@
-# File: python/plib_/base/interpolate.py
 # Regular expression that matches a placeholder like "{identifier}".
 
 import re
@@ -147,6 +146,3 @@ def _validate_braces_are_well_formed(text: str) -> None:
             # A solitary '}' is never valid after protection.
             raise ValueError(f"Single '}}' brace not allowed near index {i}: {text!r}")
         i += 1
-
-
-# End of file: src/mstair/common/base/interpolate.py

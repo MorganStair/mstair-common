@@ -1,4 +1,3 @@
-# File: python/plib_/base/context_managers.py
 """
 Context managers for managing system paths and rendering contexts.
 
@@ -305,6 +304,3 @@ def _execute_module_with_warnings_escalated_if_logger_level_requires_it(
             msg = f"{e.__class__.__name__} loading path={module_path_str!r}: {e}\n{tb}"
             logger.error(msg, exc_info=e)
             raise RuntimeError(msg) from e
-
-
-# End of file: python/plib_/base/context_managers.py

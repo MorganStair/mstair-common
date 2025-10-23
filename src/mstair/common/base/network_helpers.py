@@ -1,5 +1,3 @@
-# File: python/plib_/base/network_helpers.py
-
 import urllib.request
 from urllib.parse import urlparse
 
@@ -48,6 +46,3 @@ def is_valid_url(url: str) -> bool:
         return all([result.scheme, result.netloc])
     except Exception:
         return False
-
-
-# End of file: src/mstair/common/base/network_helpers.py

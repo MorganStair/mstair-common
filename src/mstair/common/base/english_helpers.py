@@ -1,4 +1,3 @@
-# File: python/plib_/base/english_helpers.py
 """
 Text Helpers Module
 
@@ -86,6 +85,3 @@ def english_runon_paragraph_check(text: str) -> str:
     if bool(re.search(r"(?:\w\.\s){5,}", text)):
         raise RuntimeError("Bug detected in user content.")
     return text
-
-
-# End of file: src/mstair/common/base/english_helpers.py

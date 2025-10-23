@@ -1,5 +1,3 @@
-# File: plib_/base/text_helpers.py
-
 import copy
 import difflib
 import hashlib
@@ -331,6 +329,3 @@ def text_truncate(
             _lines = [*_lines[:max_lines], "...truncated..."]
             result = linesep.join(_lines)
     return result
-
-
-# End of file: src/mstair/common/base/string_helpers.py

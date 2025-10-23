@@ -1,4 +1,3 @@
-# File: src/mstair/common/io/logging_utils.py
 """
 Shared logging utilities for common I/O operations.
 
@@ -45,6 +44,3 @@ def setup_logging(verbose: bool = False, quiet: bool = False) -> None:
         handlers=[logging.StreamHandler(sys.stdout)],
         force=True,
     )
-
-
-# End of file: src/mstair/common/io/logging_utils.py

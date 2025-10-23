@@ -1,4 +1,3 @@
-# File: python/plib_/base/file_discovery.py
 """
 Python File Discovery and Scanning
 
@@ -121,6 +120,3 @@ def _walk_python_files_in_dir(
             ):
                 continue
             yield file_path
-
-
-# End of file: src/mstair/common/base/file_discovery.py

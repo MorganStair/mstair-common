@@ -1,4 +1,3 @@
-# File: python/plib_/base/datetime_helpers.py
 """
 timezone and tzinfo helpers
 """
@@ -237,6 +236,3 @@ def is_datetime_in_range(
     if _date < since_date:
         return False
     return not _date >= until_date
-
-
-# End of file: src/mstair/common/base/datetime_helpers.py

@@ -1,4 +1,3 @@
-# File: src/mstair/common/xlogging/test_logger_util.py
 """
 Tests for LogLevelConfig: parsing, overrides, matching, and lifecycle.
 
@@ -264,6 +263,3 @@ class TestEdgeCases:
         monkeypatch.setenv("LOG_LEVELS", ";;pkg.*:DEBUG;;")
         cfg = LogLevelConfig()
         assert list(cfg.pattern_to_level.keys()) == ["pkg.*"]
-
-
-# End of file: src/mstair/common/xlogging/test_logger_util.py

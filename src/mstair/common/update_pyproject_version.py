@@ -1,4 +1,3 @@
-# File: src/mstair/common/update_pyproject_version.py
 """
 Increment pyproject.toml [project.version] if the repo has uncommitted or unpushed changes.
 
@@ -103,5 +102,3 @@ def main(argv: list[str] | None = None) -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main(sys.argv[1:]))
-
-# End of file: src/mstair/common/update_pyproject_version.py

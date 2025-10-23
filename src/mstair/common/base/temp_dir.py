@@ -1,4 +1,3 @@
-# File: python/plib_/base/tmpdir_helpers.py
 """
 TempDir: Temporary directory helper with automatic file copying support.
 """
@@ -127,6 +126,3 @@ class TempDir(TemporaryDirectory[str]):
     ) -> None:
         """Exit context manager and clean up temporary directory."""
         return super().__exit__(exc_type, exc_val, exc_tb)
-
-
-# End of file: src/mstair/common/base/temp_dir.py

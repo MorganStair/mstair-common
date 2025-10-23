@@ -1,4 +1,3 @@
-# File:
 """
 Tests for Ruff-based formatter wrapper `format_source_code`.
 
@@ -116,6 +115,3 @@ def test_stdin_filename_is_absolute(monkeypatch: pytest.MonkeyPatch, tmp_path: P
     assert captured
     for filename in captured:
         assert Path(filename) == absolute_path
-
-
-# End of file: src/mstair/common/test_format_helpers.py

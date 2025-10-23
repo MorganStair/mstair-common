@@ -1,4 +1,3 @@
-# File: python/plib_/base/nltk_helpers.py
 """
 Helpers for working with NLTK resources, including persistent caching of stopwords.
 
@@ -44,6 +43,3 @@ def load_stopwords() -> set[str]:
     value = set(nltk.corpus.stopwords.words("english"))
     nltk_cache().set(STOPWORDS_CACHE_KEY, value)
     return value
-
-
-# End of file: src/mstair/common/base/nltk_helpers.py

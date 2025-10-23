@@ -1,5 +1,3 @@
-# File: python/plib_/base/types.py
-
 import contextlib
 from collections.abc import Callable, Iterable, Iterator
 from dataclasses import asdict, dataclass, is_dataclass
@@ -318,6 +316,3 @@ def int_from_string(value: str | None, default: int = 0) -> int:
         return int(value)
     except ValueError:
         return default
-
-
-# End of file: src/mstair/common/base/types.py

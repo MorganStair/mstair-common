@@ -1,4 +1,3 @@
-# File: src/mstair/common/io/display_formatter.py
 """
 Console display formatting utilities (ASCII-only).
 
@@ -195,6 +194,3 @@ class DisplayFormatter:
             lines.append(f"{datestr}  {sender}  {subject}")
 
         return "\n".join(lines)
-
-
-# End of file: src/mstair/common/io/display_formatter.py

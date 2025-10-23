@@ -1,4 +1,3 @@
-# File: src/mstair/common/xlogging/core_logger.py
 """
 Structured logging with environment-driven configuration.
 
@@ -686,6 +685,3 @@ def _report_if_bad_stack_info(kwargs: dict[str, Any]) -> None:
     else:
         # Report via this module's debug logger to avoid recursive emission.
         logging.getLogger(__name__).warning(f"Invalid stack_info type: {type(val).__name__}")
-
-
-# End of file: src/mstair/common/xlogging/core_logger.py

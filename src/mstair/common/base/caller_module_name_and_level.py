@@ -1,5 +1,3 @@
-# File: python/plib_/base/caller_module_name_and_level.py
-
 import inspect
 from types import FrameType
 
@@ -53,6 +51,3 @@ def caller_module_name_and_level(
     finally:
         # Break reference cycle: frame -> f_locals -> frame; helps cyclic GC reclaim memory promptly
         del frame
-
-
-# End of file: src/mstair/common/base/caller_module_name_and_level.py

@@ -1,4 +1,3 @@
-# File: python/plib_/base/config.py
 """
 Environment and execution context detection utilities.
 
@@ -209,6 +208,3 @@ def being_traced() -> bool:
       - stack inspection for 'pycallgraph'
     """
     return _is_traced() or _has_pycallgraph_stack()
-
-
-# End of file: src/mstair/common/base/config.py

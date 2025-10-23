@@ -1,4 +1,3 @@
-# File: src/mstair/common/xlogging/logger_util.py
 """
 Environment variable-driven log level configuration.
 
@@ -224,6 +223,3 @@ class LogLevelConfig:
         """Return specificity score: length of fixed prefix before any wildcard."""
         first = min((i for i, ch in enumerate(pattern) if ch in "*?["), default=len(pattern))
         return first
-
-
-# End of file: src/mstair/common/xlogging/logger_util.py

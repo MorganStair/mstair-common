@@ -1,5 +1,3 @@
-# File: python/plib_/base/path_concat.py
-
 from pathlib import Path
 
 
@@ -10,6 +8,3 @@ def path_concat(path: Path | str, *strings: str) -> Path:
     for string in strings:
         path = path.with_name(path.name + string)
     return path
-
-
-# End of file: src/mstair/common/base/path_concat.py

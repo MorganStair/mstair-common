@@ -1,4 +1,3 @@
-# File: python/plib_/xdumps/model.py
 """
 Structured emission model for formatting nested Python containers.
 """
@@ -458,6 +457,3 @@ class XTokenCustomization:
             f"source_type={self.source_type.__name__ if self.source_type else None}, "
             f"continue_chain={self.continue_chain})"
         )
-
-
-# End of file: src/mstair/common/xdumps/model.py

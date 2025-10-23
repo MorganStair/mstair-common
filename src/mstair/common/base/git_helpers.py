@@ -1,4 +1,3 @@
-# File: python/plib_/base/git_helpers.py
 """
 Git Helpers Module
 
@@ -392,6 +391,3 @@ def _attr_names_from_class(
     ]
     _deduped_attr_names = {*_field_names, *_property_names}
     return tuple(_deduped_attr_names)
-
-
-# End of file: src/mstair/common/base/git_helpers.py

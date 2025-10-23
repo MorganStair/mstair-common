@@ -1,4 +1,3 @@
-# File: src/mstair/common/vscode_settings_diff.py
 """
 Compare VS Code user and workspace settings for overlapping keys.
 
@@ -174,5 +173,3 @@ def main(argv: list[str]) -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main(sys.argv[1:]))
-
-# End of file: src/mstair/common/vscode_settings_diff.py

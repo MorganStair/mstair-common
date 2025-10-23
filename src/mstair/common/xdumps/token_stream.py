@@ -1,4 +1,3 @@
-# File: python/plib_/xdumps/token_stream.py
 """
 TokenStream: Stateful token emitter for structured object traversal.
 
@@ -251,6 +250,3 @@ class TokenStream:
             yield model.Token.CLOSE(value_token)
         else:
             yield value_token
-
-
-# End of file: src/mstair/common/xdumps/token_stream.py
