@@ -1,5 +1,14 @@
 # File: make/90-helpers.mk
 
+.PHONY : bump
+bump : ## Helper to bump the pyproject and top level package version numbers
+	@$(_begin)
+	$(_activate)
+	(	set -x;
+		common_version_bump.py
+	)
+	$(_end)
+
 .PHONY : cat
 cat : ## Concatenate all Makefile parts to stdout
 	@printf "\n"
