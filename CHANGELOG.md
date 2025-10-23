@@ -1,3 +1,7 @@
+## 0.1.12 - 2025-10-23
+- Fix common_reset_inits.py and common_version_bump.py to update version dunders in the first and second level package __init__.py files from pyproject.toml.
+- Adopt PEP compliance and remove start-of-file and end-of-file comments from Python files.
+
 ## 0.1.11 - 2025-10-23
 - feat: Add context managers for module loading and cycle detection with tests
 
