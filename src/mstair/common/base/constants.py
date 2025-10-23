@@ -21,7 +21,7 @@ NOT_SUPPLIED = NotSuppliedType.NOT_SUPPLIED
 
 @cache
 def cache_dir() -> Path:
-    result = Path(os.environ.get("CACHE_DIR", ".cache"))
+    result = Path(os.environ.get("CACHE_DIR", Path.cwd() / ".cache"))
     result = Path(result.resolve().as_posix())
     return result
 

@@ -21,10 +21,10 @@ from mstair.common.base.constants import cache_dir
 @cache
 def nltk_cache() -> diskcache.Cache:
     """Return a diskcache.Cache instance for NLTK-related caching."""
-    path: Path = cache_dir() / "nltk"
-    path.mkdir(parents=True, exist_ok=True)
+    dot_cache_nltk: Path = cache_dir() / "nltk"
+    dot_cache_nltk.mkdir(parents=True, exist_ok=True)
     return diskcache.Cache(
-        directory=str(path), size_limit=100 * 1024 * 1024
+        directory=str(dot_cache_nltk), size_limit=100 * 1024 * 1024
     )  # diskcache prefers str  # 100MB limit
 
 
