@@ -35,6 +35,8 @@ from functools import cache
 
 _tls = threading.local()
 
+B_DEBUG = True
+
 
 @dataclass
 class TLSAttrs:
