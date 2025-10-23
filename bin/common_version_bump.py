@@ -51,6 +51,7 @@ __all__ = [
     "collect_commit_messages_since",
     "prepend_changelog_entry",
     "update_pyproject_version",
+    "_maybe_reset_inits",
 ]
 
 
@@ -97,6 +98,8 @@ def common_version_bump_main(argv: list[str]) -> int:
             print("pyproject.toml already at requested version; no change")
     except (FileNotFoundError, ValueError) as exc:
         print(f"Warning: failed to update pyproject.toml: {exc}", file=sys.stderr)
+    # Delegate updating __init__ files' __version__ to common_reset_inits.py
+    _maybe_reset_inits()
     return 0
 
 
@@ -284,6 +287,22 @@ def _ensure_git_repo() -> None:
         raise RuntimeError("Not a git repository (cannot run git).") from exc
     if inside.lower() != "true":
         raise RuntimeError("Not inside a git work tree.")
+
+
+def _maybe_reset_inits() -> None:
+    """Run bin/common_reset_inits.py to sync __version__ in __init__.py files.
+
+    Runs only when both `src/` and `bin/common_reset_inits.py` exist in CWD.
+    Any failure is reported as a warning but does not abort the bump.
+    """
+    src = Path("src")
+    reset_script = Path("bin/common_reset_inits.py")
+    if not (src.exists() and src.is_dir() and reset_script.exists() and reset_script.is_file()):
+        return
+    try:
+        subprocess.run([sys.executable, str(reset_script)], check=True)
+    except Exception as exc:  # noqa: BLE001 - best-effort delegation
+        print(f"Warning: failed to update __init__ versions via {reset_script}: {exc}", file=sys.stderr)
 
 
 if __name__ == "__main__":

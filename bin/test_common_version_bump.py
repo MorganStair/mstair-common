@@ -19,6 +19,42 @@ import pytest
 
 SCRIPT_PATH = "bin/common_version_bump.py"
 
+STUB_RESET_SCRIPT = r"""#!/usr/bin/env python
+from __future__ import annotations
+import re
+from pathlib import Path
+
+def read_version(p: Path) -> str:
+    in_proj = False
+    for raw in p.read_text(encoding='utf-8').splitlines():
+        line = raw.strip()
+        if line.startswith('[') and line.endswith(']'):
+            in_proj = line.lower() == '[project]'
+            continue
+        if in_proj:
+            m = re.match(r"^version\s*=\s*(['\"])([^'\"]+)\1", line)
+            if m:
+                return m.group(2)
+    raise SystemExit(2)
+
+def upsert_version(p: Path, version: str) -> None:
+    text = p.read_text(encoding='utf-8') if p.exists() else ''
+    if re.search(r'^__version__\s*=\s*', text, re.M):
+        text = re.sub(r'^__version__\s*=\s*["\'][^"\']+["\']', f'__version__ = "{version}"', text, flags=re.M)
+    else:
+        text = (text.rstrip() + '\n\n' if text else '') + f'__version__ = "{version}"\n'
+    p.parent.mkdir(parents=True, exist_ok=True)
+    p.write_text(text, encoding='utf-8')
+
+def main() -> None:
+    version = read_version(Path('pyproject.toml'))
+    for rel in [Path('src/foo/__init__.py'), Path('src/foo/bar/__init__.py')]:
+        upsert_version(rel, version)
+
+if __name__ == '__main__':
+    main()
+"""
+
 
 def _load_module() -> ModuleType:
     """Load the common_version_bump module from the adjacent file."""
@@ -222,6 +258,65 @@ def test_happy_path_bumps_and_writes_files(
     out = capsys.readouterr().out
     assert "Current version: 1.2.3" in out
     assert "Next version:    1.2.4" in out
+
+
+def test_delegates_to_reset_inits_and_updates_inits(
+    mod: ModuleType,
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """common_version_bump_main() delegates to reset_inits to sync __init__ versions.
+
+    We stub a lightweight reset script under ./bin/common_reset_inits.py that reads the
+    bumped version from pyproject and applies it to both top-level and nested packages.
+    """
+    # Prepare workspace structure
+    (tmp_path / "bin").mkdir()
+    (tmp_path / "src" / "foo").mkdir(parents=True)
+    (tmp_path / "src" / "foo" / "bar").mkdir(parents=True)
+
+    # Initial pyproject with current version
+    (tmp_path / "pyproject.toml").write_text(
+        """
+        [project]
+        name = "pkg"
+        version = "1.2.3"
+        """.strip()
+        + "\n",
+        encoding="utf-8",
+    )
+
+    # Pre-existing init files
+    (tmp_path / "src" / "foo" / "__init__.py").write_text("# top-level init\n", encoding="utf-8")
+    (tmp_path / "src" / "foo" / "bar" / "__init__.py").write_text(
+        "# nested init\n", encoding="utf-8"
+    )
+
+    # Stub reset script that mirrors the delegation behavior expected
+
+    (tmp_path / "bin" / "common_reset_inits.py").write_text(STUB_RESET_SCRIPT, encoding="utf-8")
+
+    # Git stubs
+    def fake_run_git(args: list[str]) -> str:
+        if args[:2] == ["rev-parse", "--is-inside-work-tree"]:
+            return "true\n"
+        if args[:2] == ["log", "-n"] and "-S" in args and "--pretty=%H" in args:
+            return "cafebabecafebabecafebabecafebabecafebabe\n"
+        if args[:1] == ["log"] and "--pretty=%s" in args:
+            return "chore: testing delegation\n"
+        return ""
+
+    monkeypatch.setattr(mod, "_run_git", fake_run_git)
+
+    # Execute bump without specifying next version (1.2.3 -> 1.2.4)
+    rc = mod.common_version_bump_main([])
+    assert rc == 0
+
+    # Verify stub ran and updated both init files to bumped version
+    top_init = (tmp_path / "src" / "foo" / "__init__.py").read_text(encoding="utf-8")
+    nested_init = (tmp_path / "src" / "foo" / "bar" / "__init__.py").read_text(encoding="utf-8")
+    assert '__version__ = "1.2.4"' in top_init
+    assert '__version__ = "1.2.4"' in nested_init
 
 
 # End of file: bin/test_common_version_bump.py

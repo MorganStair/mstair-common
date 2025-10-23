@@ -10,8 +10,8 @@ with the expected header structure. It performs the following steps:
 2. Ensure a package docstring exists at the top.
 3. Ensure AUTOGEN_INIT comment markers are present.
 4. Remove any __all__ definitions.
-5. For ``*.*`` packages, insert or update the __version__ dunder
-   based on the version in pyproject.toml.
+5. For top-level (``*``) and second-level (``*.*``) packages, insert or
+   update the __version__ dunder based on the version in pyproject.toml.
 6. Finally, run mkinit and Ruff to rebuild and format the package structure.
 
 Example:
@@ -131,8 +131,8 @@ def common_process_init_file(
     content = _ensure_autogen_markers(content)
     content = _remove_all_definitions(content)
 
-    # Apply version only for second-level packages
-    if version is not None and len(package_fqn.split(".")) == 2:
+    # Apply version for top-level and second-level packages
+    if version is not None and len(package_fqn.split(".")) <= 2:
         content = _set_or_update_version(content, version)
 
     # Normalize trailing newlines and check for NULs
@@ -188,7 +188,7 @@ def common_reset_inits_main(argv: list[str] | None = None) -> None:
         common_process_init_file(
             package_init_path,
             package_fqn,
-            version_string if len(package_tree) == 2 else None,
+            version_string if len(package_tree) <= 2 else None,
         )
         if len(package_tree) == 1:
             top_package_dirs.append(package_dir)
