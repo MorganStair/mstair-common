@@ -7,7 +7,6 @@ It ensures that NLTK data is downloaded as needed and stored in a virtual enviro
 specific cache directory.
 """
 
-import os
 from functools import cache
 from pathlib import Path
 from typing import cast
@@ -16,14 +15,16 @@ import diskcache
 import nltk
 from nltk.downloader import download as nltk_download
 
+from mstair.common.base.constants import cache_dir
+
 
 @cache
 def nltk_cache() -> diskcache.Cache:
     """Return a diskcache.Cache instance for NLTK-related caching."""
-    cache_dir = Path(os.environ.get("VIRTUAL_ENV", str(Path.cwd()))) / ".cache" / "nltk"
-    cache_dir.mkdir(parents=True, exist_ok=True)
+    path: Path = cache_dir() / "nltk"
+    path.mkdir(parents=True, exist_ok=True)
     return diskcache.Cache(
-        directory=str(cache_dir), size_limit=100 * 1024 * 1024
+        directory=str(path), size_limit=100 * 1024 * 1024
     )  # diskcache prefers str  # 100MB limit
 
 

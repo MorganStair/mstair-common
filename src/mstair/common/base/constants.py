@@ -4,14 +4,26 @@ import contextlib
 import os
 from enum import Enum
 from functools import cache
+from pathlib import Path
 from typing import Any
 
 
 DEFAULT_INDENT = 4
 
-NotSuppliedType = Enum("NotSuppliedType", {"NOT_SUPPLIED": object()})
+
+class NotSuppliedType(Enum):
+    NOT_SUPPLIED = object()
+
+
 Number = int | float
 NOT_SUPPLIED = NotSuppliedType.NOT_SUPPLIED
+
+
+@cache
+def cache_dir() -> Path:
+    result = Path(os.environ.get("CACHE_DIR", ".cache"))
+    result = Path(result.resolve().as_posix())
+    return result
 
 
 @cache
