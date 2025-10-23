@@ -19,11 +19,11 @@
 
 recursive-include src/mstair/common *.py *.typed
 recursive-include bin *
-
 # include .git* *.ini *.jsonc *.mak *.md *.py *.toml LICENSE*
 # recursive-include scripts *
 # recursive-include src/mstair/common *.md *.txt
 
+global-exclude test_*.py
 # prune .venv
 # prune .cache
 # prune dist
