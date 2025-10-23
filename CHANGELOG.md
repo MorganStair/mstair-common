@@ -1,3 +1,6 @@
+## 0.1.11 - 2025-10-23
+- feat: Add context managers for module loading and cycle detection with tests
+
 ## 0.1.10 - 2025-10-23
 - No changes in src since 22fe7b9.
 
