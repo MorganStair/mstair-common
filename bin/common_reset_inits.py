@@ -22,7 +22,6 @@ from __future__ import annotations
 
 import argparse
 import logging
-import pathlib
 import re
 import subprocess
 import sys
@@ -30,8 +29,6 @@ import time
 import tomllib
 from collections.abc import Iterator
 from pathlib import Path
-
-import pip
 
 
 # -----------------------------------------------------------------------------
