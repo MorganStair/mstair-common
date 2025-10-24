@@ -18,6 +18,8 @@ if [ $# -lt 1 ]; then
   exit 2
 fi
 
+[ -n "$VERBOSE" ] && set -x || set +x
+
 # ------------------------------------------------------
 # CLI Script Existence Check:
 # PROJECT_DIR = Project root directory.
@@ -52,5 +54,6 @@ if [ -z "$PYTHON" ]; then
 fi
 
 # Run the Script
-"$PYTHON" -P -s -m "$TOOL" "${@:2}"
+"$PYTHON" -W "ignore:.*found in sys\.modules.*" -P -s -m "$TOOL" "${@:2}"
+
 exit $?

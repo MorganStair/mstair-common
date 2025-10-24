@@ -21,7 +21,7 @@
 
 @setlocal enableextensions enabledelayedexpansion
 @for /f "tokens=2 delims=[]" %%A in ('echo.^| "%SystemRoot%\System32\find.exe" /I "ECHO"') do set "ECHO_OUTER=%%A"
-@set "ECHO_INNER=off"
+@if defined VERBOSE (set "ECHO_INNER=on") else (set "ECHO_INNER=off")
 @echo %ECHO_INNER% >nul
 if "%~1"=="" (
   echo Usage: pys TOOL [ARGS...] 1>&2
@@ -61,7 +61,8 @@ call :parse_args ARGS 1 %*
 
 REM -P = Prevent prepending unsafe paths to sys.path.
 REM -s = Disable user site directory.
-call .venv\Scripts\python.exe -P -s -m "%TOOL%" %ARGS%
+REM -W = Ignore specific warnings.
+call "%PYTHON%" -W "ignore:.*found in sys\.modules.*" -P -s -m "%TOOL%" %ARGS%
 
 set "exitCode=%ERRORLEVEL%"
 call deactivate >nul 2>&1
