@@ -29,27 +29,27 @@ if "%~1"=="" (
 )
 REM ----------------------------------------------------
 REM Script CLI Existence Check:
-REM PROJECT_ROOT = The root directory of the project (one level up from this script).
+REM PROJECT_DIR = The root directory of the project (one level up from this script).
 REM SRC          = The project subdirectory for the source code ("src").
 REM TOOL         = The name of the tool to run (first argument).
 REM ----------------------------------------------------
 
-for %%I in ("%~dp0..") do set "PROJECT_ROOT=%%~fI"
+if not defined PROJECT_DIR set "PROJECT_DIR=%CD%"
 set "SRC=src"
-set "TOOL=%~n1"
+set "TOOL=%1"
 
 REM ----------------------------------------------------
 REM Virtual Environment Activation:
-REM ACTIVATE = The script to activate the virtual environment.
+REM PYTHON = The Python executable in the virtual environment.
 REM ----------------------------------------------------
 
-set "ACTIVATE=%PROJECT_ROOT%\.venv\Scripts\activate.bat"
-if not exist "%ACTIVATE%" (
-  echo [ERROR] Missing virtual environment at "%PROJECT_ROOT%\.venv". 1>&2
+set "PYTHON=%PROJECT_DIR%\.venv\Scripts\python.exe"
+if not exist "%PYTHON%" (
+  echo [ERROR] Missing Python executable at "%PROJECT_DIR%\.venv". 1>&2
   endlocal & exit /b 3
 )
 echo %ECHO_INNER% >nul
-call "%ACTIVATE%" >nul 2>&1
+call "%PYTHON%" >nul 2>&1
 @echo %ECHO_INNER% >nul
 
 REM ----------------------------------------------------
@@ -58,9 +58,11 @@ REM ARGS = The Script Arguments
 REM ----------------------------------------------------
 
 call :parse_args ARGS 1 %*
+
 REM -P = Prevent prepending unsafe paths to sys.path.
 REM -s = Disable user site directory.
-call python -P -s -m "%TOOL%" %ARGS%
+call .venv\Scripts\python.exe -P -s -m "%TOOL%" %ARGS%
+
 set "exitCode=%ERRORLEVEL%"
 call deactivate >nul 2>&1
 endlocal & @echo %ECHO_OUTER% >nul & exit /b %exitCode%
