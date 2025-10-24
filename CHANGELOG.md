@@ -1,3 +1,6 @@
+## 0.1.15 - 2025-10-24
+- Fix common_reset_inits.py so python files are not switched to CRLF
+
 ## 0.1.14 - 2025-10-24
 - Enhance verbosity control and suppress specific warnings in CLI scripts
 - Update project directory handling and Python executable resolution in CLI scripts
