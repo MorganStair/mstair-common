@@ -22,6 +22,7 @@ from __future__ import annotations
 
 import argparse
 import logging
+import pathlib
 import re
 import subprocess
 import sys
@@ -29,6 +30,8 @@ import time
 import tomllib
 from collections.abc import Iterator
 from pathlib import Path
+
+import pip
 
 
 # -----------------------------------------------------------------------------
@@ -150,11 +153,15 @@ def common_process_init_file(
     return False
 
 
-def common_run_subprocess(cmd: list[str]) -> None:
+def common_run_subprocess(cmd: list[str] | str, *, shell: bool = False) -> None:
     """Run a subprocess command and exit on failure."""
-    _LOG.info("> %s", " ".join(cmd))
+    if shell and not isinstance(cmd, str):
+        raise ValueError("cmd must be a string when shell=True")
+    elif not shell and not isinstance(cmd, list):
+        raise ValueError("cmd must be a list of strings when shell=False")
+    _LOG.info("> %s", cmd if shell else " ".join(cmd))
     time.sleep(0.2)
-    subprocess.run(cmd, check=True)
+    subprocess.run(cmd, check=True, shell=shell)
 
 
 def common_reset_inits_main(argv: list[str] | None = None) -> None:
@@ -202,13 +209,14 @@ def common_reset_inits_main(argv: list[str] | None = None) -> None:
             "--noattrs",
             "--recursive",
         ]
-        _LOG.info("> %s", " ".join(mkinit_cmd))
         common_run_subprocess(mkinit_cmd)
 
     if args.dry_run:
         _LOG.info("Dry run complete. No changes written.")
         return
 
+    cmd = f"find {_SRC.as_posix()} -type f -name '*.py' -print0 | xargs -0 sed -i 's/\r$//'"
+    common_run_subprocess(cmd, shell=True)
     common_run_subprocess(["ruff", "check", _SRC.as_posix(), "--fix"])
     common_run_subprocess(["ruff", "format", _SRC.as_posix()])
 
