@@ -54,6 +54,13 @@ if [ -z "$PYTHON" ]; then
 fi
 
 # Run the Script
-"$PYTHON" -W "ignore:.*found in sys\.modules.*" -P -s -m "$TOOL" "${@:2}"
+# "$PYTHON" -W "ignore:.*found in sys\.modules.*" -P -s -m "$TOOL" "${@:2}"
+
+"$PYTHON" -P -s - <<EOF
+import warnings;
+warnings.filterwarnings('ignore', message='.*found in sys\\.modules.*', category=RuntimeWarning);
+import runpy;
+runpy.run_module('${TOOL}', run_name='__main__');
+EOF
 
 exit $?

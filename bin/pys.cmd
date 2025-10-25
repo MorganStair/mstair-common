@@ -48,9 +48,6 @@ if not exist "%PYTHON%" (
   echo [ERROR] Missing Python executable at "%PROJECT_DIR%\.venv". 1>&2
   endlocal & exit /b 3
 )
-echo %ECHO_INNER% >nul
-call "%PYTHON%" >nul 2>&1
-@echo %ECHO_INNER% >nul
 
 REM ----------------------------------------------------
 REM Run the Script:
@@ -62,7 +59,13 @@ call :parse_args ARGS 1 %*
 REM -P = Prevent prepending unsafe paths to sys.path.
 REM -s = Disable user site directory.
 REM -W = Ignore specific warnings.
-call "%PYTHON%" -W "ignore:.*found in sys\.modules.*" -P -s -m "%TOOL%" %ARGS%
+
+call "%PYTHON%" -P -s -c ^
+"import warnings;^
+warnings.filterwarnings('ignore', message='.*found in sys\\.modules.*', category=RuntimeWarning);^
+import runpy;^
+runpy.run_module('%TOOL%', run_name='__main__');"
+
 
 set "exitCode=%ERRORLEVEL%"
 call deactivate >nul 2>&1
