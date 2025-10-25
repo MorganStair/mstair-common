@@ -1,3 +1,6 @@
+## 0.1.16 - 2025-10-24
+- Update pys and pys.cmd to suppress sys.module warnings; feat: Add git-rewind.sh script to show file content at a specified date
+
 ## 0.1.15 - 2025-10-24
 - Fix common_reset_inits.py so python files are not switched to CRLF
 
