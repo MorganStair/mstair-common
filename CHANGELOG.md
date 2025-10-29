@@ -1,3 +1,6 @@
+## 0.1.17 - 2025-10-29
+- feat: Enhance cache_dir function to support subdirectory and directory creation
+
 ## 0.1.16 - 2025-10-24
 - Update pys and pys.cmd to suppress sys.module warnings; feat: Add git-rewind.sh script to show file content at a specified date
 
