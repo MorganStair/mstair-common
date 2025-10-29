@@ -19,9 +19,20 @@ Number = int | float
 NOT_SUPPLIED = NotSuppliedType.NOT_SUPPLIED
 
 
-@cache
-def cache_dir() -> Path:
+def cache_dir(
+    subdir: str | None = None,
+    mkdir: bool = True,
+) -> Path:
+    """Get the cache directory path.
+
+    :param subdir: Optional subdirectory name.
+    :param mkdir: Whether to create the directory if it doesn't exist.
+    """
     result = Path(os.environ.get("CACHE_DIR", Path.cwd() / ".cache"))
+    if subdir:
+        result /= subdir
+    if mkdir:
+        result.mkdir(parents=True, exist_ok=True)
     result = Path(result.resolve().as_posix())
     return result
 
