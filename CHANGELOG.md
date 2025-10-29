@@ -1,3 +1,6 @@
+## 0.1.19 - 2025-10-29
+- fix: Correct script name in pyproject.toml for common-git-rewind
+
 ## 0.1.18 - 2025-10-29
 - add common-git-rewind.sh to the list of scripts in pyproject.toml.
 
