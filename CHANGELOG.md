@@ -1,3 +1,6 @@
+## 0.1.18 - 2025-10-29
+- add common-git-rewind.sh to the list of scripts in pyproject.toml.
+
 ## 0.1.17 - 2025-10-29
 - feat: Enhance cache_dir function to support subdirectory and directory creation
 
