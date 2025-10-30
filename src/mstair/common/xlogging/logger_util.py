@@ -5,6 +5,11 @@ Two sources are supported:
 - Pattern-based DSL strings in LOG_LEVEL / LOG_LEVELS
 - Per-logger overrides in variables like LOG_LEVEL_<NAME>
 
+This module resolves the desired level for a given logger name; it does not
+modify or infer the root logger's level. CoreLogger ensures the effective
+emission is at least the root's level. To lower the global threshold, call
+initialize_root(level=...) from mstair.common.xlogging.core_logger.
+
 See LogLevelConfig for resolution rules.
 """
 
@@ -190,7 +195,7 @@ class LogLevelConfig:
                 level_name = parts[0].strip().strip("'\"").upper()
 
             if var.module:
-                if pattern not in ("", "root"):
+                if pattern not in {"", "root"}:
                     pattern = f"{var.module}.{pattern}"
                 else:
                     pattern = var.module

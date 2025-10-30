@@ -1,6 +1,15 @@
 """
 Structured logging with environment-driven configuration.
 
+Design summary:
+- Root logger owns handlers; CoreLogger instances always propagate.
+- Per-logger levels come from LogLevelConfig, but emission is floored to the
+    root's effective level. If root is WARNING, child loggers will not emit
+    DEBUG/TRACE even if environment requests them.
+- Root level is not derived from LOG_LEVEL/LOG_LEVELS; you must call
+    initialize_root(level=...) (or set logging.getLogger().setLevel(...)) early
+    in your application to lower the threshold.
+
 Example:
     >>> from mstair.common.xlogging import CoreLogger
     >>> logger = CoreLogger(__name__)
@@ -112,8 +121,15 @@ class CoreLogger(logging.Logger):
         """
         Initialize the CoreLogger with a name and log level.
 
-        :param name: The name of the logger, typically the module or class name.
-        :param level: The initial log level for the logger. Defaults to NOTSET.
+        Args:
+            name: Module or class logger name.
+            level: Initial log level. Defaults to NOTSET.
+
+        Notes:
+            - Effective emission is floored to the root logger's level.
+            - LOG_LEVEL/LOG_LEVELS influence desired logger level only; they do not
+              lower the root threshold. Call initialize_root(level=...) to reduce the
+              global floor early in application startup.
         """
         initialize_logger_constants()
 

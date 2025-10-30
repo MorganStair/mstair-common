@@ -1,10 +1,18 @@
 """
 Logger factory for creating and configuring CoreLogger instances.
 
-This module provides functions to create loggers with names inferred from the caller's context,
-resolve log level configurations from environment variables, and handle logger name conflicts.
+Overview:
+- Creates CoreLogger instances with consistent names based on explicit names or caller context.
+- Honors environment-driven per-logger levels via LogLevelConfig.
+- Does not modify the root logger. Root setup is handled by
+    mstair.common.xlogging.core_logger.initialize_root().
 
-It is designed to work with the CoreLogger class defined in mstair.common.xlogging.logger.
+Note:
+        CoreLogger emission is floored to the root logger's effective level. If you
+        expect DEBUG/TRACE output, ensure the root is initialized with a lower level
+        early in your application (e.g., initialize_root(level="DEBUG")).
+
+It is designed to work with the CoreLogger class defined in mstair.common.xlogging.core_logger.
 """
 
 import contextlib
