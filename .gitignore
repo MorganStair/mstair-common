@@ -203,6 +203,8 @@ tmp.*
 # Project-specific overrides
 # ============================================================
 
+/build
+
 # Do not commit credentials or secrets
 *.secret
 *.key

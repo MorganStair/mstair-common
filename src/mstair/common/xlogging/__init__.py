@@ -11,6 +11,7 @@ from mstair.common.xlogging import (
     logger_factory,
     logger_formatter,
     logger_util,
+    test_core_logger_root_level,
     test_logger_util,
 )
 
@@ -23,6 +24,7 @@ __all__ = [
     "logger_factory",
     "logger_formatter",
     "logger_util",
+    "test_core_logger_root_level",
     "test_logger_util",
 ]
 # </AUTOGEN_INIT>
