@@ -35,6 +35,136 @@ _LOG_VAR_ASSIGNMENT_OPERATOR_RX: Final[re.Pattern[str]] = re.compile(r"[:=]+")
 _log_level_config_instance: LogLevelConfig | None = None
 
 
+def _normalize_app_token(name: str) -> str:
+    """Return an uppercase token suitable for env var suffix from an app name.
+
+    Non-alphanumeric characters are converted to underscores and repeated
+    underscores are collapsed.
+    """
+    token = re.sub(r"[^A-Za-z0-9]+", "_", name).strip("_")
+    token = re.sub(r"_+", "_", token)
+    return token.upper()
+
+
+def _level_from_text(txt: str, level_map: dict[str, int]) -> int | None:
+    """Return numeric level from a name or decimal number string, else None."""
+    s = txt.strip().strip("\"'")
+    if not s:
+        return None
+    if s.isdigit():
+        try:
+            return int(s, 10)
+        except ValueError:
+            return None
+    lvl = level_map.get(s.upper())
+    if isinstance(lvl, int) and lvl != logging.NOTSET:
+        return lvl
+    return None
+
+
+def _glob_specificity_local(pattern: str) -> int:
+    """Length of fixed prefix before any wildcard (for glob tiebreaks)."""
+    first = min((i for i, ch in enumerate(pattern) if ch in "*?["), default=len(pattern))
+    return first
+
+
+def _parse_root_levels_dsl(
+    dsl: str, level_map: dict[str, int]
+) -> tuple[list[tuple[str, int]], int | None]:
+    """Parse LOG_ROOT_LEVELS DSL into (patterns, default_level)."""
+    patterns: list[tuple[str, int]] = []
+    default_level: int | None = None
+    for fragment in _LOG_VAR_FRAGMENT_SEPARATOR_RX.split(dsl):
+        part = fragment.strip()
+        if not part:
+            continue
+        segs = _LOG_VAR_ASSIGNMENT_OPERATOR_RX.split(part, maxsplit=1)
+        if len(segs) == 2:
+            pat = segs[0].strip().strip("'\"")
+            level_txt = segs[1].strip().strip("'\"")
+        else:
+            pat = ""
+            level_txt = segs[0].strip().strip("'\"")
+        lvl_val = _level_from_text(level_txt, level_map)
+        if lvl_val is None:
+            continue
+        if pat:
+            patterns.append((pat, lvl_val))
+        else:
+            default_level = lvl_val
+    return patterns, default_level
+
+
+def _match_app_level(
+    app_name: str, patterns: list[tuple[str, int]], default_level: int | None
+) -> int | None:
+    """Return level for app_name using exact first, then best glob, else default."""
+    app_lc = app_name.lower()
+    for pat, lvl_val in patterns:
+        if pat.lower() == app_lc:
+            return lvl_val
+    best: tuple[int, int] | None = None
+    for pat, lvl_val in patterns:
+        pl = pat.lower()
+        if fnmatch.fnmatch(app_lc, pl):
+            score = _glob_specificity_local(pl)
+            if best is None or score > best[0]:
+                best = (score, lvl_val)
+    if best is not None:
+        return best[1]
+    return default_level
+
+
+def get_root_level_from_environment(app_name: str | None = None) -> int | None:
+    """Return a root logger level from environment if defined.
+
+    Precedence (first match wins):
+    1. LOG_ROOT_LEVEL_<APP>
+    2. LOG_ROOT_LEVEL
+
+    Where <APP> is derived from ``app_name`` by uppercasing and converting any
+    non-alphanumeric characters to underscores.
+
+    Returns None if no valid level is configured.
+    """
+    fs_load_dotenv()
+    # Build mapping once that includes custom levels (TRACE, CONSTRUCT, ...)
+    initialize_logger_constants()
+    level_map: dict[str, int] = {
+        k.upper(): v
+        for k, v in logging.getLevelNamesMapping().items()
+        if isinstance(k, str) and k.isupper() and isinstance(v, int)
+    }
+
+    # 1) Per-app explicit override
+    if app_name:
+        app_var = f"LOG_ROOT_LEVEL_{_normalize_app_token(app_name)}"
+        raw = os.environ.get(app_var)
+        if raw:
+            lvl = _level_from_text(raw, level_map)
+            if lvl is not None:
+                return lvl
+
+    # 2) DSL-based mapping for app names, same separators and operators as LOG_LEVELS
+    dsl = os.environ.get("LOG_ROOT_LEVELS", "")
+    if dsl:
+        patterns, default_level = _parse_root_levels_dsl(dsl, level_map)
+        if app_name:
+            lvl = _match_app_level(app_name, patterns, default_level)
+            if lvl is not None:
+                return lvl
+        elif default_level is not None:
+            return default_level
+
+    # 3) Global single value fallback
+    raw_global = os.environ.get("LOG_ROOT_LEVEL")
+    if raw_global:
+        lvl = _level_from_text(raw_global, level_map)
+        if lvl is not None:
+            return lvl
+    return None
+
+
 @dataclass(slots=True)
 class LogEnvVar:
     """

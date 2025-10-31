@@ -7,7 +7,7 @@ Design summary:
     root's effective level. If root is WARNING, child loggers will not emit
     DEBUG/TRACE even if environment requests them.
 - Root level is not derived from LOG_LEVEL/LOG_LEVELS; you must call
-    initialize_root(level=...) (or set logging.getLogger().setLevel(...)) early
+        initialize_root(level=...) (or set logging.getLogger().setLevel(...)) early
     in your application to lower the threshold.
 
 Example:
@@ -63,6 +63,7 @@ from typing import Any, ClassVar, TextIO
 
 from mstair.common.base.types import PRIMITIVE_TYPES
 from mstair.common.xdumps.xdumps_api import xdumps
+from mstair.common.xlogging import logger_util as _lu
 from mstair.common.xlogging.logger_constants import TRACE
 from mstair.common.xlogging.logger_util import LogLevelConfig
 
@@ -475,6 +476,35 @@ def initialize_root(
         root.setLevel(level)
     elif root.getEffectiveLevel() == logging.NOTSET:
         root.setLevel(logging.WARNING)
+
+
+def initialize_root_from_environment(
+    app_name: str | None = None,
+    *,
+    fmt: str | None = None,
+    datefmt: str | None = None,
+    force: bool = False,
+) -> None:
+    """Initialize root using a level sourced from environment variables.
+
+    Precedence:
+        LOG_ROOT_LEVEL_<APP> > LOG_ROOT_LEVEL > default behavior
+
+    Args:
+        app_name: Optional application name used to resolve LOG_ROOT_LEVEL_<APP>.
+        fmt: Optional format string for CoreFormatter.
+        datefmt: Optional date format string.
+        force: Reinitialize handler/formatting even if already set.
+
+    Notes:
+        - If no environment override is found, this function still ensures the
+          stderr CoreFormatter is installed by delegating to initialize_root().
+    """
+    resolved = _lu.get_root_level_from_environment(app_name)
+    if resolved is None:
+        initialize_root(fmt=fmt, datefmt=datefmt, level=None, force=force)
+    else:
+        initialize_root(fmt=fmt, datefmt=datefmt, level=resolved, force=force)
 
 
 def _ensure_stderr_coreformatter(*, fmt: str | None = None, datefmt: str | None = None) -> None:

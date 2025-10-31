@@ -16,7 +16,11 @@ from collections.abc import Iterator
 import pytest
 
 from mstair.common.xlogging import logger_util as lu
-from mstair.common.xlogging.core_logger import CoreLogger, initialize_root
+from mstair.common.xlogging.core_logger import (
+    CoreLogger,
+    initialize_root,
+    initialize_root_from_environment,
+)
 
 
 @pytest.fixture(autouse=False)
@@ -99,6 +103,47 @@ def test_initialize_root_level_controls_logger_threshold(
     assert log.level == logging.DEBUG
     assert log.getEffectiveLevel() == logging.DEBUG
     assert log.isEnabledFor(logging.DEBUG)
+
+
+def test_initialize_root_from_environment_global(
+    clean_env: None, clean_logging: None, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """LOG_ROOT_LEVEL sets the root level when using initialize_root_from_environment()."""
+    monkeypatch.setenv("LOG_ROOT_LEVEL", "INFO")
+    initialize_root_from_environment()
+    assert logging.getLogger().getEffectiveLevel() == logging.INFO
+
+
+def test_initialize_root_from_environment_app_precedence(
+    clean_env: None, clean_logging: None, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """App-specific env overrides global value."""
+    monkeypatch.setenv("LOG_ROOT_LEVEL", "WARNING")
+    monkeypatch.setenv("LOG_ROOT_LEVEL_MY_APP", "DEBUG")
+    initialize_root_from_environment(app_name="my-app")
+    assert logging.getLogger().getEffectiveLevel() == logging.DEBUG
+
+
+def test_initialize_root_from_environment_levels_dsl_exact(
+    clean_env: None, clean_logging: None, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """LOG_ROOT_LEVELS supports exact app name mapping."""
+    monkeypatch.setenv("LOG_ROOT_LEVELS", "my-app=DEBUG; other=INFO")
+    initialize_root_from_environment(app_name="my-app")
+    assert logging.getLogger().getEffectiveLevel() == logging.DEBUG
+
+
+def test_initialize_root_from_environment_levels_dsl_glob_and_default(
+    clean_env: None, clean_logging: None, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """LOG_ROOT_LEVELS supports glob patterns and bare default."""
+    monkeypatch.setenv("LOG_ROOT_LEVELS", "my-*=INFO; WARNING")
+    initialize_root_from_environment(app_name="my-app")
+    assert logging.getLogger().getEffectiveLevel() == logging.INFO
+    # Non-matching app falls back to bare default
+    monkeypatch.setenv("LOG_ROOT_LEVELS", "WARNING")
+    initialize_root_from_environment(app_name="unknown-app", force=True)
+    assert logging.getLogger().getEffectiveLevel() == logging.WARNING
 
 
 # End of file: src/mstair/common/xlogging/test_core_logger_root_level.py
