@@ -15,8 +15,6 @@ from collections.abc import Iterator
 
 import pytest
 
-from mstair.common.xlogging.core_logger import CoreLogger, initialize_root
-
 
 @pytest.fixture(autouse=False)
 def clean_logging(monkeypatch: pytest.MonkeyPatch) -> Iterator[None]:

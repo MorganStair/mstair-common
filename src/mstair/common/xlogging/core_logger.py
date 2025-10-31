@@ -56,8 +56,8 @@ import os
 import re
 import sys
 import traceback
-from collections.abc import Callable, Iterator
-from contextlib import contextmanager, suppress
+from collections.abc import Iterator
+from contextlib import contextmanager
 from types import FrameType, TracebackType
 from typing import Any, ClassVar, TextIO
 

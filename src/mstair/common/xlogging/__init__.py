@@ -13,6 +13,7 @@ from mstair.common.xlogging import (
     logger_util,
     test_core_logger_root_level,
     test_logger_util,
+    test_sys_excepthook_obsolete,
 )
 
 
@@ -26,5 +27,6 @@ __all__ = [
     "logger_util",
     "test_core_logger_root_level",
     "test_logger_util",
+    "test_sys_excepthook_obsolete",
 ]
 # </AUTOGEN_INIT>
