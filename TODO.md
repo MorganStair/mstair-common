@@ -31,70 +31,56 @@ Never invent new markers.
 
 ---
 
-# 🧩 Conversion: True Namespace Package `mstair.common`
-
-Follow stages in order. Stop after any failed test.
-
----
-
-<!-- stage:1 -->
-## Stage 1 — Directory and File Layout
-
- - [x] Code is in `src/mstair/common/`
- - [x] Delete `src/mstair/__init__.py` (namespace must have no init) <!-- @copilot-action:delete -->
- - [ ] Run all tests to confirm imports still work <!-- @copilot-action:test -->
- - [x] Confirm `src/mstair/common/__init__.py` exists (regular package)
- - [x] Confirm `py.typed` exists in both `src/mstair/` and `src/mstair/common/`
-
----
-
-<!-- stage:2 -->
-## Stage 2 — Packaging Metadata
+## Namespaces and Packaging Compliance
 
 - [ ] Update `setup.py` to use `find_namespace_packages(where="src")` <!-- @copilot-action:edit -->
-- [x] Confirm `package_dir={"": "src"}` in `setup.py` or `pyproject.toml`
-- [x] Confirm `MANIFEST.in` includes `py.typed`
-
----
-
-<!-- stage:3 -->
-## Stage 3 — Type Checking
-
-- [x] Confirm `py.typed` in `src/mstair/common/`
-- [x] Confirm `mypy.ini` or `pyrightconfig.json` exist
-
----
-
-<!-- stage:4 -->
-## Stage 4 — Tests & Linting
-
-- [x] Ensure test files exist: `src/mstair/common/test_*.py`
-- [x] Confirm configs exist for `ruff`, `mypy`, and `pyright`
-
----
-
-<!-- stage:5 -->
-## Stage 5 — Namespace Compliance
-
-- [ ] Ensure no `__init__.py` exists in `src/mstair/` <!-- @copilot-action:verify -->
-- [x] Confirm `src/mstair/common/__init__.py` exists
-
----
-
-<!-- stage:6 -->
-## Stage 6 — Distribution Setup
 
 - [ ] Confirm `find_namespace_packages(where="src")` used in setup <!-- @copilot-action:verify -->
-- [x] Confirm `mstair_common.egg-info/` directory exists
 
----
 
-## 📊 Completion Criteria
+## Refactor and API Cleanup Plan
 
-Task is complete when:
-- All `[ ]` steps are `[x]`
-- Tests and packaging succeed
-- Version patch incremented if user‑visible changes occurred
+**Recommendation:**
+
+- Keep root setup in a “config” module (public), not as CoreLogger methods. Provide a thin alias for ergonomics:
+  - Public: `setup_root(level=...)`, `setup_root_from_env(app_name=...)`
+  - Internals: `_initialize_root`, `_initialize_root_from_environment` (private)
+  - Optionally export classmethod aliases that delegate to config, but mark them as convenience only.
+- Reduce CoreLogger “bloat”:
+  - Keep: `findCaller` override (core), `prefix_with` context manager (useful), `trace/construct` custom levels (if used; otherwise consider deprecating CONSTRUCT)
+  - Consider moving or deprecating: `rebind_stream` (move to utility or document a recipe), `sys_excepthook` property (move to “extras” utility or keep documented but not front-and-center)
+  - Tighten kwargs guardrails (already done) and keep `log()` minimal; avoid adding helpers that drift beyond structured logging.
+- Rename to reflect environment auto-config:
+  - Package: `xlogging` → `envlog` or `logenv` (emphasizes environment-driven config). Keep `xlogging` as a compat alias for a deprecation window.
+  - Modules:
+    - `core_logger.py` → `logger.py`
+    - `logger_formatter.py` → `formatter.py`
+    - `logger_util.py` → `config.py`
+    - `logger_factory.py` → `factory.py` (or fold into logger.py as `get_logger`)
+    - `frame_analyzer.py` → `_frames.py` (private)
+    - `constants.py` stays public
+  - Public API (clean):
+    ```python
+    from mstair.common.envlog import (
+        CoreLogger, CoreFormatter,
+        get_logger, setup_root, setup_root_from_env,
+        LogLevelConfig, TRACE, CONSTRUCT, SUPPRESS,
+    )
+    ```
+- Simplify and consolidate:
+  - Fold factory into logger (`get_logger`) unless you need separate indirection.
+  - Merge color formatting into formatter as an optional style or subclass; avoid an extra top-level module if behavior is small.
+  - Keep `LOG_LEVELS` and `LOG_ROOT_LEVELS` DSLs but document clearly that only the latter drives the root threshold (via `setup_root_from_env`).
+- Back-compat and migration:
+  - Add deprecation-friendly shims (old names import new) for one minor release.
+  - Update `__init__.py` to export the cleaner API; stop exporting tests from the package.
+  - Add short “How to use” docstrings at the top of `logger.py` and `config.py` with 2–3-line examples.
+
+**Net outcome:**
+
+- CoreLogger stays lean and focused.
+- Bootstrap lives in config as explicit, data-driven, and opt-in.
+- Names and layout match logging developers’ expectations while preserving your environment-first design.
 
 ---
 
@@ -110,6 +96,7 @@ Task is complete when:
 
 ## Notes for Copilot
 
+- Use ASCII characters only. No Unicode, no emojis, no long dashes, etc.
 - Never modify unrelated files.
 - Always work in `src/mstair/common/`.
 - Preserve formatting and anchors.

@@ -155,50 +155,6 @@ class CoreLogger(logging.Logger):
             level=level,
         )
 
-    def rebind_stream(
-        self,
-        stream: TextIO | None = None,
-    ) -> None:
-        """
-        Rebind this logger's StreamHandler to the given stream (default: current
-        sys.stderr).
-
-        This is intended only for controlled contexts (e.g., CLI rerouting), not
-        for concurrent modification.
-
-        - Closes and removes existing StreamHandlers.
-        - Preserves level from the first removed StreamHandler (fallback:
-          self.level).
-        - Formatter preference:
-            1) Keep existing CoreFormatter as-is.
-            2) Replace stdlib Formatter or None with a new CoreFormatter.
-            3) Never downgrade from CoreFormatter to stdlib Formatter.
-        """
-        preserved_formatter: logging.Formatter | None = None
-        preserved_level: int | None = None
-
-        retained_handlers: list[logging.Handler] = []
-        for h in self.handlers:
-            if isinstance(h, logging.StreamHandler):
-                if preserved_formatter is None:
-                    preserved_formatter = h.formatter
-                    preserved_level = h.level
-                with suppress(Exception):
-                    h.close()
-                continue
-            retained_handlers.append(h)
-
-        self.handlers = retained_handlers
-
-        new_handler = logging.StreamHandler(stream or sys.stderr)
-        new_handler.setFormatter(
-            preserved_formatter
-            if isinstance(preserved_formatter, CoreFormatter)
-            else CoreFormatter()
-        )
-        new_handler.setLevel(preserved_level if preserved_level is not None else self.level)
-        self.addHandler(new_handler)
-
     def log(self, level: int, *args: Any, **kwargs: Any) -> None:
         """
         Emit a log record with stack-aware context, preserving all handler/filter logic.
@@ -262,16 +218,20 @@ class CoreLogger(logging.Logger):
         stacklevel: int = 1,
     ) -> tuple[str, int, str, str | None]:
         """
-        Override to use pre-computed frame info, avoiding duplicate stack
+        Override ``super().findCaller``.
+
+        Find the stack frame of the caller so that we can note the source
+        file name, line number and function name.
+
+        Instead, this method uses pre-computed frame info, avoiding duplicate stack
         walking.
 
-        ``findCaller()`` uses a cached StackFrameInfo from the preceding log() call
-        to avoid repeating expensive stack inspection. The cache is cleared
-        immediately after use to prevent stale frame references and potential
-        memory leaks. Future maintainers: do not retain cached_caller_info
-        across log calls -- this could keep stack frames alive.
+        The cache is cleared immediately after use to prevent stale frame
+        references and potential memory leaks. Future maintainers: do not retain
+        cached_caller_info across log calls -- this could keep stack frames
+        alive.
 
-        Called by Logger._log() during the super().log() call to populate
+        Called by ``Logger._log()`` during the ``super().log()`` call to populate
         filename, lineno, and funcName in the LogRecord.
 
         :param stack_info: Whether to include stack trace information.
@@ -384,43 +344,6 @@ class CoreLogger(logging.Logger):
             yield
         finally:
             _log_prefix.reset(token)
-
-    @property
-    def sys_excepthook(
-        self,
-    ) -> Callable[[type[BaseException], BaseException, TracebackType | None], None]:
-        """Returns a sys_excepthook that uses this logger."""
-
-        def sys_excepthook(
-            exc_type: type[BaseException],
-            exc_value: BaseException,
-            exc_traceback: TracebackType | None,
-        ) -> None:
-            """An alternative to the default sys.excepthook that logs uncaught exceptions via logger.critical()."""
-            tb = traceback.extract_tb(exc_traceback)
-            msg = xdumps(exc_value, rshift=4)
-            if tb:
-                frame = tb[-1]
-                log_record = sys_excepthook_logger.makeRecord(
-                    name=sys_excepthook_logger.name,
-                    level=logging.CRITICAL,
-                    fn=frame.filename if frame.filename else "<unknown file>",
-                    lno=frame.lineno or 1,
-                    msg=msg,
-                    args=(),
-                    exc_info=(exc_type, exc_value, exc_traceback),
-                    func=frame.name if frame.name else "<unknown function>",
-                )
-                sys_excepthook_logger.handle(log_record)
-            else:
-                sys_excepthook_logger.critical(
-                    f"\nUncaught exception:\n    {msg}",
-                    exc_info=(exc_type, exc_value, exc_traceback),
-                    stack_info=True,
-                )
-
-        sys_excepthook_logger: logging.Logger | CoreLogger = self
-        return sys_excepthook
 
 
 def initialize_root(
