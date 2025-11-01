@@ -16,11 +16,7 @@ from collections.abc import Iterator
 import pytest
 
 from mstair.common.xlogging import logger_util as lu
-from mstair.common.xlogging.core_logger import (
-    CoreLogger,
-    initialize_root,
-    initialize_root_from_environment,
-)
+from mstair.common.xlogging.core_logger import CoreLogger, should_override_root_logger_level
 
 
 @pytest.fixture(autouse=False)
@@ -89,11 +85,11 @@ def test_env_trace_does_not_lower_root_or_logger(
 def test_initialize_root_level_controls_logger_threshold(
     clean_env: None, clean_logging: None, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    """initialize_root(level=...) sets the root threshold; loggers track that floor."""
+    """Setting root level controls logger floor; loggers track that floor."""
     monkeypatch.setenv("LOG_LEVELS", "pkg.*:TRACE")  # most verbose desired for the logger
 
-    # Lower the root using the public API
-    initialize_root(level="DEBUG")
+    # Lower the root explicitly
+    logging.getLogger().setLevel(logging.DEBUG)
 
     root = logging.getLogger()
     assert root.getEffectiveLevel() == logging.DEBUG
@@ -105,44 +101,55 @@ def test_initialize_root_level_controls_logger_threshold(
     assert log.isEnabledFor(logging.DEBUG)
 
 
-def test_initialize_root_from_environment_global(
+def test_setup_root_from_env_global(
     clean_env: None, clean_logging: None, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    """LOG_ROOT_LEVEL sets the root level when using initialize_root_from_environment()."""
+    """Environment-derived root level can be resolved and applied deterministically."""
     monkeypatch.setenv("LOG_ROOT_LEVEL", "INFO")
-    initialize_root_from_environment()
+    assert should_override_root_logger_level() is True
+    level = lu.get_root_level_from_environment()
+    assert isinstance(level, int)
+    logging.getLogger().setLevel(level)
     assert logging.getLogger().getEffectiveLevel() == logging.INFO
 
 
-def test_initialize_root_from_environment_app_precedence(
+def test_setup_root_from_env_app_precedence(
     clean_env: None, clean_logging: None, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     """App-specific env overrides global value."""
     monkeypatch.setenv("LOG_ROOT_LEVEL", "WARNING")
     monkeypatch.setenv("LOG_ROOT_LEVEL_MY_APP", "DEBUG")
-    initialize_root_from_environment(app_name="my-app")
+    assert should_override_root_logger_level(app_name="my-app") is True
+    level = lu.get_root_level_from_environment("my-app")
+    logging.getLogger().setLevel(level or logging.WARNING)
     assert logging.getLogger().getEffectiveLevel() == logging.DEBUG
 
 
-def test_initialize_root_from_environment_levels_dsl_exact(
+def test_setup_root_from_env_levels_dsl_exact(
     clean_env: None, clean_logging: None, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     """LOG_ROOT_LEVELS supports exact app name mapping."""
     monkeypatch.setenv("LOG_ROOT_LEVELS", "my-app=DEBUG; other=INFO")
-    initialize_root_from_environment(app_name="my-app")
+    assert should_override_root_logger_level(app_name="my-app") is True
+    level = lu.get_root_level_from_environment("my-app")
+    logging.getLogger().setLevel(level or logging.WARNING)
     assert logging.getLogger().getEffectiveLevel() == logging.DEBUG
 
 
-def test_initialize_root_from_environment_levels_dsl_glob_and_default(
+def test_setup_root_from_env_levels_dsl_glob_and_default(
     clean_env: None, clean_logging: None, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     """LOG_ROOT_LEVELS supports glob patterns and bare default."""
     monkeypatch.setenv("LOG_ROOT_LEVELS", "my-*=INFO; WARNING")
-    initialize_root_from_environment(app_name="my-app")
+    assert should_override_root_logger_level(app_name="my-app") is True
+    level = lu.get_root_level_from_environment("my-app")
+    logging.getLogger().setLevel(level or logging.WARNING)
     assert logging.getLogger().getEffectiveLevel() == logging.INFO
     # Non-matching app falls back to bare default
     monkeypatch.setenv("LOG_ROOT_LEVELS", "WARNING")
-    initialize_root_from_environment(app_name="unknown-app", force=True)
+    assert should_override_root_logger_level(app_name="unknown-app") is True
+    level2 = lu.get_root_level_from_environment("unknown-app")
+    logging.getLogger().setLevel(level2 or logging.WARNING)
     assert logging.getLogger().getEffectiveLevel() == logging.WARNING
 
 

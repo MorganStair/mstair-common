@@ -162,7 +162,7 @@ class CoreLogger(logging.Logger):
         Delegates to super().log() to ensure proper handler filtering, propagation,
         and level checking across the entire logging chain.
         """
-        initialize_root()
+        _setup_root()
         if cfg.in_analysis_mode():
             return
         if not self.isEnabledFor(level):
@@ -346,8 +346,46 @@ class CoreLogger(logging.Logger):
             _log_prefix.reset(token)
 
 
-def initialize_root(
-    fmt: str | None = None,
+def should_override_root_logger_level(*, app_name: str | None = None) -> bool:
+    """Return True if root logger level should be overridden based on environment and context.
+
+    Heuristics (deterministic):
+    - Do not override during static analysis.
+    - If an explicit per-app or DSL root level is defined (via logger_util.get_root_level_from_environment), override.
+    - Otherwise, if a global per-logger default is explicitly requested (LOG_LEVEL present), override.
+
+    Notes:
+        This does not perform the override; it only reflects the decision policy.
+    """
+    if cfg.in_analysis_mode():
+        return False
+
+    # Prefer explicit root-level mapping from environment first
+    resolved = _lu.get_root_level_from_environment(app_name)
+    if resolved is not None:
+        return True
+
+    # Fallback: presence of LOG_LEVEL indicates the user explicitly requested a default level
+    # for the application's loggers; hosts may choose to mirror this at the root.
+    return "LOG_LEVEL" in os.environ
+
+
+def should_override_root_handler() -> bool:
+    """Return True if root stderr handler/formatter should be managed by this package.
+
+    Heuristics:
+    - Do not override in AWS Lambda (the platform wires handlers; duplicating can cause duplicate output).
+    - Do not override during static analysis.
+    - Otherwise allow override (desktop, tests, services) so format and handler policy is consistent.
+    """
+    if cfg.in_lambda() or cfg.in_analysis_mode():
+        return False
+    return True
+
+
+def _setup_root(
+    *,
+    format: str | None = None,
     datefmt: str | None = None,
     level: int | str | None = None,
     force: bool = False,
@@ -390,7 +428,7 @@ def initialize_root(
             if not (isinstance(h, logging.StreamHandler) and h.stream is sys.stderr)
         ]
 
-    _ensure_stderr_coreformatter(fmt=fmt, datefmt=datefmt)
+    _ensure_stderr_coreformatter(fmt=format, datefmt=datefmt)
 
     # Apply level policy
     if level is not None:
@@ -401,7 +439,7 @@ def initialize_root(
         root.setLevel(logging.WARNING)
 
 
-def initialize_root_from_environment(
+def _setup_root_from_env(
     app_name: str | None = None,
     *,
     fmt: str | None = None,
@@ -421,13 +459,13 @@ def initialize_root_from_environment(
 
     Notes:
         - If no environment override is found, this function still ensures the
-          stderr CoreFormatter is installed by delegating to initialize_root().
+          stderr CoreFormatter is installed by delegating to _setup_root().
     """
     resolved = _lu.get_root_level_from_environment(app_name)
     if resolved is None:
-        initialize_root(fmt=fmt, datefmt=datefmt, level=None, force=force)
+        _setup_root(format=fmt, datefmt=datefmt, level=None, force=force)
     else:
-        initialize_root(fmt=fmt, datefmt=datefmt, level=resolved, force=force)
+        _setup_root(format=fmt, datefmt=datefmt, level=resolved, force=force)
 
 
 def _ensure_stderr_coreformatter(*, fmt: str | None = None, datefmt: str | None = None) -> None:
